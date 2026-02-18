@@ -315,7 +315,12 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
             >
               Tap to Count
             </button>
-            <div className="text-center font-mono text-white/80 text-lg">
+            <div
+              className="text-center font-mono text-lg px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 dark:bg-gray-900 dark:border-white/10 dark:text-gray-200"
+              role="status"
+              aria-live="polite"
+              aria-label={`Chant count ${String(count).padStart(3, '0')} of ${target}`}
+            >
               {String(count).padStart(3, '0')} / {target}
             </div>
             <button
