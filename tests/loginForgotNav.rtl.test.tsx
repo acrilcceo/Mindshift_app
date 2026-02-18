@@ -3,6 +3,7 @@ import React from 'react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import '@testing-library/jest-dom';
 import Login from '../src/pages/Login';
 
 vi.mock('../src/context/AuthContext', async () => {
@@ -25,6 +26,6 @@ describe('Forgot Password navigation interactions', () => {
     const link = screen.getByRole('link', { name: /forgot password/i });
     await user.click(link);
     const reset = await screen.findByTestId('reset-route');
-    expect(reset).toBeInTheDocument();
+    expect(reset).toBeTruthy();
   });
 });
