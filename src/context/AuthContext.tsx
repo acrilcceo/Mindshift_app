@@ -3,6 +3,7 @@ import { auth, db, googleProvider, configured } from '../firebase/firebaseConfig
 import { onAuthStateChanged, signInWithPopup, signOut, User } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { createJournalEntry } from '../services/journalService';
+import { assignGeneratedUserId } from '../services/userIdService';
 
 type AuthContextType = {
   currentUser: User | null;
@@ -45,6 +46,9 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
             createdAt: serverTimestamp(),
             welcomeCreated: true
           }, { merge: true });
+          try {
+            await assignGeneratedUserId(user.uid, user.displayName || user.email || '');
+          } catch {}
           await createJournalEntry('Welcome to MindShift. Begin your journey with your first affirmation.', 'affirmation');
         } else {
           const data = snap.data() as any;
@@ -53,6 +57,11 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
             email: user.email || data?.email || '',
             createdAt: data?.createdAt || serverTimestamp()
           }, { merge: true });
+          if (!data?.userId) {
+            try {
+              await assignGeneratedUserId(user.uid, user.displayName || user.email || '');
+            } catch {}
+          }
           if (!data?.welcomeCreated) {
             await createJournalEntry('Welcome to MindShift. Begin your journey with your first affirmation.', 'affirmation');
             await setDoc(ref, { welcomeCreated: true }, { merge: true });
@@ -93,6 +102,9 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       email,
       createdAt: serverTimestamp()
     }, { merge: true });
+    try {
+      await assignGeneratedUserId(cred.user.uid, username);
+    } catch {}
   };
 
   const value = useMemo(() => ({ currentUser, loading, login, logout, loginWithUserId, register }), [currentUser, loading]);

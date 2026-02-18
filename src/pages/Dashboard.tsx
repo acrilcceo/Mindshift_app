@@ -8,8 +8,9 @@ import Module555 from '../../components/Module555';
 import Hooponopono from '../../components/Hooponopono';
 import Journaling from '../../components/Journaling';
 import Visualization from '../../components/Visualization';
+import ProfileSettings from '../components/ProfileSettings';
 
-type View = 'dashboard' | 'beliefs' | '369' | '555' | 'release' | 'journal' | 'visualize';
+type View = 'dashboard' | 'beliefs' | '369' | '555' | 'release' | 'journal' | 'visualize' | 'profile';
 
 const DashboardPage: React.FC = () => {
   const [state, setState] = useState<AppState>(loadState());
@@ -79,6 +80,7 @@ const DashboardPage: React.FC = () => {
             <NavItem icon="✨" label="Whisper Visualize" active={activeView === 'visualize'} onClick={() => navigate('visualize')} />
             <NavItem icon="🌊" label="Emotional Release" active={activeView === 'release'} onClick={() => navigate('release')} />
             <NavItem icon="📓" label="Daily Journal" active={activeView === 'journal'} onClick={() => navigate('journal')} />
+            <NavItem icon="⚙️" label="Profile Settings" active={activeView === 'profile'} onClick={() => navigate('profile')} />
           </div>
 
           <div className="mt-auto pt-8 border-t border-slate-100 dark:border-white/5 space-y-4">
@@ -120,6 +122,7 @@ const DashboardPage: React.FC = () => {
           <NavItem icon="✨" label="Visualize" active={activeView === 'visualize'} onClick={() => navigate('visualize')} />
           <NavItem icon="🌊" label="Release" active={activeView === 'release'} onClick={() => navigate('release')} />
           <NavItem icon="📓" label="Journal" active={activeView === 'journal'} onClick={() => navigate('journal')} />
+          <NavItem icon="⚙️" label="Profile" active={activeView === 'profile'} onClick={() => navigate('profile')} />
         </div>
 
         <div className="mt-auto space-y-6">
@@ -153,6 +156,7 @@ const DashboardPage: React.FC = () => {
           {activeView === 'visualize' && <Visualization state={state} onUpdate={handleUpdate} />}
           {activeView === 'release' && <Hooponopono state={state} onUpdate={handleUpdate} />}
           {activeView === 'journal' && <Journaling state={state} onUpdate={handleUpdate} />}
+          {activeView === 'profile' && <ProfileSettings />}
         </div>
       </main>
 
