@@ -32,7 +32,8 @@ const DashboardPage: React.FC = () => {
   const toggleTheme = () => {
     const nextTheme: Theme = state.theme === 'dark' ? 'light' : 'dark';
     handleUpdate({ theme: nextTheme });
-    if (typeof window.toggleTheme === 'function') window.toggleTheme();
+    const wt = (window as any).toggleTheme;
+    if (typeof wt === 'function') wt();
   };
 
   const navigate = (view: View) => {

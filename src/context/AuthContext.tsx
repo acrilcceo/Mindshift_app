@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { auth, db, googleProvider } from '../firebase/firebaseConfig';
+import { auth, db, googleProvider, configured } from '../firebase/firebaseConfig';
 import { onAuthStateChanged, signInWithPopup, signOut, User } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
@@ -22,6 +22,11 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!configured || !auth || !db) {
+      setCurrentUser(null);
+      setLoading(false);
+      return;
+    }
     const unsub = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user || null);
       setLoading(false);
@@ -38,10 +43,14 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
   }, []);
 
   const login = async () => {
+    if (!configured || !auth || !googleProvider) {
+      throw new Error('Firebase is not configured. Please set environment variables.');
+    }
     await signInWithPopup(auth, googleProvider);
   };
 
   const logout = async () => {
+    if (!configured || !auth) return;
     await signOut(auth);
   };
 

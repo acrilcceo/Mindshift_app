@@ -21,20 +21,24 @@
   </script>
   <script>
     (function() {
+      function apply(mode) {
+        document.documentElement.classList.remove('dark','light');
+        document.documentElement.classList.add(mode);
+      }
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       const saved = localStorage.getItem('theme');
       const initial = saved ? saved : (prefersDark ? 'dark' : 'light');
-      function apply(mode) {
-        document.body.classList.remove('dark','light');
-        document.body.classList.add(mode);
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => apply(initial), { once: true });
+      } else {
+        apply(initial);
       }
-      apply(initial);
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
         const currentSaved = localStorage.getItem('theme');
         if (!currentSaved) apply(e.matches ? 'dark' : 'light');
       });
       window.toggleTheme = function() {
-        const isDark = document.body.classList.contains('dark');
+        const isDark = document.documentElement.classList.contains('dark');
         const next = isDark ? 'light' : 'dark';
         localStorage.setItem('theme', next);
         apply(next);
@@ -47,8 +51,12 @@
       transition: background-color 0.3s ease, color 0.3s ease;
     }
     .glass-card {
-      @apply bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-slate-200/50 dark:border-white/10 shadow-sm dark:shadow-none;
+      background-color: rgba(255,255,255,0.7);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(15,23,42,0.12);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
     }
+    .dark .glass-card { background-color: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.08); box-shadow: none; }
     .soft-glow-purple {
       box-shadow: 0 0 40px -10px rgba(139, 92, 246, 0.15);
     }
