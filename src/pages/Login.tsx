@@ -69,7 +69,7 @@ const Login: React.FC = () => {
         <div className="grid grid-cols-2 gap-2" role="tablist" aria-label="Auth mode">
           <button
             onClick={() => setMode('register')}
-            className={`px-4 py-2 rounded-xl text-[12px] font-bold transition-theme ${mode==='register' ? 'bg-slate-900 text-white dark:bg-amber-500 dark:text-black' : 'bg-white/60 dark:bg-white/10 text-secondary'}`}
+            className={`px-4 py-2 rounded-xl text-[12px] font-bold transition-theme ${mode==='register' ? 'bg-slate-900 ensure-contrast dark:bg-amber-500' : 'bg-white/60 dark:bg-white/10 text-secondary'}`}
             role="tab"
             aria-selected={mode==='register'}
           >
@@ -77,7 +77,7 @@ const Login: React.FC = () => {
           </button>
           <button
             onClick={() => setMode('login')}
-            className={`px-4 py-2 rounded-xl text-[12px] font-bold transition-theme ${mode==='login' ? 'bg-slate-900 text-white dark:bg-amber-500 dark:text-black' : 'bg-white/60 dark:bg-white/10 text-secondary'}`}
+            className={`px-4 py-2 rounded-xl text-[12px] font-bold transition-theme ${mode==='login' ? 'bg-slate-900 ensure-contrast dark:bg-amber-500' : 'bg-white/60 dark:bg-white/10 text-secondary'}`}
             role="tab"
             aria-selected={mode==='login'}
           >
@@ -175,7 +175,7 @@ const Login: React.FC = () => {
           </button>
           <Link
             to="/reset"
-            className="w-full h-12 min-w-[44px] min-h-[44px] rounded-2xl bg-slate-900 dark:bg-amber-500 text-white dark:text-black text-[12px] font-bold hover:opacity-90 active:scale-95 transition-theme focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 text-center flex items-center justify-center"
+            className="w-full h-12 min-w-[44px] min-h-[44px] rounded-2xl bg-slate-900 ensure-contrast dark:bg-amber-500 text-[12px] font-bold hover:opacity-90 active:scale-95 transition-theme focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 text-center flex items-center justify-center"
             aria-label="Forgot Password"
           >
             Forgot Password

@@ -68,8 +68,8 @@ const DashboardPage: React.FC = () => {
         ></div>
         <nav className={`absolute top-0 right-0 bottom-0 w-4/5 max-w-xs bg-white dark:bg-[#0c0c0e] shadow-2xl transition-transform duration-500 ease-out flex flex-col p-8 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="flex justify-between items-center mb-12">
-            <div className="text-[10px] uppercase tracking-widest text-slate-400 dark:text-gray-500 font-bold">Main Navigation</div>
-            <button onClick={() => setIsMenuOpen(false)} className="text-slate-400 dark:text-gray-500 hover:text-red-500">✕</button>
+            <div className="text-[10px] uppercase tracking-widest text-muted font-bold">Main Navigation</div>
+            <button onClick={() => setIsMenuOpen(false)} className="text-muted hover:text-red-500">✕</button>
           </div>
 
           <div className="space-y-3">
@@ -90,7 +90,7 @@ const DashboardPage: React.FC = () => {
             >
               <div className="flex items-center gap-3">
                 <span className="text-xl">{state.theme === 'dark' ? '☀️' : '🌙'}</span>
-                <span className="text-xs font-bold uppercase tracking-widest text-slate-600 dark:text-gray-400">
+                <span className="text-xs font-bold uppercase tracking-widest text-secondary">
                   {state.theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
                 </span>
               </div>
@@ -98,7 +98,7 @@ const DashboardPage: React.FC = () => {
                 <div className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all ${state.theme === 'dark' ? 'right-0.5' : 'left-0.5'}`}></div>
               </div>
             </button>
-            <p className="text-[9px] text-center text-slate-400 dark:text-gray-600 uppercase tracking-widest leading-loose">
+            <p className="text-[9px] text-center text-muted uppercase tracking-widest leading-loose">
               Manifesting Excellence<br/>v1.2 Premium Edition
             </p>
           </div>
@@ -128,20 +128,20 @@ const DashboardPage: React.FC = () => {
         <div className="mt-auto space-y-6">
            <div className="p-5 bg-slate-50 dark:bg-white/5 rounded-3xl border border-slate-100 dark:border-white/5">
               <div className="flex justify-between items-center mb-3">
-                <span className="text-[9px] uppercase tracking-widest text-slate-400 dark:text-gray-500 font-bold">Theme Calibration</span>
+                <span className="text-[9px] uppercase tracking-widest text-muted font-bold">Theme Calibration</span>
                 <span className="text-xs">{state.theme === 'dark' ? '✨' : '🎨'}</span>
               </div>
               <button 
                 onClick={toggleTheme}
-                className="w-full h-10 rounded-xl bg-slate-900 dark:bg-amber-500 flex items-center justify-center gap-2 group transition-all active:scale-95"
+                className="w-full h-10 rounded-xl bg-slate-900 ensure-contrast dark:bg-amber-500 flex items-center justify-center gap-2 group transition-all active:scale-95"
               >
                 <span className="text-lg transition-transform group-hover:rotate-12">{state.theme === 'dark' ? '☀️' : '🌙'}</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-white dark:text-black">
+                <span className="text-[10px] font-bold uppercase tracking-widest ensure-contrast">
                   Switch Mode
                 </span>
               </button>
            </div>
-           <p className="text-[9px] text-center text-slate-400 dark:text-gray-600 uppercase tracking-[0.2em] font-medium italic">
+           <p className="text-[9px] text-center text-muted uppercase tracking-[0.2em] font-medium italic">
              "Thoughts become things."
            </p>
         </div>
@@ -160,7 +160,7 @@ const DashboardPage: React.FC = () => {
         </div>
       </main>
 
-      <footer className="w-full py-8 text-center text-slate-400 dark:text-gray-600 text-[10px] uppercase tracking-widest border-t border-slate-100 dark:border-white/5 leading-relaxed">
+      <footer className="w-full py-8 text-center text-muted text-[10px] uppercase tracking-widest border-t border-slate-100 dark:border-white/5 leading-relaxed">
          &copy; 2026 MindShift Manifest &bull; Elevate your Reality <br />
          Made to heal your inner self - Sambit Ghosh
       </footer>

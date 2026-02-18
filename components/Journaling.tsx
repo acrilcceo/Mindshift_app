@@ -298,7 +298,7 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
             <div className="flex flex-col gap-4 px-2 print:hidden">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <h4 className="text-[10px] uppercase tracking-widest text-slate-400 dark:text-gray-500 font-bold">Evolution History</h4>
+                  <h4 className="text-[10px] uppercase tracking-widest text-muted font-bold">Evolution History</h4>
                   <span className="text-[9px] bg-slate-200 dark:bg-white/5 text-slate-600 dark:text-gray-400 px-2 py-0.5 rounded-full font-mono border border-slate-300 dark:border-white/5">
                     {state.ftbaEntries.length} total
                   </span>
@@ -337,7 +337,7 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                    </select>
                 </div>
                 <div className="flex flex-wrap gap-2 items-center">
-                  <span className="text-[9px] uppercase tracking-widest text-slate-400 dark:text-gray-600 font-bold">Filter By Date:</span>
+                  <span className="text-[9px] uppercase tracking-widest text-muted font-bold">Filter By Date:</span>
                   <input 
                     type="date" 
                     value={startDate}
@@ -378,7 +378,7 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                     <div className="flex gap-4">
                       <button 
                         onClick={() => setSelectedIds(new Set())}
-                        className="text-[10px] text-slate-400 hover:text-slate-600 dark:hover:text-gray-200 font-bold uppercase tracking-widest"
+                        className="text-[10px] text-muted hover:text-slate-600 dark:hover:text-gray-200 font-bold uppercase tracking-widest"
                       >
                         Clear
                       </button>
@@ -415,7 +415,7 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                       <div className="space-y-4">
                         <div className="flex justify-between items-center mb-2">
                           <h5 className="text-[10px] uppercase tracking-widest text-amber-600 dark:text-amber-500 font-bold">Editing Evolution</h5>
-                          <span className="text-[9px] text-slate-400 dark:text-gray-400 font-mono tracking-tighter">{formatTimestamp(e.timestamp)}</span>
+                          <span className="text-[9px] text-muted font-mono tracking-tighter">{formatTimestamp(e.timestamp)}</span>
                         </div>
                         <div className="space-y-3">
                           <input value={editForm.feel} onChange={ev => setEditForm({...editForm, feel: ev.target.value})} className="w-full bg-slate-50 dark:bg-black/60 border border-amber-500/30 rounded-lg px-3 py-2 text-xs" />
@@ -433,11 +433,11 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                         <div className="flex justify-between items-center mb-4 pb-2 border-b border-slate-100 dark:border-white/5">
                           <div className="flex flex-col">
                             <span className="text-xs font-bold text-purple-700 dark:text-purple-300 uppercase tracking-wide">{e.feel}</span>
-                            <span className="text-[9px] text-slate-400 dark:text-gray-500 font-mono mt-0.5 tracking-tighter uppercase">{formatTimestamp(e.timestamp)}</span>
+                            <span className="text-[9px] text-muted font-mono mt-0.5 tracking-tighter uppercase">{formatTimestamp(e.timestamp)}</span>
                           </div>
                           <div className="flex gap-2 print:hidden">
-                            <button onClick={() => startEditing(e)} className="text-[10px] text-slate-400 hover:text-amber-600 transition-colors px-2 py-1 bg-slate-50 dark:bg-white/5 rounded-lg">Edit</button>
-                            <button onClick={() => deleteFtba(e.id)} className="text-[10px] text-slate-400 hover:text-red-600 transition-colors px-2 py-1 bg-slate-50 dark:bg-white/5 rounded-lg">✕</button>
+                            <button onClick={() => startEditing(e)} className="text-[10px] text-muted hover:text-amber-600 transition-colors px-2 py-1 bg-slate-50 dark:bg-white/5 rounded-lg">Edit</button>
+                            <button onClick={() => deleteFtba(e.id)} className="text-[10px] text-muted hover:text-red-600 transition-colors px-2 py-1 bg-slate-50 dark:bg-white/5 rounded-lg">✕</button>
                           </div>
                         </div>
                         <div className="space-y-3 text-[11px] leading-relaxed">
@@ -521,7 +521,7 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                     <span>{item}</span>
                   </div>
                 ))}
-                {state.gratitudeList.length === 0 && <div className="text-center py-10 text-slate-400 dark:text-gray-600 text-xs italic">Abundance begins with appreciation.</div>}
+                {state.gratitudeList.length === 0 && <div className="text-center py-10 text-muted text-xs italic">Abundance begins with appreciation.</div>}
              </div>
           </div>
         </div>
@@ -542,12 +542,12 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                       <button onClick={() => toggleGoal(goal.id)} className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${goal.completed ? 'bg-blue-500 border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'border-slate-300 dark:border-gray-600 hover:border-blue-400'}`}>
                         {goal.completed && <span className="text-[12px] text-white">✓</span>}
                       </button>
-                      <span className={`text-sm font-medium transition-all ${goal.completed ? 'text-slate-400 dark:text-gray-600 line-through' : 'text-slate-800 dark:text-gray-200'}`}>{goal.text}</span>
+                      <span className={`text-sm font-medium transition-all ${goal.completed ? 'text-muted line-through' : 'text-slate-800 dark:text-gray-200'}`}>{goal.text}</span>
                     </div>
                     <button onClick={() => deleteGoal(goal.id)} className="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-2">✕</button>
                   </div>
                 ))}
-                {state.dailyGoals.length === 0 && <div className="text-center py-10 text-slate-400 dark:text-gray-600 text-xs italic">Define your reality for today.</div>}
+                {state.dailyGoals.length === 0 && <div className="text-center py-10 text-muted text-xs italic">Define your reality for today.</div>}
              </div>
           </div>
         </div>

@@ -40,7 +40,7 @@ const BeliefReframer: React.FC<BeliefReframerProps> = ({ state, onUpdate }) => {
       </div>
 
       <div className="glass-card p-8 rounded-[2rem] space-y-6">
-        <label className="text-[10px] uppercase tracking-[0.3em] text-slate-400 dark:text-gray-500 font-bold">The Limiting Narrative</label>
+        <label className="text-[10px] uppercase tracking-[0.3em] text-muted font-bold">The Limiting Narrative</label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -57,19 +57,19 @@ const BeliefReframer: React.FC<BeliefReframerProps> = ({ state, onUpdate }) => {
       </div>
 
       <div className="space-y-6">
-        <h3 className="text-[10px] uppercase tracking-[0.3em] text-slate-400 dark:text-gray-500 font-bold px-4">Evolution Archive</h3>
+        <h3 className="text-[10px] uppercase tracking-[0.3em] text-muted font-bold px-4">Evolution Archive</h3>
         {state.beliefs.map((b) => (
           <div key={b.id} className="glass-card p-7 rounded-[2rem] border-l-4 border-amber-500 transition-all hover:bg-slate-50 dark:hover:bg-white/10">
-            <div className="text-xs text-slate-400 dark:text-gray-500 line-through mb-2 italic">"{b.original}"</div>
+            <div className="text-xs text-muted line-through mb-2 italic">"{b.original}"</div>
             <div className="text-xl font-medium text-slate-800 dark:text-amber-100 leading-relaxed">"{b.reframed}"</div>
             <div className="flex items-center gap-2 mt-4">
                <div className="h-px bg-slate-200 dark:bg-white/5 flex-1"></div>
-               <div className="text-[9px] text-slate-400 dark:text-gray-600 uppercase tracking-widest font-bold whitespace-nowrap">Reframed {new Date(b.timestamp).toLocaleDateString()}</div>
+               <div className="text-[9px] text-muted uppercase tracking-widest font-bold whitespace-nowrap">Reframed {new Date(b.timestamp).toLocaleDateString()}</div>
             </div>
           </div>
         ))}
         {state.beliefs.length === 0 && (
-          <div className="text-center text-slate-400 dark:text-gray-600 py-16 px-8 border-2 border-dashed border-slate-200 dark:border-white/5 rounded-[2rem] italic text-sm">No transformations logged. Expose a shadow above.</div>
+          <div className="text-center text-muted py-16 px-8 border-2 border-dashed border-slate-200 dark:border-white/5 rounded-[2rem] italic text-sm">No transformations logged. Expose a shadow above.</div>
         )}
       </div>
     </div>

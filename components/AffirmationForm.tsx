@@ -69,10 +69,10 @@ const AffirmationForm: React.FC<Props> = ({ open, onClose, editing, onSaved }) =
       <div ref={dialogRef} className="relative w-[95%] max-w-xl glass-card p-6 rounded-3xl shadow-2xl">
         <div className="flex justify-between items-center mb-4">
           <h2 id="affirmationFormTitle" className="text-lg font-serif text-slate-800 dark:text-amber-100">Add Affirmation</h2>
-          <button aria-label="Close" className="text-slate-400 dark:text-gray-500 hover:text-red-500" onClick={onClose}>✕</button>
+          <button aria-label="Close" className="text-muted hover:text-red-500" onClick={onClose}>✕</button>
         </div>
         {error && <div role="alert" className="mb-3 text-[12px] text-red-600 dark:text-red-400">{error}</div>}
-        <label className="text-[10px] uppercase tracking-[0.3em] text-slate-400 dark:text-gray-500 font-bold">Affirmation</label>
+        <label className="text-[10px] uppercase tracking-[0.3em] text-muted font-bold">Affirmation</label>
         <textarea
           ref={inputRef}
           aria-label="Affirmation text"
@@ -85,7 +85,7 @@ const AffirmationForm: React.FC<Props> = ({ open, onClose, editing, onSaved }) =
         />
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-[10px] uppercase tracking-[0.3em] text-slate-400 dark:text-gray-500 font-bold">Category</label>
+            <label className="text-[10px] uppercase tracking-[0.3em] text-muted font-bold">Category</label>
             <select
               aria-label="Category"
               value={category}
@@ -96,7 +96,7 @@ const AffirmationForm: React.FC<Props> = ({ open, onClose, editing, onSaved }) =
             </select>
           </div>
           <div>
-            <label className="text-[10px] uppercase tracking-[0.3em] text-slate-400 dark:text-gray-500 font-bold">Reminder</label>
+            <label className="text-[10px] uppercase tracking-[0.3em] text-muted font-bold">Reminder</label>
             <select
               aria-label="Reminder frequency"
               value={frequency}
@@ -109,7 +109,7 @@ const AffirmationForm: React.FC<Props> = ({ open, onClose, editing, onSaved }) =
         </div>
         {frequency === 'Custom' && (
           <div className="mt-3">
-            <div className="text-[10px] uppercase tracking-widest text-slate-400 dark:text-gray-500 font-bold">Custom Days</div>
+            <div className="text-[10px] uppercase tracking-widest text-muted font-bold">Custom Days</div>
             <div className="flex flex-wrap gap-2 mt-2" role="group" aria-label="Select custom days">
               {[0,1,2,3,4,5,6].map(d => (
                 <button
