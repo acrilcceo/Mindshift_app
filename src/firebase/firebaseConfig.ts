@@ -26,5 +26,6 @@ if (configured) {
   auth = getAuth(app);
   db = getFirestore(app);
   googleProvider = new GoogleAuthProvider();
+  try { googleProvider.setCustomParameters({ prompt: 'select_account' }); } catch {}
   setPersistence(auth, browserLocalPersistence);
 }

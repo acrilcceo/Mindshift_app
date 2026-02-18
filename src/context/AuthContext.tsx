@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { auth, db, googleProvider, configured } from '../firebase/firebaseConfig';
-import { onAuthStateChanged, signInWithPopup, signOut, User } from 'firebase/auth';
+import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { createJournalEntry } from '../services/journalService';
 import { assignGeneratedUserId } from '../services/userIdService';
+import { googleLogin } from '../services/authService';
 
 type AuthContextType = {
   currentUser: User | null;
@@ -76,7 +77,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     if (!configured || !auth || !googleProvider) {
       throw new Error('Firebase is not configured. Please set environment variables.');
     }
-    await signInWithPopup(auth, googleProvider);
+    await googleLogin(auth, googleProvider);
   };
 
   const logout = async () => {

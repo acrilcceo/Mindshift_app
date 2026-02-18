@@ -5,6 +5,7 @@ import { AuthProvider } from './src/context/AuthContext';
 import ProtectedRoute from './src/routes/ProtectedRoute';
 import Login from './src/pages/Login';
 import Dashboard from './src/pages/Dashboard';
+import ResetPassword from './src/pages/ResetPassword';
 
 const App: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ const App: React.FC = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/reset" element={<ResetPassword />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>

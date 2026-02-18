@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const { currentUser, loading, login, loginWithUserId, register } = useAuth();
@@ -173,6 +173,13 @@ const Login: React.FC = () => {
           >
             {loading ? 'Loading...' : 'Continue with Google'}
           </button>
+          <Link
+            to="/reset"
+            className="w-full h-12 min-w-[44px] min-h-[44px] rounded-2xl bg-slate-900 dark:bg-amber-500 text-white dark:text-black text-[12px] font-bold hover:opacity-90 active:scale-95 transition-theme focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 text-center flex items-center justify-center"
+            aria-label="Forgot Password"
+          >
+            Forgot Password
+          </Link>
         </div>
       </div>
     </div>
