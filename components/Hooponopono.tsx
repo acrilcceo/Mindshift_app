@@ -365,16 +365,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
           </div>
         </div>
 
-        {showConfetti && (
-          <div className="pointer-events-none fixed inset-0 flex items-center justify-center">
-            <div className="relative w-full h-full">
-              <div className="absolute inset-0 animate-pulse bg-gradient-to-b from-purple-500/10 via-teal-500/10 to-amber-500/10"></div>
-              <div className="absolute left-1/4 top-1/3 text-2xl animate-bounce">✨</div>
-              <div className="absolute left-2/3 top-1/4 text-2xl animate-bounce delay-150">🎉</div>
-              <div className="absolute left-1/2 top-2/3 text-2xl animate-bounce delay-300">🌟</div>
-            </div>
-          </div>
-        )}
+        {showConfetti && <div className="cleanse-overlay"></div>}
 
         {askFeeling && (
           <div className="mt-6 space-y-3">

@@ -101,8 +101,8 @@ const MyAffirmations: React.FC = () => {
     <section aria-labelledby="myAffirmationsTitle" className="glass-card p-8 rounded-[2rem] mt-10">
       <div className="flex justify-between items-center mb-4">
         <div>
-          <h3 id="myAffirmationsTitle" className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 dark:text-gray-500">My Affirmations</h3>
-          <p className="text-[10px] text-slate-500 dark:text-gray-500">Create, edit, search, and organize your personal invocations.</p>
+          <h3 id="myAffirmationsTitle" className="label text-secondary">My Affirmations</h3>
+          <p className="body-sm text-muted">Create, edit, search, and organize your personal invocations.</p>
         </div>
         <div className="flex gap-2">
           <button
@@ -132,35 +132,35 @@ const MyAffirmations: React.FC = () => {
             placeholder="Search..."
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2 text-[12px]"
+            className="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2 text-[12px] text-primary"
           />
-          <span className="absolute right-3 top-2 text-slate-300 dark:text-gray-600">🔍</span>
+          <span className="absolute right-3 top-2 text-muted label">Search</span>
         </div>
-        <select aria-label="Filter by category" value={category} onChange={e => { setCategory(e.target.value as any); setPage(1); }} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px]">
+        <select aria-label="Filter by category" value={category} onChange={e => { setCategory(e.target.value as any); setPage(1); }} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px] text-primary">
           <option value="All">All Categories</option>
           {(['Gratitude','Self-Love','Success','Health','Relationships','Custom'] as AffirmationCategory[]).map(c => <option key={c} value={c}>{c}</option>)}
         </select>
-        <select aria-label="Filter by reminder" value={reminder} onChange={e => { setReminder(e.target.value as any); setPage(1); }} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px]">
+        <select aria-label="Filter by reminder" value={reminder} onChange={e => { setReminder(e.target.value as any); setPage(1); }} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px] text-primary">
           <option value="All">All Reminders</option>
           <option value="Has">Has Reminder</option>
           <option value="None">No Reminder</option>
         </select>
-        <select aria-label="Sort affirmations" value={sort} onChange={e => setSort(e.target.value as SortKey)} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px]">
+        <select aria-label="Sort affirmations" value={sort} onChange={e => setSort(e.target.value as SortKey)} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px] text-primary">
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>
           <option value="alpha">Alphabetical</option>
           <option value="used">Most Used</option>
         </select>
-        <input type="date" aria-label="Start date" value={startDate} onChange={e => { setStartDate(e.target.value); setPage(1); }} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px]" />
-        <input type="date" aria-label="End date" value={endDate} onChange={e => { setEndDate(e.target.value); setPage(1); }} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px]" />
+        <input type="date" aria-label="Start date" value={startDate} onChange={e => { setStartDate(e.target.value); setPage(1); }} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px] text-primary" />
+        <input type="date" aria-label="End date" value={endDate} onChange={e => { setEndDate(e.target.value); setPage(1); }} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px] text-primary" />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {pageItems.map(a => (
           <div key={a.id} className="glass-card p-6 rounded-3xl border-l-4 border-purple-500/40">
-            <div className="text-xs text-slate-400 dark:text-gray-500 uppercase tracking-widest font-bold mb-2">{a.category}</div>
-            <div className="text-slate-800 dark:text-gray-100 leading-relaxed">{a.text}</div>
-            <div className="mt-4 flex items-center justify-between text-[10px] text-slate-400 dark:text-gray-600">
+            <div className="label text-secondary mb-2">{a.category}</div>
+            <div className="text-primary leading-relaxed">{a.text}</div>
+            <div className="mt-4 flex items-center justify-between text-[10px] text-muted">
               <span>Created {new Date(a.createdAt).toLocaleDateString()}</span>
               <span>Used {a.useCount}</span>
             </div>
@@ -178,7 +178,7 @@ const MyAffirmations: React.FC = () => {
             )}
             {a.versions.length > 1 && (
               <details className="mt-3">
-                <summary className="cursor-pointer text-[12px] text-slate-500 dark:text-gray-500">Version History</summary>
+                <summary className="cursor-pointer text-[12px] text-secondary">Version History</summary>
                 <ul className="mt-2 space-y-2">
                   {a.versions.map((v, i) => (
                     <li key={i} className="text-[12px] text-slate-600 dark:text-gray-400">

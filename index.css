@@ -1,0 +1,61 @@
+:root {
+  --bg: #F8FAFC; /* slate-50 */
+  --text-primary: #0F172A; /* slate-900 */
+  --text-secondary: #334155; /* slate-700 */
+  --text-muted: #475569; /* slate-600 */
+  --accent: #F59E0B; /* amber-500 */
+  --brand: #8B5CF6; /* purple-500 */
+  --border: rgba(15, 23, 42, 0.12);
+}
+.dark {
+  --bg: #0a0a0c;
+  --text-primary: #E5E7EB; /* gray-200 */
+  --text-secondary: #CBD5E1; /* slate-300 */
+  --text-muted: #94A3B8; /* slate-400 */
+  --accent: #F59E0B; /* amber-500 */
+  --brand: #A78BFA; /* purple-400 */
+  --border: rgba(255, 255, 255, 0.08);
+}
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+}
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
+.border-neutral { border-color: var(--border); }
+.accent { color: var(--accent); }
+.brand { color: var(--brand); }
+
+/* Typography scale (both themes) */
+.heading-xl { font-size: 2rem; line-height: 2.5rem; font-weight: 700; }
+.heading-lg { font-size: 1.5rem; line-height: 2rem; font-weight: 700; }
+.heading-md { font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; }
+.heading-sm { font-size: 0.875rem; line-height: 1.25rem; font-weight: 600; }
+.label { font-size: 0.75rem; line-height: 1rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; }
+.body-md { font-size: 0.875rem; line-height: 1.5rem; font-weight: 400; }
+.body-sm { font-size: 0.75rem; line-height: 1.25rem; font-weight: 400; }
+
+/* Minimal confetti-like cleanse animation without emoji */
+.cleanse-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cleanse-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(167,139,250,0.12), transparent 60%),
+              radial-gradient(ellipse at 30% 30%, rgba(59,130,246,0.10), transparent 50%),
+              radial-gradient(ellipse at 70% 70%, rgba(245,158,11,0.10), transparent 50%);
+  animation: cleansePulse 1200ms ease-in-out 2;
+}
+@keyframes cleansePulse {
+  0% { opacity: 0; }
+  30% { opacity: 1; }
+  100% { opacity: 0; }
+}

@@ -105,23 +105,23 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
       <div className="flex justify-between items-end px-2">
         <div>
           <h2 className="text-4xl font-serif text-slate-800 dark:text-amber-100 font-bold">Today's Focus</h2>
-          <p className="text-slate-500 dark:text-gray-400 text-sm mt-1">Aligning your frequency for peak potential.</p>
+          <p className="text-secondary body-sm mt-1">Aligning your frequency for peak potential.</p>
         </div>
         <div className="text-right">
           <div className="text-5xl font-bold text-amber-500 dark:text-amber-400 drop-shadow-sm">{state.streak}</div>
-          <div className="text-[10px] uppercase tracking-[0.2em] text-slate-400 dark:text-gray-500 font-bold mt-1">Day Streak</div>
+          <div className="label text-secondary mt-1">Day Streak</div>
         </div>
       </div>
 
       <div className="space-y-4">
         <div className="glass-card p-8 rounded-[2rem] flex flex-col sm:flex-row items-center justify-between gap-6 border-blue-500/10 dark:border-blue-500/20 shadow-xl dark:shadow-none">
           <div className="text-center sm:text-left">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400">Vibration Index</h3>
-            <p className="text-[10px] text-slate-400 dark:text-gray-500 mt-1">Holistic consistency score</p>
+            <h3 className="label brand">Vibration Index</h3>
+            <p className="body-sm text-muted mt-1">Holistic consistency score</p>
           </div>
           <div className="flex items-center gap-6">
-            <div className="text-4xl font-bold text-slate-800 dark:text-white">{calculateVibrationScore()}%</div>
-            <div className="w-24 h-2 bg-slate-200 dark:bg-gray-800 rounded-full overflow-hidden">
+            <div className="text-4xl font-bold text-primary">{calculateVibrationScore()}%</div>
+            <div className="w-24 h-2 bg-white/60 dark:bg-white/10 rounded-full overflow-hidden">
               <div className="h-full bg-blue-500 transition-all duration-1000 shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{ width: `${calculateVibrationScore()}%` }}></div>
             </div>
           </div>
@@ -130,8 +130,8 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
         {/* Mood History Chart */}
         <div className="glass-card p-6 rounded-[2rem] border-slate-200 dark:border-white/5">
           <div className="flex justify-between items-center mb-4 px-2">
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 dark:text-gray-500">30-Day Frequency Trend</h3>
-            <span className="text-[10px] text-blue-500 font-bold">Emotional Arc</span>
+            <h3 className="label text-secondary">30-Day Frequency Trend</h3>
+            <span className="label brand">Emotional Arc</span>
           </div>
           <div className="relative h-24 w-full">
             <svg viewBox="0 0 500 100" preserveAspectRatio="none" className="w-full h-full overflow-visible">
@@ -148,7 +148,7 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
               ))}
             </svg>
           </div>
-          <div className="flex justify-between mt-2 px-1 text-[8px] text-slate-400 dark:text-gray-600 font-mono">
+          <div className="flex justify-between mt-2 px-1 text-[8px] text-muted font-mono">
             <span>30D AGO</span>
             <span>PRESENT</span>
           </div>
@@ -160,13 +160,13 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
         <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-purple-500 via-amber-400 to-purple-500 opacity-80"></div>
         <div className="flex justify-between items-center mb-8">
           <div className="space-y-1">
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-purple-600 dark:text-purple-400">Daily Invocations</h3>
-            <p className="text-[9px] text-slate-400 dark:text-gray-500 italic">Core Frequency Alignment</p>
+            <h3 className="label brand">Daily Invocations</h3>
+            <p className="text-[10px] text-muted italic">Core Frequency Alignment</p>
           </div>
           <button 
             onClick={handleRefreshAffirmations} 
             disabled={loading}
-            className="text-[10px] uppercase tracking-widest text-slate-400 dark:text-gray-500 hover:text-purple-500 dark:hover:text-white transition-colors font-bold"
+            className="label text-secondary hover:text-purple-500 dark:hover:text-white transition-colors"
           >
             {loading ? 'Aligning...' : 'Refresh'}
           </button>
@@ -184,7 +184,7 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
           {state.dailyAffirmation ? (
             <>
               <div className="w-full transition-all duration-500 transform animate-in fade-in zoom-in-95" key={affirmationIndex}>
-                <p className="text-2xl font-serif text-slate-800 dark:text-gray-100 italic leading-relaxed px-4">
+                <p className="text-2xl font-serif text-primary italic leading-relaxed px-4">
                   "{state.dailyAffirmation[affirmationIndex]}"
                 </p>
                 <div className="mt-8 flex justify-center gap-2">
@@ -192,7 +192,7 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
                     <button 
                       key={i} 
                       onClick={() => setAffirmationIndex(i)}
-                      className={`h-1 rounded-full transition-all duration-300 ${i === affirmationIndex ? 'w-6 bg-purple-500' : 'w-2 bg-slate-200 dark:bg-gray-800'}`}
+                      className={`h-1 rounded-full transition-all duration-300 ${i === affirmationIndex ? 'w-6 bg-purple-500' : 'w-2 bg-white/60 dark:bg-white/10'}`}
                     />
                   ))}
                 </div>
@@ -201,31 +201,31 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
               <div className="absolute inset-y-0 left-0 flex items-center">
                 <button 
                   onClick={() => setAffirmationIndex(prev => (prev > 0 ? prev - 1 : state.dailyAffirmation!.length - 1))}
-                  className="p-2 text-slate-300 hover:text-purple-500 transition-colors"
+                  className="p-2 text-secondary hover:text-purple-500 transition-colors"
                 >
-                  <span className="text-xl">←</span>
+                  <span className="text-[10px] label">Prev</span>
                 </button>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center">
                 <button 
                   onClick={() => setAffirmationIndex(prev => (prev < state.dailyAffirmation!.length - 1 ? prev + 1 : 0))}
-                  className="p-2 text-slate-300 hover:text-purple-500 transition-colors"
+                  className="p-2 text-secondary hover:text-purple-500 transition-colors"
                 >
-                  <span className="text-xl">→</span>
+                  <span className="text-[10px] label">Next</span>
                 </button>
               </div>
             </>
           ) : (
             <div className="animate-pulse flex flex-col items-center space-y-4">
-               <div className="h-6 bg-slate-200 dark:bg-gray-800 rounded-full w-64"></div>
-               <div className="h-4 bg-slate-100 dark:bg-gray-900 rounded-full w-48"></div>
+               <div className="h-6 bg-white/60 dark:bg-white/10 rounded-full w-64"></div>
+               <div className="h-4 bg-white/40 dark:bg-white/5 rounded-full w-48"></div>
             </div>
           )}
         </div>
       </div>
 
       <div className="glass-card p-8 rounded-[2rem] shadow-lg border-white/5 dark:border-white/5">
-        <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400 mb-8 text-center">Frequency Input</h3>
+        <h3 className="label accent mb-8 text-center">Frequency Input</h3>
         <div className="flex justify-around items-center gap-2">
           {(['Radiant', 'Balanced', 'Quiet', 'Challenged', 'Heavy'] as Mood[]).map((m) => (
             <button
@@ -233,14 +233,10 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
               onClick={() => handleMoodSelect(m)}
               className={`flex flex-col items-center space-y-3 transition-all transform hover:scale-110 ${currentMood === m ? 'scale-115' : 'opacity-40 grayscale hover:grayscale-0 hover:opacity-100'}`}
             >
-              <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-[1.5rem] flex items-center justify-center text-2xl transition-all shadow-xl ${currentMood === m ? 'ring-2 ring-amber-500 bg-amber-500/10 dark:bg-amber-400/10' : 'bg-slate-100 dark:bg-white/5'}`}>
-                {m === 'Radiant' && '✨'}
-                {m === 'Balanced' && '🧘'}
-                {m === 'Quiet' && '☁️'}
-                {m === 'Challenged' && '🌪️'}
-                {m === 'Heavy' && '🌑'}
+              <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-[1.5rem] flex items-center justify-center text-2xl transition-all shadow-xl ${currentMood === m ? 'ring-2 ring-amber-500 bg-amber-500/10 dark:bg-amber-400/10' : 'bg-white/60 dark:bg-white/10'}`}>
+                <span className="label text-secondary">{m[0]}</span>
               </div>
-              <span className="text-[9px] uppercase tracking-widest font-bold text-slate-500 dark:text-gray-400">{m}</span>
+              <span className="label text-secondary">{m}</span>
             </button>
           ))}
         </div>
