@@ -19,6 +19,28 @@
       },
     }
   </script>
+  <script>
+    (function() {
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const saved = localStorage.getItem('theme');
+      const initial = saved ? saved : (prefersDark ? 'dark' : 'light');
+      function apply(mode) {
+        document.body.classList.remove('dark','light');
+        document.body.classList.add(mode);
+      }
+      apply(initial);
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        const currentSaved = localStorage.getItem('theme');
+        if (!currentSaved) apply(e.matches ? 'dark' : 'light');
+      });
+      window.toggleTheme = function() {
+        const isDark = document.body.classList.contains('dark');
+        const next = isDark ? 'light' : 'dark';
+        localStorage.setItem('theme', next);
+        apply(next);
+      }
+    })();
+  </script>
   
   <style>
     body {
@@ -56,7 +78,7 @@
 </script>
 <link rel="stylesheet" href="/index.css">
 </head>
-<body class="bg-slate-50 text-slate-900 dark:bg-[#0a0a0c] dark:text-gray-100 min-h-screen">
+<body class="bg-slate-50 text-slate-900 dark:bg-[#0a0a0c] dark:text-gray-100 min-h-screen transition-theme">
   <div id="root"></div>
 <script type="module" src="/index.tsx"></script>
 </body>

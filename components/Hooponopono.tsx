@@ -311,12 +311,12 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
             <button
               aria-label="Count tap"
               onClick={handleTapCount}
-              className="px-4 py-2 rounded-xl bg-teal-600 text-white text-[12px] font-bold hover:bg-teal-500 active:scale-95"
+              className="px-4 py-2 rounded-xl bg-teal-600 auto-text text-[12px] font-bold hover:bg-teal-500 active:scale-95 transition-theme"
             >
               Tap to Count
             </button>
             <div
-              className="text-center font-mono text-lg px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 dark:bg-gray-900 dark:border-white/10 dark:text-gray-200"
+              className="text-center font-mono text-lg px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 dark:bg-gray-900 dark:border-white/10 dark:text-gray-200 transition-theme"
               role="status"
               aria-live="polite"
               aria-label={`Chant count ${String(count).padStart(3, '0')} of ${target}`}
@@ -326,7 +326,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
             <button
               aria-label="Reset chant"
               onClick={handleResetChant}
-              className="px-4 py-2 rounded-xl bg-gray-800 text-gray-300 text-[12px] font-bold hover:bg-gray-700 active:scale-95"
+              className="px-4 py-2 rounded-xl bg-gray-800 auto-text text-[12px] font-bold hover:bg-gray-700 active:scale-95 transition-theme"
             >
               Reset
             </button>
