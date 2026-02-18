@@ -1,0 +1,7 @@
+{
+  "name": "MindShift Manifest",
+  "description": "A premium daily mental reprogramming app combining AI-powered affirmations, 369/555 manifestation tracking, and emotional release tools.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
