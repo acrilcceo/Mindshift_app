@@ -162,6 +162,36 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
     return 'text-gray-400';
   };
 
+  const defaultMantra = "I am sorry.\n\nPlease forgive me.\n\nThank you.\n\nI love you.";
+  const [mantra, setMantra] = useState<string>(defaultMantra);
+  const [count, setCount] = useState<number>(0);
+  const [target, setTarget] = useState<number>(108);
+  const [showConfetti, setShowConfetti] = useState<boolean>(false);
+  const [askFeeling, setAskFeeling] = useState<boolean>(false);
+  const [feelingResponse, setFeelingResponse] = useState<string | null>(null);
+
+  const handleTapCount = () => {
+    setCount(c => c + 1);
+  };
+
+  const handleResetChant = () => {
+    setCount(0);
+    setMantra(defaultMantra);
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 2000);
+    setAskFeeling(true);
+    setFeelingResponse(null);
+  };
+
+  const handleFeeling = (choice: 'better' | 'neutral') => {
+    setAskFeeling(false);
+    if (choice === 'better') {
+      setFeelingResponse("Beautiful. Keep this warmth with you. You are supported.");
+    } else {
+      setFeelingResponse("You are not alone. Breathe gently and be kind to yourself.");
+    }
+  };
+
   return (
     <div className="flex flex-col items-center space-y-8 py-10 animate-in fade-in duration-1000">
       <div className="text-center space-y-2">
@@ -266,11 +296,8 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
 
       {/* Ritual Text */}
       <div className="glass-card p-8 rounded-[2rem] max-w-sm w-full text-center space-y-8 border-teal-500/10 shadow-2xl">
-        <div className="space-y-4 text-sm font-medium tracking-wide text-gray-200">
-          <p className="hover:text-teal-400 transition-colors cursor-default">I am sorry.</p>
-          <p className="hover:text-teal-400 transition-colors cursor-default">Please forgive me.</p>
-          <p className="hover:text-teal-400 transition-colors cursor-default">Thank you.</p>
-          <p className="hover:text-teal-400 transition-colors cursor-default">I love you.</p>
+        <div className="space-y-4 text-sm font-medium tracking-wide text-gray-200 whitespace-pre-line">
+          {mantra}
         </div>
 
         <div className="h-px bg-white/5 w-full"></div>
@@ -278,6 +305,102 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
         <div className="text-xs text-gray-400 italic leading-relaxed px-4 min-h-[40px] flex items-center justify-center">
           {loading ? 'Aligning frequencies...' : prompt}
         </div>
+
+        <div className="mt-6 grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-3 gap-2 items-center">
+            <button
+              aria-label="Count tap"
+              onClick={handleTapCount}
+              className="px-4 py-2 rounded-xl bg-teal-600 text-white text-[12px] font-bold hover:bg-teal-500 active:scale-95"
+            >
+              Tap to Count
+            </button>
+            <div className="text-center font-mono text-white/80 text-lg">
+              {String(count).padStart(3, '0')} / {target}
+            </div>
+            <button
+              aria-label="Reset chant"
+              onClick={handleResetChant}
+              className="px-4 py-2 rounded-xl bg-gray-800 text-gray-300 text-[12px] font-bold hover:bg-gray-700 active:scale-95"
+            >
+              Reset
+            </button>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              aria-label="Set target 50"
+              className={`px-3 py-2 rounded-xl text-[12px] ${target === 50 ? 'bg-amber-500 text-black' : 'bg-white/5 text-gray-300'}`}
+              onClick={() => setTarget(50)}
+            >
+              50
+            </button>
+            <button
+              aria-label="Set target 108"
+              className={`px-3 py-2 rounded-xl text-[12px] ${target === 108 ? 'bg-amber-500 text-black' : 'bg-white/5 text-gray-300'}`}
+              onClick={() => setTarget(108)}
+            >
+              108
+            </button>
+            <input
+              aria-label="Custom target"
+              type="number"
+              min={1}
+              value={target}
+              onChange={e => setTarget(Math.max(1, parseInt(e.target.value || '1')))}
+              className="px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-[12px] text-center"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Custom Mantra</label>
+            <textarea
+              aria-label="Mantra text"
+              value={mantra}
+              onChange={e => setMantra(e.target.value)}
+              placeholder={defaultMantra}
+              className="w-full bg-black/40 border border-white/10 rounded-2xl p-3 text-[12px] text-gray-200 min-h-[120px]"
+            />
+            <div className="text-[10px] text-gray-500">Paste any text (e.g., Maha Mrityunjaya Mantra) to chant.</div>
+          </div>
+        </div>
+
+        {showConfetti && (
+          <div className="pointer-events-none fixed inset-0 flex items-center justify-center">
+            <div className="relative w-full h-full">
+              <div className="absolute inset-0 animate-pulse bg-gradient-to-b from-purple-500/10 via-teal-500/10 to-amber-500/10"></div>
+              <div className="absolute left-1/4 top-1/3 text-2xl animate-bounce">✨</div>
+              <div className="absolute left-2/3 top-1/4 text-2xl animate-bounce delay-150">🎉</div>
+              <div className="absolute left-1/2 top-2/3 text-2xl animate-bounce delay-300">🌟</div>
+            </div>
+          </div>
+        )}
+
+        {askFeeling && (
+          <div className="mt-6 space-y-3">
+            <div className="text-[12px] text-gray-200">How are you feeling now?</div>
+            <div className="flex gap-2 justify-center">
+              <button
+                onClick={() => handleFeeling('better')}
+                className="px-4 py-2 rounded-xl bg-amber-500 text-black text-[12px] font-bold"
+                aria-label="I am feeling better"
+              >
+                I am feeling better
+              </button>
+              <button
+                onClick={() => handleFeeling('neutral')}
+                className="px-4 py-2 rounded-xl bg-white/5 text-gray-300 text-[12px] font-bold"
+                aria-label="Still heavy"
+              >
+                Still heavy
+              </button>
+            </div>
+          </div>
+        )}
+
+        {feelingResponse && (
+          <div className="mt-4 text-[12px] text-teal-200">{feelingResponse}</div>
+        )}
       </div>
 
       {/* Session History Section */}
