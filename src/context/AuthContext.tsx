@@ -21,7 +21,7 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => {},
   logout: async () => {},
   loginWithUserId: async () => {},
-  register: async () => {}
+  register: async () => '' as any
 });
 
 export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
