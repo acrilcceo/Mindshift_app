@@ -1,16 +1,22 @@
-import { doc, getDoc, runTransaction, serverTimestamp, setDoc } from 'firebase/firestore';
+import { doc, getDoc, runTransaction, serverTimestamp, setDoc, addDoc, collection } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
 
 function sanitize(s: string) {
-  const base = (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z]/g, '');
+  const base = (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
   return base;
 }
 
-function baseFrom(firstName?: string, lastName?: string) {
+function baseCombos(firstName?: string, lastName?: string) {
   const f = sanitize(firstName || '');
   const l = sanitize(lastName || '');
-  const base = (f + l) || sanitize('user');
-  return base.slice(0, 16);
+  const combos = new Set<string>();
+  if (f) combos.add(f);
+  if (l) combos.add(l);
+  if (f && l) combos.add(f + l);
+  if (f && l) combos.add(f[0] + l);
+  if (f && l) combos.add(f + l[0]);
+  if (!combos.size) combos.add('user');
+  return Array.from(combos).map(c => c.slice(0, 16));
 }
 
 function randomDigits(len = 3) {
@@ -28,22 +34,32 @@ export async function checkUserIdAvailability(userId: string): Promise<boolean> 
 
 export async function generateUniqueUserId(firstName?: string, lastName?: string): Promise<string> {
   if (!db) throw new Error('Firebase not configured');
-  const base = baseFrom(firstName, lastName);
-  for (let i = 0; i < 20; i++) {
-    const suffixLen = i < 10 ? 3 : 4;
-    const candidate = (base + randomDigits(suffixLen)).slice(0, 20);
-    const ok = await checkUserIdAvailability(candidate);
-    if (ok) return candidate;
+  const deadline = Date.now() + 2500;
+  const bases = baseCombos(firstName, lastName);
+  for (const base of bases) {
+    const seed = base.length >= 6 ? base : (base + randomDigits(6 - base.length));
+    const initial = seed.slice(0, 20);
+    try {
+      const ok = await checkUserIdAvailability(initial);
+      await logAttempt({ firstName, lastName, candidate: initial, available: ok });
+      if (ok) return initial;
+    } catch (e) {
+      await logAttempt({ firstName, lastName, candidate: initial, available: false, error: String((e as any)?.message || e) });
+    }
+    for (let n = 1; n <= 9999 && Date.now() < deadline; n++) {
+      const candidate = (seed + String(n)).slice(0, 20);
+      try {
+        const ok = await checkUserIdAvailability(candidate);
+        await logAttempt({ firstName, lastName, candidate, available: ok });
+        if (ok) return candidate;
+      } catch (e) {
+        await logAttempt({ firstName, lastName, candidate, available: false, error: String((e as any)?.message || e) });
+      }
+    }
   }
-  const fallback = (base + Date.now().toString().slice(-5)).slice(0, 20);
-  const ok = await checkUserIdAvailability(fallback);
-  if (ok) return fallback;
-  for (let i = 0; i < 100; i++) {
-    const candidate = (base + randomDigits(4)).slice(0, 20);
-    const ok2 = await checkUserIdAvailability(candidate);
-    if (ok2) return candidate;
-  }
-  throw new Error('Unable to generate a unique user ID');
+  const fallbackBase = bases[0] || 'user';
+  const fallback = (fallbackBase + Date.now().toString().slice(-6)).slice(0, 20);
+  return fallback;
 }
 
 export async function reserveUserId(userId: string, uid: string) {
@@ -110,4 +126,18 @@ export async function updateUserId(uid: string, nextId: string): Promise<void> {
       tx.set(prevRef, { active: false, releasedAt: serverTimestamp(), releasedBy: uid }, { merge: true });
     }
   });
+}
+
+async function logAttempt(payload: { firstName?: string; lastName?: string; candidate: string; available: boolean; error?: string }) {
+  try {
+    if (!db) return;
+    await addDoc(collection(db, 'usernameAttempts'), {
+      firstName: payload.firstName || '',
+      lastName: payload.lastName || '',
+      candidate: payload.candidate,
+      available: payload.available,
+      error: payload.error || '',
+      createdAt: serverTimestamp()
+    });
+  } catch {}
 }

@@ -3,7 +3,7 @@ import { auth, db, googleProvider, configured } from '../firebase/firebaseConfig
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { createJournalEntry } from '../services/journalService';
-import { assignGeneratedUserId } from '../services/userIdService';
+import { assignGeneratedUserId, generateUniqueUserId, reserveUserId } from '../services/userIdService';
 import { googleLogin } from '../services/authService';
 
 type AuthContextType = {
@@ -12,7 +12,7 @@ type AuthContextType = {
   login: () => Promise<void>;
   logout: () => Promise<void>;
   loginWithUserId?: (userId: string, password: string) => Promise<void>;
-  register?: (userId: string, username: string, password: string) => Promise<void>;
+  register?: (firstName: string, lastName: string, password: string) => Promise<string>;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -92,20 +92,23 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     await signInWithEmailAndPassword(auth, email, password);
   };
 
-  const register = async (userId: string, username: string, password: string) => {
+  const register = async (firstName: string, lastName: string, password: string) => {
     if (!configured || !auth || !db) throw new Error('Firebase not configured');
-    const email = `${userId}@mindshift.local`;
+    const generated = await generateUniqueUserId(firstName, lastName);
+    const email = `${generated}@mindshift.local`;
     const { createUserWithEmailAndPassword } = await import('firebase/auth');
     const cred = await createUserWithEmailAndPassword(auth, email, password);
     const ref = doc(db, 'users', cred.user.uid);
     await setDoc(ref, {
-      name: username,
+      name: `${firstName} ${lastName}`.trim(),
+      userId: generated,
       email,
       createdAt: serverTimestamp()
     }, { merge: true });
     try {
-      await assignGeneratedUserId(cred.user.uid, username);
+      await reserveUserId(generated, cred.user.uid);
     } catch {}
+    return generated;
   };
 
   const value = useMemo(() => ({ currentUser, loading, login, logout, loginWithUserId, register }), [currentUser, loading]);

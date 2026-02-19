@@ -3,7 +3,6 @@ import React from 'react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import '@testing-library/jest-dom';
 import Login from '../src/pages/Login';
 
 vi.mock('../src/context/AuthContext', async () => {

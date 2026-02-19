@@ -9,11 +9,12 @@ const Login: React.FC = () => {
 
   const [mode, setMode] = useState<'login' | 'register'>('register');
   const [userId, setUserId] = useState('');
-  const [username, setUsername] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     if (currentUser && !loading) {
@@ -23,18 +24,20 @@ const Login: React.FC = () => {
   }, [currentUser, loading]);
 
   const idValid = useMemo(() => /^[a-zA-Z0-9]{6,20}$/.test(userId), [userId]);
-  const usernameValid = useMemo(() => /^[a-zA-Z0-9 ]{3,25}$/.test(username), [username]);
+  const firstValid = useMemo(() => /^[A-Za-z][A-Za-z' -]{1,49}$/.test(firstName.trim()), [firstName]);
+  const lastValid = useMemo(() => /^[A-Za-z][A-Za-z' -]{1,49}$/.test(lastName.trim()), [lastName]);
   const passwordValid = useMemo(() => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/.test(password), [password]);
-  const confirmValid = useMemo(() => confirm === password && password.length > 0, [confirm, password]);
-  const canCreate = idValid && usernameValid && passwordValid && confirmValid;
+  const canCreate = firstValid && lastValid && passwordValid;
   const canLogin = idValid && passwordValid;
 
   const handleCreateAccount = async () => {
     setError(null);
+    setSuccess(null);
     if (!canCreate || !register) return;
     setProcessing(true);
     try {
-      await register(userId, username, password);
+      const generated = await register(firstName.trim(), lastName.trim(), password);
+      setSuccess(`Account created. Your username: ${generated}`);
     } catch (e: any) {
       setError(e?.message || 'Registration failed');
     } finally {
@@ -86,29 +89,44 @@ const Login: React.FC = () => {
         </div>
 
         <div className="space-y-4">
-          <div>
-            <label className="label text-secondary">User ID</label>
-            <input
-              value={userId}
-              onChange={e => setUserId(e.target.value)}
-              placeholder="6–20 alphanumeric"
-              className="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-[12px] text-primary focus:outline-none focus:ring-2 focus:ring-amber-500"
-              aria-invalid={!idValid}
-            />
-            {!idValid && userId.length > 0 && <div className="text-[11px] text-red-600 dark:text-red-400 mt-1">User ID must be 6–20 alphanumeric characters.</div>}
-          </div>
+          {mode === 'login' && (
+            <div>
+              <label className="label text-secondary">User ID</label>
+              <input
+                value={userId}
+                onChange={e => setUserId(e.target.value)}
+                placeholder="6–20 alphanumeric"
+                className="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-[12px] text-primary focus:outline-none focus:ring-2 focus:ring-amber-500"
+                aria-invalid={!idValid}
+              />
+              {!idValid && userId.length > 0 && <div className="text-[11px] text-red-600 dark:text-red-400 mt-1">User ID must be 6–20 alphanumeric characters.</div>}
+            </div>
+          )}
 
           {mode === 'register' && (
-            <div>
-              <label className="label text-secondary">Username</label>
-              <input
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-                placeholder="3–25 characters; no special symbols"
-                className="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-[12px] text-primary focus:outline-none focus:ring-2 focus:ring-amber-500"
-                aria-invalid={!usernameValid}
-              />
-              {!usernameValid && username.length > 0 && <div className="text-[11px] text-red-600 dark:text-red-400 mt-1">Username must be 3–25 letters/numbers/spaces.</div>}
+            <div className="space-y-4">
+              <div>
+                <label className="label text-secondary">First Name</label>
+                <input
+                  value={firstName}
+                  onChange={e => setFirstName(e.target.value)}
+                  placeholder="Your given name"
+                  className="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-[12px] text-primary focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  aria-invalid={!firstValid}
+                />
+                {!firstValid && firstName.length > 0 && <div className="text-[11px] text-red-600 dark:text-red-400 mt-1">Enter a valid first name.</div>}
+              </div>
+              <div>
+                <label className="label text-secondary">Second/Last Name</label>
+                <input
+                  value={lastName}
+                  onChange={e => setLastName(e.target.value)}
+                  placeholder="Your family name"
+                  className="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-[12px] text-primary focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  aria-invalid={!lastValid}
+                />
+                {!lastValid && lastName.length > 0 && <div className="text-[11px] text-red-600 dark:text-red-400 mt-1">Enter a valid last name.</div>}
+              </div>
             </div>
           )}
 
@@ -125,23 +143,11 @@ const Login: React.FC = () => {
             {!passwordValid && password.length > 0 && <div className="text-[11px] text-red-600 dark:text-red-400 mt-1">Must include uppercase, lowercase, number, and symbol.</div>}
           </div>
 
-          {mode === 'register' && (
-            <div>
-              <label className="label text-secondary">Confirm Password</label>
-              <input
-                type="password"
-                value={confirm}
-                onChange={e => setConfirm(e.target.value)}
-                placeholder="Re-enter password"
-                className="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-[12px] text-primary focus:outline-none focus:ring-2 focus:ring-amber-500"
-                aria-invalid={!confirmValid}
-              />
-              {!confirmValid && confirm.length > 0 && <div className="text-[11px] text-red-600 dark:text-red-400 mt-1">Passwords must match.</div>}
-            </div>
-          )}
+          
         </div>
 
         {error && <div role="alert" className="text-[12px] text-red-600 dark:text-red-400">{error}</div>}
+        {success && <div role="status" className="text-[12px] text-emerald-700 dark:text-emerald-400">{success}</div>}
 
         {mode === 'register' ? (
           <button
