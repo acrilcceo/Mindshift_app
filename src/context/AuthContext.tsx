@@ -1,144 +1,75 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { auth, db, googleProvider } from '../firebase/firebaseConfig';
-import { onAuthStateChanged, signOut, User } from 'firebase/auth';
-import { doc, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
-import { createJournalEntry } from '../services/journalService';
-import { assignGeneratedUserId, generateUniqueUserId, reserveUserId } from '../services/userIdService';
-import { googleLogin } from '../services/authService';
-import { mapFirebaseAuthError } from '../utils/firebaseErrors';
+
+type SimpleUser = {
+  name: string;
+};
 
 type AuthContextType = {
-  currentUser: User | null;
+  currentUser: SimpleUser | null;
   loading: boolean;
-  login: () => Promise<void>;
-  logout: () => Promise<void>;
-  loginWithUserId?: (userId: string, password: string) => Promise<void>;
-  register?: (firstName: string, lastName: string, password: string) => Promise<string>;
+  loginWithName: (name: string) => void;
+  logout: () => void;
 };
+
+const STORAGE_KEY = 'mindshift_user_name';
 
 const AuthContext = createContext<AuthContextType>({
   currentUser: null,
   loading: true,
-  login: async () => {},
-  logout: async () => {},
-  loginWithUserId: async () => {},
-  register: async () => '' as any
+  loginWithName: () => {},
+  logout: () => {}
 });
 
 export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<SimpleUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!auth || !db) {
-      setCurrentUser(null);
-      setLoading(false);
-      return;
-    }
-    const unsub = onAuthStateChanged(auth, async (user) => {
-      setCurrentUser(user || null);
-      setLoading(false);
-      if (user) {
-        const ref = doc(db, 'users', user.uid);
-        const snap = await getDoc(ref);
-        if (!snap.exists()) {
-          await setDoc(ref, {
-            name: user.displayName || '',
-            email: user.email || '',
-            createdAt: serverTimestamp(),
-            welcomeCreated: true
-          }, { merge: true });
-          try {
-            await assignGeneratedUserId(user.uid, user.displayName || user.email || '');
-          } catch {}
-          await createJournalEntry('Welcome to MindShift. Begin your journey with your first affirmation.', 'affirmation');
-        } else {
-          const data = snap.data() as any;
-          await setDoc(ref, {
-            name: user.displayName || data?.name || '',
-            email: user.email || data?.email || '',
-            createdAt: data?.createdAt || serverTimestamp()
-          }, { merge: true });
-          if (!data?.userId) {
-            try {
-              await assignGeneratedUserId(user.uid, user.displayName || user.email || '');
-            } catch {}
-          }
-          if (!data?.welcomeCreated) {
-            await createJournalEntry('Welcome to MindShift. Begin your journey with your first affirmation.', 'affirmation');
-            await setDoc(ref, { welcomeCreated: true }, { merge: true });
-          }
-        }
+    try {
+      const stored = typeof window !== 'undefined' ? window.localStorage.getItem(STORAGE_KEY) : null;
+      if (stored && stored.trim()) {
+        setCurrentUser({ name: stored });
+      } else {
+        setCurrentUser(null);
       }
-    });
-    return () => unsub();
+    } catch {
+      setCurrentUser(null);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const login = async () => {
-    if (!auth || !googleProvider) {
-      console.error('[auth] Google login attempted without Firebase configuration');
-      throw new Error('Configuration error. Please contact admin.');
-    }
+  const loginWithName = (name: string) => {
+    const trimmed = name.trim();
+    setCurrentUser(trimmed ? { name: trimmed } : null);
     try {
-      await googleLogin(auth, googleProvider);
-    } catch (e) {
-      console.error('[auth] Google login failed', e);
-      throw new Error(mapFirebaseAuthError(e));
-    }
+      if (trimmed && typeof window !== 'undefined') {
+        window.localStorage.setItem(STORAGE_KEY, trimmed);
+      } else if (typeof window !== 'undefined') {
+        window.localStorage.removeItem(STORAGE_KEY);
+      }
+    } catch {}
   };
 
-  const logout = async () => {
-    if (!auth) return;
+  const logout = () => {
+    setCurrentUser(null);
     try {
-      await signOut(auth);
-    } catch (e) {
-      console.error('[auth] Logout failed', e);
-    }
+      if (typeof window !== 'undefined') {
+        window.localStorage.removeItem(STORAGE_KEY);
+      }
+    } catch {}
   };
 
-  const loginWithUserId = async (userId: string, password: string) => {
-    if (!auth) {
-      console.error('[auth] User ID login attempted without Firebase configuration');
-      throw new Error('Configuration error. Please contact admin.');
-    }
-    const email = `${userId}@mindshift.local`;
-    try {
-      const { signInWithEmailAndPassword } = await import('firebase/auth');
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (e) {
-      console.error('[auth] User ID login failed', e);
-      throw new Error(mapFirebaseAuthError(e));
-    }
-  };
+  const value = useMemo(
+    () => ({
+      currentUser,
+      loading,
+      loginWithName,
+      logout
+    }),
+    [currentUser, loading]
+  );
 
-  const register = async (firstName: string, lastName: string, password: string) => {
-    if (!auth || !db) {
-      console.error('[auth] Registration attempted without Firebase configuration');
-      throw new Error('Configuration error. Please contact admin.');
-    }
-    try {
-      const generated = await generateUniqueUserId(firstName, lastName);
-      const email = `${generated}@mindshift.local`;
-      const { createUserWithEmailAndPassword } = await import('firebase/auth');
-      const cred = await createUserWithEmailAndPassword(auth, email, password);
-      const ref = doc(db, 'users', cred.user.uid);
-      await setDoc(ref, {
-        name: `${firstName} ${lastName}`.trim(),
-        userId: generated,
-        email,
-        createdAt: serverTimestamp()
-      }, { merge: true });
-      try {
-        await reserveUserId(generated, cred.user.uid);
-      } catch {}
-      return generated;
-    } catch (e) {
-      console.error('[auth] Registration failed', e);
-      throw new Error(mapFirebaseAuthError(e));
-    }
-  };
-
-  const value = useMemo(() => ({ currentUser, loading, login, logout, loginWithUserId, register }), [currentUser, loading]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 

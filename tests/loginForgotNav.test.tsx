@@ -6,7 +6,7 @@ import Login from '../src/pages/Login';
 
 vi.mock('../src/context/AuthContext', async () => {
   return {
-    useAuth: () => ({ currentUser: null, loading: false, login: async () => {} })
+    useAuth: () => ({ currentUser: null, loading: false, loginWithName: () => {} })
   };
 });
 
