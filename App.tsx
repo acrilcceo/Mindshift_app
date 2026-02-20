@@ -4,8 +4,9 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './src/context/AuthContext';
 import ProtectedRoute from './src/routes/ProtectedRoute';
 import Login from './src/pages/Login';
-import Dashboard from './src/pages/Dashboard';
 import ResetPassword from './src/pages/ResetPassword';
+
+const Dashboard = React.lazy(() => import('./src/pages/Dashboard'));
 
 const App: React.FC = () => {
   return (
@@ -15,7 +16,20 @@ const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/reset" element={<ResetPassword />} />
           <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route
+              path="/dashboard"
+              element={
+                <React.Suspense
+                  fallback={
+                    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#0a0a0c]">
+                      <div className="text-secondary text-sm">Loading…</div>
+                    </div>
+                  }
+                >
+                  <Dashboard />
+                </React.Suspense>
+              }
+            />
           </Route>
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>

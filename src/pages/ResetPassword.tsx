@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from 'react';
-import { auth, configured } from '../firebase/firebaseConfig';
+import { auth } from '../firebase/firebaseConfig';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { Link } from 'react-router-dom';
+import { mapFirebaseAuthError } from '../utils/firebaseErrors';
 
 const ResetPassword: React.FC = () => {
   const [userId, setUserId] = useState('');
@@ -12,13 +13,13 @@ const ResetPassword: React.FC = () => {
 
   const idValid = useMemo(() => /^[a-zA-Z0-9]{6,20}$/.test(userId), [userId]);
   const emailValid = useMemo(() => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email), [email]);
-  const canSubmit = (idValid || emailValid) && configured && !processing;
+  const canSubmit = (idValid || emailValid) && !!auth && !processing;
 
   const submit = async () => {
     setMessage(null);
     setError(null);
-    if (!configured || !auth) {
-      setError('Firebase is not configured.');
+    if (!auth) {
+      setError('Configuration error. Please contact admin.');
       return;
     }
     setProcessing(true);
@@ -27,7 +28,7 @@ const ResetPassword: React.FC = () => {
       await sendPasswordResetEmail(auth, targetEmail);
       setMessage('Password reset email sent. Please check your inbox.');
     } catch (e: any) {
-      setError(e?.message || 'Failed to send password reset email.');
+      setError(mapFirebaseAuthError(e));
     } finally {
       setProcessing(false);
     }

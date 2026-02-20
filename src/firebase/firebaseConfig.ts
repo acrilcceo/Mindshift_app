@@ -1,6 +1,9 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, setPersistence, browserLocalPersistence, GoogleAuthProvider, type Auth } from 'firebase/auth';
 import { getFirestore, type Firestore } from 'firebase/firestore';
+import { validateFirebaseEnv } from '../utils/envCheck';
+
+const envStatus = validateFirebaseEnv();
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY ?? '',
@@ -11,10 +14,7 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID ?? ''
 };
 
-export const configured =
-  !!firebaseConfig.apiKey &&
-  !!firebaseConfig.projectId &&
-  !!firebaseConfig.appId;
+export const configured = envStatus.ok;
 
 let app: ReturnType<typeof initializeApp> | null = null;
 export let auth: Auth | null = null;
@@ -28,4 +28,6 @@ if (configured) {
   googleProvider = new GoogleAuthProvider();
   try { googleProvider.setCustomParameters({ prompt: 'select_account' }); } catch {}
   setPersistence(auth, browserLocalPersistence);
+} else if (import.meta.env.DEV) {
+  console.error('[firebase] Firebase was not initialized because configuration is invalid.');
 }

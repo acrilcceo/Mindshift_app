@@ -26,14 +26,14 @@ function randomDigits(len = 3) {
 }
 
 export async function checkUserIdAvailability(userId: string): Promise<boolean> {
-  if (!db) throw new Error('Firebase not configured');
+  if (!db) throw new Error('Configuration error. Please contact admin.');
   const ref = doc(db, 'userIds', userId);
   const snap = await getDoc(ref);
   return !snap.exists() || snap.data()?.active === false;
 }
 
 export async function generateUniqueUserId(firstName?: string, lastName?: string): Promise<string> {
-  if (!db) throw new Error('Firebase not configured');
+  if (!db) throw new Error('Configuration error. Please contact admin.');
   const deadline = Date.now() + 2500;
   const bases = baseCombos(firstName, lastName);
   for (const base of bases) {
@@ -63,7 +63,7 @@ export async function generateUniqueUserId(firstName?: string, lastName?: string
 }
 
 export async function reserveUserId(userId: string, uid: string) {
-  if (!db) throw new Error('Firebase not configured');
+  if (!db) throw new Error('Configuration error. Please contact admin.');
   const ref = doc(db, 'userIds', userId);
   await runTransaction(db, async (tx) => {
     const snap = await tx.get(ref);
@@ -79,13 +79,13 @@ export async function reserveUserId(userId: string, uid: string) {
 }
 
 export async function releaseUserId(userId: string, uid: string) {
-  if (!db) throw new Error('Firebase not configured');
+  if (!db) throw new Error('Configuration error. Please contact admin.');
   const ref = doc(db, 'userIds', userId);
   await setDoc(ref, { active: false, releasedAt: serverTimestamp(), releasedBy: uid }, { merge: true });
 }
 
 export async function assignGeneratedUserId(uid: string, fullName?: string): Promise<string> {
-  if (!db) throw new Error('Firebase not configured');
+  if (!db) throw new Error('Configuration error. Please contact admin.');
   const [first, ...rest] = (fullName || '').trim().split(/\s+/);
   const last = rest.join(' ');
   const generated = await generateUniqueUserId(first, last);
@@ -107,7 +107,7 @@ export async function assignGeneratedUserId(uid: string, fullName?: string): Pro
 }
 
 export async function updateUserId(uid: string, nextId: string): Promise<void> {
-  if (!db) throw new Error('Firebase not configured');
+  if (!db) throw new Error('Configuration error. Please contact admin.');
   const userRef = doc(db, 'users', uid);
   const nextRef = doc(db, 'userIds', nextId);
   await runTransaction(db, async (tx) => {

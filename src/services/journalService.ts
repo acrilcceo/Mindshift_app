@@ -1,9 +1,11 @@
-import { addDoc, collection, getDocs, orderBy, query, serverTimestamp, where } from 'firebase/firestore';
-import { auth, db, configured } from '../firebase/firebaseConfig';
+import { auth, db } from '../firebase/firebaseConfig';
 import { JournalEntry, JournalType } from '../types';
 
 export async function createJournalEntry(content: string, type: JournalType): Promise<void> {
-  if (!configured || !auth || !db) throw new Error('Firebase not configured');
+  if (!auth || !db) {
+    throw new Error('Configuration error. Please contact admin.');
+  }
+  const { addDoc, collection, serverTimestamp } = await import('firebase/firestore');
   const uid = auth.currentUser?.uid;
   if (!uid) throw new Error('Not authenticated');
   await addDoc(collection(db, 'journals'), {
@@ -15,7 +17,10 @@ export async function createJournalEntry(content: string, type: JournalType): Pr
 }
 
 export async function getUserJournalEntries(userId: string): Promise<JournalEntry[]> {
-  if (!configured || !db) throw new Error('Firebase not configured');
+  if (!db) {
+    throw new Error('Configuration error. Please contact admin.');
+  }
+  const { collection, getDocs, orderBy, query, where } = await import('firebase/firestore');
   const q = query(collection(db, 'journals'), where('userId', '==', userId), orderBy('createdAt', 'desc'));
   const snap = await getDocs(q);
   const list: JournalEntry[] = [];

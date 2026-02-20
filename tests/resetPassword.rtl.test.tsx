@@ -52,7 +52,7 @@ describe('ResetPassword interactions', () => {
     await user.click(submit);
     const alerts = await screen.findAllByRole('alert').catch(() => []);
     const hasError = alerts.some((el) =>
-      el.textContent?.toLowerCase().includes('failed')
+      el.textContent?.toLowerCase().includes('something went wrong')
     );
     expect(hasError).toBe(true);
   });

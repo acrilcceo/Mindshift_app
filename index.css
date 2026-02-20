@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --bg: #F8FAFC; /* slate-50 */
   --text-primary: #0F172A; /* slate-900 */
