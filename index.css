@@ -73,11 +73,15 @@ body {
   100% { opacity: 0.96; }
 }
 
+.dark .soundshift-atmosphere {
+  background: linear-gradient(to bottom, #0F1720, #0C141C);
+}
+
 .soundshift-tile {
   position: relative;
   border-radius: 22px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  background: linear-gradient(to bottom, rgba(94, 108, 158, 0.18), rgba(123, 141, 183, 0.26));
+  background: linear-gradient(to bottom, #1E2A38, #223247);
   overflow: hidden;
 }
 .soundshift-tile::after {
@@ -100,18 +104,36 @@ body {
 
 .soundshift-chip {
   border-radius: 9999px;
-  background-color: #E8F1EF;
   padding: 0.4rem 1rem;
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: none;
-  transition: background-color 180ms ease, color 180ms ease, box-shadow 200ms ease, transform 120ms ease;
+  transition: background-color 180ms ease, color 180ms ease, box-shadow 200ms ease, transform 120ms ease, border-color 180ms ease;
 }
 .soundshift-chip:active {
   transform: scale(0.97);
 }
-.soundshift-chip-active {
+
+.dark .soundshift-chip {
+  background-color: #243445;
+  color: #AFC6D6;
+  border: 1px solid #2F445A;
+}
+.dark .soundshift-chip-active {
+  background-color: #2E5564;
+  color: #E6F4F8;
+  box-shadow: 0 0 8px rgba(159, 211, 199, 0.25);
+}
+
+.light .soundshift-chip,
+:root .soundshift-chip {
+  background-color: #E8F1EF;
+  color: #2F3A4A;
+  border: 1px solid #CBD5E1;
+}
+.light .soundshift-chip-active,
+:root .soundshift-chip-active {
   background-color: #A8C3B8;
   color: #2F3A4A;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
@@ -126,13 +148,82 @@ body {
 .soundshift-wave-bar {
   width: 2px;
   border-radius: 9999px;
-  background-color: rgba(184, 227, 212, 0.7);
-  opacity: 0.7;
+  background-color: rgba(134, 209, 194, 0.8);
+  opacity: 0.8;
   transition: opacity 500ms ease, transform 500ms ease;
 }
 .soundshift-tile:hover .soundshift-wave-bar {
   opacity: 1;
   transform: translateY(-1px);
+}
+
+.soundshift-heading {
+  letter-spacing: 0.03em;
+  color: #2F3A4A;
+}
+.dark .soundshift-heading {
+  color: #E6EDF5;
+}
+.soundshift-subheading {
+  color: #2F3A4A;
+}
+.dark .soundshift-subheading {
+  color: #C9D4E2;
+}
+.soundshift-body {
+  color: #566074;
+}
+.dark .soundshift-body {
+  color: #AAB6C4;
+}
+.soundshift-muted {
+  color: #6B7280;
+}
+.dark .soundshift-muted {
+  color: #8FA3B8;
+}
+.soundshift-listening-value {
+  color: #D4B483;
+}
+.dark .soundshift-listening-value {
+  color: #D4B483;
+}
+.soundshift-listening-label {
+  color: #9CA3AF;
+}
+.dark .soundshift-listening-label {
+  color: #7F8C9D;
+}
+.soundshift-card-primary {
+  background-color: #EEF2F5;
+}
+.dark .soundshift-card-primary {
+  background-color: #1B2430;
+}
+.soundshift-card-secondary {
+  background-color: #F4F6F8;
+}
+.dark .soundshift-card-secondary {
+  background-color: #1B2430;
+}
+.soundshift-card-title {
+  color: #2F3A4A;
+}
+.dark .soundshift-card-title {
+  color: #E6EDF5;
+}
+.soundshift-tile-title {
+  color: #F1F6FA;
+  font-weight: 600;
+}
+.soundshift-tile-subtitle {
+  color: #A8B8C8;
+}
+
+.dark footer {
+  background-color: #0E141B;
+  color: #6C7A89;
+  border-top: 1px solid #1F2B38;
 }
 
 /* Typography scale (both themes) */

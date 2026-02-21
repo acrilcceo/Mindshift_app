@@ -19,6 +19,7 @@ const emotionalStates: { id: EmotionalState; label: string }[] = [
 
 const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [selectedEmotion, setSelectedEmotion] = useState<EmotionalState | null>(null);
 
   const totalMinutesToday = useMemo(() => {
     if (!state.soundPreferences) return 0;
@@ -40,6 +41,7 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
   };
 
   const handleSelectEmotionalState = (value: EmotionalState) => {
+    setSelectedEmotion(value);
     const existing = state.soundMixes && state.soundMixes[0];
     if (!existing) return;
     const updated: SoundMix = { ...existing, emotionalState: value };
@@ -118,31 +120,31 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
     <div className="soundshift-atmosphere space-y-10 animate-in fade-in duration-700">
       <div className="flex justify-between items-end px-2">
         <div>
-          <h2 className="text-3xl sm:text-4xl font-serif font-semibold" style={{ color: '#2F3A4A', letterSpacing: '0.03em' }}>
+          <h2 className="text-3xl sm:text-4xl font-serif font-semibold soundshift-heading">
             SoundShift Studio
           </h2>
-          <p className="body-sm mt-1" style={{ color: '#566074' }}>
+          <p className="body-sm mt-1 soundshift-body">
             Regulate your state through sound and subtle frequency.
           </p>
         </div>
         <div className="text-right">
-          <div className="text-xs" style={{ color: '#6B7280' }}>Today</div>
-          <div className="text-3xl font-semibold" style={{ color: '#C6A96E' }}>
+          <div className="text-xs soundshift-muted">Today</div>
+          <div className="text-3xl font-semibold soundshift-listening-value">
             {totalMinutesToday} min
           </div>
-          <div className="text-[11px] mt-1" style={{ color: '#9CA3AF' }}>Listening</div>
+          <div className="text-[11px] mt-1 soundshift-listening-label">Listening</div>
         </div>
       </div>
 
-      <div className="glass-card p-6 rounded-[2rem] border-slate-200/70 dark:border-white/5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between" style={{ backgroundColor: '#EEF2F5' }}>
+      <div className="glass-card p-6 rounded-[2rem] border-slate-200/70 dark:border-white/5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between soundshift-card-primary">
         <div>
-          <div className="text-[11px] font-semibold tracking-wide" style={{ color: '#5E6C9E' }}>
+          <div className="text-[11px] font-semibold tracking-wide soundshift-subheading">
             Last sound
           </div>
-          <div className="text-base sm:text-lg mt-1 font-semibold" style={{ color: '#2F3A4A' }}>
+          <div className="text-base sm:text-lg mt-1 font-semibold soundshift-card-title">
             {lastMix ? lastMix.name : 'No mix played yet'}
           </div>
-          <div className="text-[11px] mt-1" style={{ color: '#6B7280' }}>
+          <div className="text-[11px] mt-1 soundshift-body">
             Tap a tile below to build a calming or focusing soundscape.
           </div>
         </div>
@@ -156,11 +158,11 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
         </button>
       </div>
 
-      <div className="glass-card p-6 rounded-[2rem] border-slate-200/70 dark:border-white/5" style={{ backgroundColor: '#F4F6F8' }}>
+      <div className="glass-card p-6 rounded-[2rem] border-slate-200/70 dark:border-white/5 soundshift-card-secondary">
         <div className="flex justify-between items-center mb-4">
           <div>
-            <div className="text-sm font-semibold" style={{ color: '#2F3A4A' }}>How are you feeling?</div>
-            <p className="text-[11px] mt-1" style={{ color: '#6B7280' }}>Select an emotional state to see suggested sound patterns.</p>
+            <div className="text-sm font-semibold soundshift-subheading">How are you feeling?</div>
+            <p className="text-[11px] mt-1 soundshift-body">Select an emotional state to see suggested sound patterns.</p>
           </div>
         </div>
         <div className="flex flex-wrap gap-3 mt-2">
@@ -169,7 +171,7 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
               key={es.id}
               type="button"
               onClick={() => handleSelectEmotionalState(es.id)}
-              className="soundshift-chip"
+              className={`soundshift-chip ${selectedEmotion === es.id ? 'soundshift-chip-active' : ''}`}
             >
               {es.label}
             </button>
@@ -178,9 +180,9 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
       </div>
 
       <div className="space-y-4">
-        <div className="flex justify-between items-center px-1">
-          <h3 className="text-sm font-semibold" style={{ color: '#2F3A4A' }}>Sound Palette</h3>
-          <span className="text-[11px]" style={{ color: '#6B7280' }}>Frequencies • Binaural • Nature • Tones</span>
+        <div className="flex justify-between items-center px-1 mt-2">
+          <h3 className="text-sm font-semibold soundshift-subheading">Sound Palette</h3>
+          <span className="text-[11px] soundshift-muted">Frequencies • Binaural • Nature • Tones</span>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <SoundTile label="528 Hz" tag="For emotional balance" />
@@ -212,8 +214,8 @@ const SoundTile: React.FC<SoundTileProps> = ({ label, tag, onClick, active }) =>
       }`}
     >
       <div className="relative z-10">
-        <div className="text-xs mb-1" style={{ color: '#E5E7EB' }}>{tag}</div>
-        <div className="text-lg font-semibold" style={{ color: '#F9FAFB' }}>{label}</div>
+        <div className="text-xs mb-1 soundshift-tile-subtitle">{tag}</div>
+        <div className="text-lg font-semibold soundshift-tile-title">{label}</div>
       </div>
       <div className="relative z-10 flex items-end justify-between mt-3">
         <div className="flex items-center gap-1 text-[10px]" style={{ color: '#E5F3EC' }}>
