@@ -48,7 +48,7 @@ const Visualization: React.FC<VisualizationProps> = ({ state, onUpdate }) => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="flex bg-gray-900/50 p-1 rounded-2xl">
+      <div className="flex p-1 rounded-2xl bg-[#EEF2F6] dark:bg-gray-900/60">
         {(['whisper', 'release'] as const).map(tab => (
           <button
             key={tab}
@@ -56,7 +56,11 @@ const Visualization: React.FC<VisualizationProps> = ({ state, onUpdate }) => {
               setActiveMode(tab);
               setShowErrors(false);
             }}
-            className={`flex-1 py-3 rounded-xl text-[10px] uppercase tracking-widest font-bold transition-all ${activeMode === tab ? 'bg-indigo-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
+            className={`flex-1 py-3 rounded-xl text-[10px] uppercase tracking-widest font-semibold transition-all ${
+              activeMode === tab
+                ? 'bg-white text-heading-secondary shadow-md'
+                : 'text-helper hover:text-body-main'
+            }`}
           >
             {tab === 'whisper' ? 'Whisper Technique' : 'Thought Release'}
           </button>
@@ -66,16 +70,20 @@ const Visualization: React.FC<VisualizationProps> = ({ state, onUpdate }) => {
       {activeMode === 'whisper' && (
         <div className="space-y-8 animate-in slide-in-from-right-4">
           <div className="text-center px-4">
-            <h3 className="text-xl font-serif text-indigo-200">The Whisper Method</h3>
-            <p className="text-gray-500 text-[10px] mt-1 tracking-widest uppercase italic">Manifest communication through subconscious connection.</p>
+            <h3 className="text-xl font-serif text-heading-secondary">The Whisper Method</h3>
+            <p className="text-[10px] mt-1 tracking-widest uppercase italic text-helper">
+              Manifest communication through subconscious connection.
+            </p>
           </div>
 
-          <div className="glass-card p-8 rounded-[2rem] space-y-6 shadow-2xl border-indigo-500/10">
+          <div className="glass-card card-elevated p-8 rounded-[2rem] space-y-6">
             <div className="space-y-4">
               <div className="space-y-2">
                 <label className="flex justify-between text-[10px] uppercase tracking-widest font-bold">
-                  <span className="text-indigo-400/70">Target Person *</span>
-                  {showErrors && !whisperForm.target.trim() && <span className="text-red-500 lowercase font-normal">Required</span>}
+                  <span className="text-heading-secondary">Target Person *</span>
+                  {showErrors && !whisperForm.target.trim() && (
+                    <span className="text-red-500 lowercase font-normal">Required</span>
+                  )}
                 </label>
                 <input 
                   value={whisperForm.target} 
@@ -84,13 +92,17 @@ const Visualization: React.FC<VisualizationProps> = ({ state, onUpdate }) => {
                     if (e.target.value.trim()) setShowErrors(false);
                   }}
                   placeholder="Who are you connecting with?" 
-                  className={`w-full bg-black/40 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors ${showErrors && !whisperForm.target.trim() ? 'border-red-500/50 bg-red-500/5' : 'border-white/5 focus:border-indigo-500/50'}`}
+                  className={`input-soft rounded-xl text-sm ${
+                    showErrors && !whisperForm.target.trim() ? 'input-soft-error' : ''
+                  }`}
                 />
               </div>
               <div className="space-y-2">
                 <label className="flex justify-between text-[10px] uppercase tracking-widest font-bold">
-                  <span className="text-indigo-400/70">Your Message *</span>
-                  {showErrors && !whisperForm.text.trim() && <span className="text-red-500 lowercase font-normal">Required</span>}
+                  <span className="text-heading-secondary">Your Message *</span>
+                  {showErrors && !whisperForm.text.trim() && (
+                    <span className="text-red-500 lowercase font-normal">Required</span>
+                  )}
                 </label>
                 <textarea 
                   value={whisperForm.text} 
@@ -99,21 +111,25 @@ const Visualization: React.FC<VisualizationProps> = ({ state, onUpdate }) => {
                     if (e.target.value.trim()) setShowErrors(false);
                   }}
                   placeholder="What is the subconscious message?" 
-                  className={`w-full bg-black/40 border rounded-2xl px-4 py-4 text-sm focus:outline-none transition-colors min-h-[100px] ${showErrors && !whisperForm.text.trim() ? 'border-red-500/50 bg-red-500/5' : 'border-white/5 focus:border-indigo-500/50'}`}
+                  className={`input-soft rounded-2xl text-sm min-h-[100px] ${
+                    showErrors && !whisperForm.text.trim() ? 'input-soft-error' : ''
+                  }`}
                 />
               </div>
             </div>
             <button 
               onClick={startWhisper}
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-indigo-700 to-indigo-500 text-white font-bold hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all active:scale-[0.98]"
+              className="w-full py-4 rounded-2xl btn-whisper-anchor"
             >
               Anchor Connection
             </button>
           </div>
 
           <div className="space-y-4">
-            <h4 className="text-[10px] uppercase tracking-widest text-gray-600 font-bold px-4">Guided Visualization</h4>
-            <div className="glass-card p-6 rounded-3xl text-xs text-gray-400 leading-relaxed italic border-white/5">
+            <h4 className="text-[10px] uppercase tracking-widest text-helper font-bold px-4">
+              Guided Visualization
+            </h4>
+            <div className="glass-card guided-panel p-6 rounded-3xl text-xs italic">
               1. Close your eyes and take 3 deep breaths.<br/><br/>
               2. Imagine {whisperForm.target || 'the target'} sleeping peacefully in a room filled with golden light.<br/><br/>
               3. Walk up to them and gently whisper your message into their ear. See them smile in their sleep.<br/><br/>
@@ -126,8 +142,10 @@ const Visualization: React.FC<VisualizationProps> = ({ state, onUpdate }) => {
       {activeMode === 'release' && (
         <div className="space-y-10 animate-in slide-in-from-left-4 flex flex-col items-center">
           <div className="text-center px-4">
-            <h3 className="text-xl font-serif text-red-200">Neural Purgation</h3>
-            <p className="text-gray-500 text-[10px] mt-1 tracking-widest uppercase italic">Write your shadow, then watch it turn to ash.</p>
+            <h3 className="text-xl font-serif text-heading-secondary">Neural Purgation</h3>
+            <p className="text-[10px] mt-1 tracking-widest uppercase italic text-helper">
+              Write your shadow, then watch it turn to ash.
+            </p>
           </div>
 
           <div className="relative w-full max-w-sm flex flex-col items-center">
@@ -147,12 +165,12 @@ const Visualization: React.FC<VisualizationProps> = ({ state, onUpdate }) => {
                   value={burningThought}
                   onChange={e => setBurningThought(e.target.value)}
                   placeholder="I am not good enough... (Enter the shadow thought)"
-                  className="w-full bg-black/60 border-2 border-dashed border-red-500/20 rounded-3xl p-6 text-sm text-gray-300 focus:outline-none focus:border-red-500/50 min-h-[150px] shadow-2xl"
+                  className="w-full input-soft rounded-3xl border-2 border-dashed border-red-500/25 p-6 text-sm min-h-[150px]"
                 />
                 <button 
                   onClick={handleBurn}
                   disabled={!burningThought.trim()}
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-red-900 to-red-600 text-white font-bold hover:shadow-[0_0_20px_rgba(220,38,38,0.4)] transition-all disabled:opacity-30 active:scale-[0.98]"
+                  className="w-full py-4 rounded-2xl btn-ritual-amber disabled:opacity-40"
                 >
                   Sacrifice to the Flame
                 </button>
@@ -161,7 +179,7 @@ const Visualization: React.FC<VisualizationProps> = ({ state, onUpdate }) => {
           </div>
 
           <div className="max-w-xs text-center">
-            <p className="text-[10px] text-gray-600 leading-relaxed">
+            <p className="text-[10px] text-helper leading-relaxed">
               Symbolic release helps detach the emotional charge from limiting beliefs. Once burned, do not dwell on the thought. It no longer belongs to you.
             </p>
           </div>

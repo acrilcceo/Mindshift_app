@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --bg: #F8FAFC;
+  --bg: #F6F8FA;
   --surface: #FFFFFF;
   --surface-soft: #F1F5F9;
   --text-primary: #0F172A;
@@ -58,6 +58,99 @@ body {
 }
 .dark .sidebar-shell {
   background: linear-gradient(to bottom, #0F1720, #0C141C);
+}
+
+.text-heading-primary {
+  color: #1E2A38;
+}
+.text-heading-secondary {
+  color: #2F3A4A;
+}
+.text-body-main {
+  color: #4A5568;
+}
+.text-helper {
+  color: #6B7280;
+}
+.text-muted-micro {
+  color: #9AA4B2;
+}
+
+.card-elevated {
+  background-color: #FFFFFF;
+  border-radius: 18px;
+  border: 1px solid #E3EAF2;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.input-soft {
+  width: 100%;
+  background-color: #F3F6F9;
+  border-radius: 14px;
+  border: 1px solid #D5DEE8;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.875rem;
+  color: #2F3A4A;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+.input-soft::placeholder {
+  color: #9AA4B2;
+}
+.input-soft:focus {
+  outline: none;
+  border-color: #8FA3B8;
+  box-shadow: 0 0 0 3px rgba(143, 163, 184, 0.15);
+}
+.input-soft-error {
+  border-color: #E53E3E;
+  background-color: #FFF5F5;
+}
+
+.btn-ritual-amber {
+  background-color: #E8A23C;
+  color: #1E2A38;
+  font-weight: 600;
+  box-shadow: 0 6px 16px rgba(232, 162, 60, 0.25);
+  transition: background-color 180ms ease, box-shadow 180ms ease, transform 120ms ease;
+}
+.btn-ritual-amber:hover {
+  background-color: #D9912E;
+}
+.btn-ritual-amber:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.btn-whisper-anchor {
+  background-color: #6C72C9;
+  color: #FFFFFF;
+  font-weight: 600;
+  box-shadow: 0 6px 16px rgba(108, 114, 201, 0.25);
+  transition: background-color 180ms ease, box-shadow 180ms ease, transform 120ms ease;
+}
+.btn-whisper-anchor:hover {
+  background-color: #5C63B8;
+}
+.btn-whisper-anchor:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.guided-panel {
+  background-color: #F0F4F8;
+  color: #3F4B5C;
+  line-height: 1.7;
+  border-left: 4px solid rgba(168, 195, 184, 0.9);
+}
+
+.btn-logout-light {
+  background-color: #2F3A4A;
+  color: #FFFFFF;
+  transition: background-color 180ms ease, transform 120ms ease;
+}
+.btn-logout-light:hover {
+  background-color: #34495E;
+}
+.btn-logout-light:active {
+  transform: translateY(1px) scale(0.99);
 }
 
 /* SoundShift Studio calming visuals */
