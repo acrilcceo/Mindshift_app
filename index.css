@@ -198,6 +198,118 @@ body {
   transform: translateY(1px) scale(0.99);
 }
 
+.mala-shell {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  border-radius: 9999px;
+  margin: 0 auto;
+  background: radial-gradient(circle at top, #F6F8FA, #EEF2F6);
+}
+.dark .mala-shell {
+  background: radial-gradient(circle at top, #020617, #020617);
+}
+.mala-ring {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.mala-bead {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background-color: #D5DEE8;
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.18);
+  transform-origin: 50% 50%;
+}
+.mala-bead-current {
+  background-color: #E8A23C;
+  box-shadow: 0 0 12px rgba(232, 162, 60, 0.3);
+}
+.mala-bead-completed {
+  background-color: #9FD3C7;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
+}
+.mala-counter-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 56%;
+  height: 56%;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: linear-gradient(to bottom, #F9FAFB, #E5EAF0);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #1E2A38;
+}
+.dark .mala-counter-core {
+  background: radial-gradient(circle at top, #020617, #020617);
+  color: #E5E7EB;
+}
+.mala-counter-core-number {
+  font-size: 2rem;
+  font-weight: 600;
+}
+.mala-counter-core-sub {
+  margin-top: 0.15rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6B7280;
+}
+.dark .mala-counter-core-sub {
+  color: #9CA3AF;
+}
+.mala-shell-complete .mala-bead {
+  box-shadow: 0 0 8px rgba(159, 211, 199, 0.4);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .mala-bead-current {
+    animation: malaBeadPulse 0.25s ease-out;
+  }
+  .mala-shell-complete .mala-counter-core {
+    animation: malaCompletePulse 2.4s ease-in-out infinite;
+  }
+}
+@keyframes malaBeadPulse {
+  0% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+@keyframes malaCompletePulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.02); opacity: 0.96; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.mala-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+}
+.mala-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background-color: #E5EAF0;
+  border: 1px solid #CBD5E1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: #4A5568;
+}
+.mala-toggle-active {
+  background-color: #9FD3C7;
+  border-color: #8AC7B8;
+  color: #1E2A38;
+}
+
 /* SoundShift Studio calming visuals */
 .soundshift-atmosphere {
   position: relative;

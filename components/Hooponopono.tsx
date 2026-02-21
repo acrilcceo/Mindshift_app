@@ -169,9 +169,75 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
   const [askFeeling, setAskFeeling] = useState<boolean>(false);
   const [feelingResponse, setFeelingResponse] = useState<string | null>(null);
+  const [soundOn, setSoundOn] = useState<boolean>(true);
+  const [hapticsOn, setHapticsOn] = useState<boolean>(false);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const touchXRef = useRef<number | null>(null);
 
   const handleTapCount = () => {
     setCount(c => c + 1);
+  };
+
+  const playBeadClick = () => {
+    try {
+      const AC = (window as any).AudioContext || (window as any).webkitAudioContext;
+      if (!AC) return;
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new AC();
+      }
+      const ctx = audioCtxRef.current;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = 900;
+      gain.gain.value = 0.0001;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      const now = ctx.currentTime;
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.045, now + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
+      osc.start(now);
+      osc.stop(now + 0.12);
+    } catch {
+    }
+  };
+
+  const handleMalaTap = () => {
+    handleTapCount();
+    if (soundOn) {
+      playBeadClick();
+    }
+    if (hapticsOn && typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      navigator.vibrate(10);
+    }
+  };
+
+  const handleMalaKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === ' ' || e.key === 'Spacebar' || e.key === 'Enter') {
+      e.preventDefault();
+      handleMalaTap();
+    }
+  };
+
+  const handleMalaTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length > 0) {
+      touchXRef.current = e.touches[0].clientX;
+    }
+  };
+
+  const handleMalaTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length === 0) return;
+    const x = e.touches[0].clientX;
+    if (touchXRef.current === null) {
+      touchXRef.current = x;
+      return;
+    }
+    const delta = Math.abs(x - touchXRef.current);
+    if (delta > 24) {
+      touchXRef.current = x;
+      handleMalaTap();
+    }
   };
 
   const handleResetChant = () => {
@@ -191,6 +257,11 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
       setFeelingResponse("You are not alone. Breathe gently and be kind to yourself.");
     }
   };
+
+  const safeCount = Math.min(count, target);
+  const beads = Array.from({ length: target }, (_, i) => i);
+  const activeIndex = safeCount === 0 ? 0 : Math.min(safeCount, target - 1);
+  const isComplete = safeCount >= target;
 
   return (
     <div className="flex flex-col items-center space-y-8 py-10 animate-in fade-in duration-1000">
@@ -306,32 +377,79 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
           {loading ? 'Aligning frequencies...' : prompt}
         </div>
 
-        <div className="mt-6 space-y-4">
-          <div className="flex justify-center">
-            <div
-              className="ritual-counter-display"
-              role="status"
-              aria-live="polite"
-              aria-label={`Chant count ${String(count).padStart(3, '0')} of ${target}`}
-            >
-              {String(count).padStart(3, '0')} / {target}
+        <div className={`mt-6 space-y-4 flex flex-col items-center ${isComplete ? 'mala-shell-complete' : ''}`}>
+          <div
+            className="mala-shell"
+            onClick={handleMalaTap}
+            onKeyDown={handleMalaKeyDown}
+            onTouchStart={handleMalaTouchStart}
+            onTouchMove={handleMalaTouchMove}
+            tabIndex={0}
+            role="button"
+            aria-label={`Tap to advance mala counter. Currently at ${safeCount} of ${target}.`}
+          >
+            <div className="mala-ring">
+              {beads.map((_, i) => {
+                const angle = (i / beads.length) * 360;
+                const baseClass = 'mala-bead';
+                const stateClass = isComplete
+                  ? 'mala-bead-completed'
+                  : i < safeCount
+                    ? 'mala-bead-completed'
+                    : i === activeIndex
+                      ? 'mala-bead-current'
+                      : '';
+                return (
+                  <div
+                    key={i}
+                    className={`${baseClass} ${stateClass}`}
+                    style={{ transform: `rotate(${angle}deg) translate(0, -46%)` }}
+                  />
+                );
+              })}
+              <div className="mala-counter-core">
+                <div
+                  className="mala-counter-core-number"
+                  aria-live="polite"
+                  role="status"
+                >
+                  {safeCount}
+                </div>
+                <div className="mala-counter-core-sub">
+                  of {target}
+                </div>
+                {isComplete && (
+                  <div className="mt-2 text-[10px] tracking-widest uppercase text-helper">
+                    Cycle Complete
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="flex flex-col items-center space-y-3">
-            <button
-              aria-label="Count tap"
-              onClick={handleTapCount}
-              className="w-4/5 max-w-xs btn-chant-primary text-[12px] font-bold active:scale-95 transition-theme"
-            >
-              Tap to Count
-            </button>
+          <div className="mala-controls">
             <button
               aria-label="Reset chant"
               onClick={handleResetChant}
-              className="w-1/2 max-w-[180px] btn-chant-reset text-[12px] active:scale-95 transition-theme"
+              className="px-4 py-2 rounded-full bg-[#E5EAF0] border border-[#CBD5E1] text-[11px] text-body-main font-medium active:scale-95 transition-theme"
             >
               Reset
+            </button>
+            <button
+              type="button"
+              aria-label={soundOn ? 'Disable bead sound' : 'Enable bead sound'}
+              onClick={() => setSoundOn(v => !v)}
+              className={`mala-toggle ${soundOn ? 'mala-toggle-active' : ''}`}
+            >
+              {soundOn ? '🔊' : '🔈'}
+            </button>
+            <button
+              type="button"
+              aria-label={hapticsOn ? 'Disable vibration' : 'Enable vibration'}
+              onClick={() => setHapticsOn(v => !v)}
+              className={`mala-toggle ${hapticsOn ? 'mala-toggle-active' : ''}`}
+            >
+              ☼
             </button>
           </div>
 
