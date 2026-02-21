@@ -82,7 +82,7 @@ const Login: React.FC = () => {
         <button
           onClick={handleEnter}
           disabled={!canSubmit}
-          className="w-full h-12 min-w-[44px] min-h-[44px] rounded-2xl bg-slate-900 dark:bg-amber-500 text-white dark:text-black text-[12px] font-bold hover:opacity-90 active:scale-95 transition-theme focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 disabled:opacity-50"
+          className="w-full h-12 min-w-[44px] min-h-[44px] rounded-2xl bg-accent ensure-contrast text-[12px] font-bold shadow-md shadow-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/25 active:scale-95 transition-theme focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 disabled:opacity-50"
           aria-label="Enter app"
         >
           {processing ? 'Entering...' : 'Enter'}
