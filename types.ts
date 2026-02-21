@@ -157,6 +157,41 @@ export interface SoundAnalyticsProfile {
   mostRegulatingPattern?: { description: string; computedAt: number };
 }
 
+export type MarketplaceCategoryId =
+  | 'ritual_tools'
+  | 'protection_grounding'
+  | 'sleep_calm'
+  | 'focus_energy';
+
+export interface MarketplaceProduct {
+  id: string;
+  title: string;
+  categoryId: MarketplaceCategoryId;
+  imageUrl: string;
+  shortDescription: string;
+  oftenUsedFor: string;
+  ritualTags: Array<'555' | '369' | 'soundshift' | 'whisper' | 'release' | 'journal'>;
+  sellerName: string;
+  ratingAverage: number;
+  ratingCount: number;
+  priceCents: number;
+  currency: string;
+  isFeatured?: boolean;
+}
+
+export interface MarketplaceCartItem {
+  productId: string;
+  quantity: number;
+  priceCentsAtAdd: number;
+}
+
+export interface MarketplaceCart {
+  items: MarketplaceCartItem[];
+  subtotalCents: number;
+  totalCents: number;
+  currency: string;
+}
+
 export interface AppState {
   streak: number;
   lastVisit: number;
@@ -177,4 +212,6 @@ export interface AppState {
   soundPreferences?: SoundPreferences;
   whisperGoalAnchors?: WhisperGoalAnchor[];
   soundAnalytics?: SoundAnalyticsProfile;
+  marketplaceCart?: MarketplaceCart;
+  wishlistProductIds?: string[];
 }
