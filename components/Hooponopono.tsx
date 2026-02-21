@@ -306,43 +306,54 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
           {loading ? 'Aligning frequencies...' : prompt}
         </div>
 
-        <div className="mt-6 grid grid-cols-1 gap-3">
-          <div className="grid grid-cols-3 gap-2 items-center">
-            <button
-              aria-label="Count tap"
-              onClick={handleTapCount}
-              className="px-4 py-2 rounded-xl bg-accent ensure-contrast text-[12px] font-bold active:scale-95 transition-theme"
-            >
-              Tap to Count
-            </button>
+        <div className="mt-6 space-y-4">
+          <div className="flex justify-center">
             <div
-              className="text-center font-mono text-lg px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 dark:bg-gray-900 dark:border-white/10 dark:text-gray-200 transition-theme"
+              className="ritual-counter-display"
               role="status"
               aria-live="polite"
               aria-label={`Chant count ${String(count).padStart(3, '0')} of ${target}`}
             >
               {String(count).padStart(3, '0')} / {target}
             </div>
+          </div>
+
+          <div className="flex flex-col items-center space-y-3">
+            <button
+              aria-label="Count tap"
+              onClick={handleTapCount}
+              className="w-4/5 max-w-xs btn-chant-primary text-[12px] font-bold active:scale-95 transition-theme"
+            >
+              Tap to Count
+            </button>
             <button
               aria-label="Reset chant"
               onClick={handleResetChant}
-              className="px-4 py-2 rounded-xl bg-gray-900 auto-text text-[12px] font-bold hover:bg-gray-800 active:scale-95 transition-theme"
+              className="w-1/2 max-w-[180px] btn-chant-reset text-[12px] active:scale-95 transition-theme"
             >
               Reset
             </button>
           </div>
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-2 pt-1">
             <button
               aria-label="Set target 50"
-              className={`px-3 py-2 rounded-xl text-[12px] ${target === 50 ? 'bg-amber-500 text-black' : 'bg-white border border-slate-200 text-slate-900 dark:bg-white/5 dark:border-white/10 dark:text-gray-300'}`}
+              className={`px-3 py-2 rounded-full text-[12px] ${
+                target === 50
+                  ? 'bg-[#E8A23C] text-heading-primary'
+                  : 'bg-[#E5EAF0] text-body-main border border-[#CBD5E1]'
+              }`}
               onClick={() => setTarget(50)}
             >
               50
             </button>
             <button
               aria-label="Set target 108"
-              className={`px-3 py-2 rounded-xl text-[12px] ${target === 108 ? 'bg-amber-500 text-black' : 'bg-white border border-slate-200 text-slate-900 dark:bg-white/5 dark:border-white/10 dark:text-gray-300'}`}
+              className={`px-3 py-2 rounded-full text-[12px] ${
+                target === 108
+                  ? 'bg-[#E8A23C] text-heading-primary'
+                  : 'bg-[#E5EAF0] text-body-main border border-[#CBD5E1]'
+              }`}
               onClick={() => setTarget(108)}
             >
               108
@@ -353,7 +364,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
               min={1}
               value={target}
               onChange={e => setTarget(Math.max(1, parseInt(e.target.value || '1')))}
-              className="px-3 py-2 rounded-xl bg-white/70 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-[12px] text-center text-primary dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-transparent"
+              className="px-3 py-2 rounded-full bg-[#E5EAF0] border border-[#CBD5E1] text-[12px] text-center text-body-main focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-transparent"
             />
           </div>
 
