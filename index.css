@@ -310,6 +310,67 @@ body {
   color: #1E2A38;
 }
 
+.frequency-card {
+  position: relative;
+  overflow: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.frequency-tabs-viewport {
+  position: relative;
+  margin-top: 1rem;
+}
+
+.frequency-tabs-wrapper {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.frequency-tabs-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.frequency-tabs-wrapper {
+  scrollbar-width: none;
+}
+
+.frequency-tab {
+  flex: 0 0 auto;
+  min-width: 64px;
+  scroll-snap-align: center;
+}
+
+.frequency-tabs-fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  pointer-events: none;
+}
+
+.frequency-tabs-fade-left {
+  left: 0;
+  background: linear-gradient(to right, #F6F8FA, transparent);
+}
+
+.frequency-tabs-fade-right {
+  right: 0;
+  background: linear-gradient(to left, #F6F8FA, transparent);
+}
+
+.dark .frequency-tabs-fade-left {
+  background: linear-gradient(to right, #020617, transparent);
+}
+
+.dark .frequency-tabs-fade-right {
+  background: linear-gradient(to left, #020617, transparent);
+}
+
 /* SoundShift Studio calming visuals */
 .soundshift-atmosphere {
   position: relative;

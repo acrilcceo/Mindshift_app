@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { generateAffirmations } from '../services/affirmationEngine';
 import { Mood, AppState } from '../types';
 import MyAffirmations from './MyAffirmations';
@@ -20,11 +20,31 @@ const MOOD_VALUES: Record<Mood, number> = {
 const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
   const [loading, setLoading] = useState(false);
   const [affirmationIndex, setAffirmationIndex] = useState(0);
+  const moodTabsRef = useRef<HTMLDivElement | null>(null);
+  const [showMoodLeftFade, setShowMoodLeftFade] = useState(false);
+  const [showMoodRightFade, setShowMoodRightFade] = useState(false);
 
   useEffect(() => {
     if (!state.dailyAffirmation) {
       handleRefreshAffirmations();
     }
+  }, []);
+
+  useEffect(() => {
+    const el = moodTabsRef.current;
+    if (!el) return;
+    const update = () => {
+      const { scrollLeft, scrollWidth, clientWidth } = el;
+      setShowMoodLeftFade(scrollLeft > 0);
+      setShowMoodRightFade(scrollLeft + clientWidth < scrollWidth - 1);
+    };
+    update();
+    el.addEventListener('scroll', update);
+    window.addEventListener('resize', update);
+    return () => {
+      el.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
   }, []);
 
   const handleRefreshAffirmations = async () => {
@@ -238,21 +258,25 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
         </div>
       </div>
 
-      <div className="glass-card p-8 rounded-[2rem] shadow-lg border-white/5 dark:border-white/5">
+      <div className="glass-card p-8 rounded-[2rem] shadow-lg border-white/5 dark:border-white/5 frequency-card">
         <h3 className="label accent mb-8 text-center">Frequency Input</h3>
-        <div className="flex justify-around items-center gap-2">
-          {(['Radiant', 'Balanced', 'Quiet', 'Challenged', 'Heavy'] as Mood[]).map((m) => (
-            <button
-              key={m}
-              onClick={() => handleMoodSelect(m)}
-              className={`flex flex-col items-center space-y-3 transition-all transform hover:scale-110 ${currentMood === m ? 'scale-115' : 'opacity-40 grayscale hover:grayscale-0 hover:opacity-100'}`}
-            >
-              <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-[1.5rem] flex items-center justify-center text-2xl transition-all shadow-xl ${currentMood === m ? 'ring-2 ring-amber-500 bg-amber-500/10 dark:bg-amber-400/10' : 'bg-white/60 dark:bg-white/10'}`}>
-                <span className="label text-secondary">{m[0]}</span>
-              </div>
-              <span className="label text-secondary">{m}</span>
-            </button>
-          ))}
+        <div className="frequency-tabs-viewport">
+          <div ref={moodTabsRef} className="frequency-tabs-wrapper">
+            {(['Radiant', 'Balanced', 'Quiet', 'Challenged', 'Heavy'] as Mood[]).map((m) => (
+              <button
+                key={m}
+                onClick={() => handleMoodSelect(m)}
+                className={`frequency-tab flex flex-col items-center space-y-3 transition-all transform hover:scale-110 ${currentMood === m ? 'scale-115' : 'opacity-40 grayscale hover:grayscale-0 hover:opacity-100'}`}
+              >
+                <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-[1.5rem] flex items-center justify-center text-2xl transition-all shadow-xl ${currentMood === m ? 'ring-2 ring-amber-500 bg-amber-500/10 dark:bg-amber-400/10' : 'bg-white/60 dark:bg-white/10'}`}>
+                  <span className="label text-secondary">{m[0]}</span>
+                </div>
+                <span className="label text-secondary">{m}</span>
+              </button>
+            ))}
+          </div>
+          {showMoodLeftFade && <div className="frequency-tabs-fade frequency-tabs-fade-left" />}
+          {showMoodRightFade && <div className="frequency-tabs-fade frequency-tabs-fade-right" />}
         </div>
       </div>
       
