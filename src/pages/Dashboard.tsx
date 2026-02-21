@@ -126,7 +126,7 @@ const DashboardPage: React.FC = () => {
         </div>
 
         <div className="mt-auto space-y-6">
-           <div className="p-5 bg-slate-50 dark:bg-white/5 rounded-3xl border border-slate-100 dark:border-white/5">
+           <div className="p-5 bg-surface-soft dark:bg-white/5 rounded-3xl border border-subtle dark:border-white/5 shadow-md">
               <div className="flex justify-between items-center mb-3">
                 <span className="text-[9px] uppercase tracking-widest text-muted font-bold">Theme Calibration</span>
                 <span className="text-xs">{state.theme === 'dark' ? '✨' : '🎨'}</span>
@@ -178,7 +178,7 @@ interface NavItemProps {
 const NavItem: React.FC<NavItemProps> = ({ icon, label, active, onClick }) => (
   <button
     onClick={onClick}
-    className={`flex items-center space-x-4 p-4 lg:px-5 lg:py-4 rounded-2xl transition-all duration-300 group w-full ${active ? 'bg-slate-900 dark:bg-white/10 text-white shadow-xl shadow-slate-900/10 dark:shadow-none' : 'text-slate-400 dark:text-gray-500 hover:text-slate-800 dark:hover:text-gray-300 hover:bg-slate-100 dark:hover:bg-white/5'}`}
+    className={`flex items-center space-x-4 p-4 lg:px-5 lg:py-4 rounded-2xl transition-all duration-300 group w-full border ${active ? 'bg-surface-soft border-subtle text-primary shadow-md shadow-emerald-500/10 dark:bg-white/10 dark:border-transparent dark:text-white dark:shadow-none' : 'border-transparent text-muted dark:text-gray-500 hover:text-primary dark:hover:text-gray-300 hover:bg-surface-soft dark:hover:bg-white/5'}`}
   >
     <span className={`text-xl lg:text-2xl transition-transform duration-300 ${active ? 'scale-110' : 'group-hover:scale-105'}`}>{icon}</span>
     <span className="text-xs lg:text-sm font-bold lg:font-semibold uppercase lg:capitalize tracking-widest lg:tracking-normal">{label}</span>
