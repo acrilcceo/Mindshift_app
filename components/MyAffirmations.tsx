@@ -107,7 +107,7 @@ const MyAffirmations: React.FC = () => {
         <div className="flex gap-2">
           <button
             onClick={() => { setEditing(null); setOpenForm(true); }}
-            className="px-4 py-2 rounded-xl bg-slate-900 dark:bg-amber-500 text-white dark:text-black text-[12px] font-bold"
+            className="px-5 py-2.5 rounded-2xl bg-accent ensure-contrast text-[12px] font-semibold shadow-md shadow-emerald-500/15 hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-200 ease-out transform hover:-translate-y-0.5 active:scale-95 dark:bg-amber-500"
             aria-label="Add New Affirmation"
           >
             Add New Affirmation
