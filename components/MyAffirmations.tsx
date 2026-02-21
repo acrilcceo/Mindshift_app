@@ -124,35 +124,62 @@ const MyAffirmations: React.FC = () => {
 
       {importError && <div role="alert" className="mb-3 text-[12px] text-red-600 dark:text-red-400">{importError}</div>}
 
-      <div className="grid grid-cols-1 md:grid-cols-6 gap-3 mb-4">
-        <div className="relative">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 mb-4">
+        <div className="flex flex-col gap-1">
+          <span className="text-[10px] uppercase tracking-widest text-muted font-bold">Search</span>
           <input
             type="text"
             aria-label="Search affirmations"
             placeholder="Search..."
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2 text-[12px] text-primary"
+            className="w-full h-10 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 text-[12px] text-primary"
           />
-          <span className="absolute right-3 top-2 text-muted label">Search</span>
         </div>
-        <select aria-label="Filter by category" value={category} onChange={e => { setCategory(e.target.value as any); setPage(1); }} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px] text-primary">
+        <select
+          aria-label="Filter by category"
+          value={category}
+          onChange={e => { setCategory(e.target.value as any); setPage(1); }}
+          className="w-full h-10 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 text-[12px] text-primary"
+        >
           <option value="All">All Categories</option>
           {(['Gratitude','Self-Love','Success','Health','Relationships','Custom'] as AffirmationCategory[]).map(c => <option key={c} value={c}>{c}</option>)}
         </select>
-        <select aria-label="Filter by reminder" value={reminder} onChange={e => { setReminder(e.target.value as any); setPage(1); }} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px] text-primary">
+        <select
+          aria-label="Filter by reminder"
+          value={reminder}
+          onChange={e => { setReminder(e.target.value as any); setPage(1); }}
+          className="w-full h-10 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 text-[12px] text-primary"
+        >
           <option value="All">All Reminders</option>
           <option value="Has">Has Reminder</option>
           <option value="None">No Reminder</option>
         </select>
-        <select aria-label="Sort affirmations" value={sort} onChange={e => setSort(e.target.value as SortKey)} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px] text-primary">
+        <select
+          aria-label="Sort affirmations"
+          value={sort}
+          onChange={e => setSort(e.target.value as SortKey)}
+          className="w-full h-10 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 text-[12px] text-primary"
+        >
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>
           <option value="alpha">Alphabetical</option>
           <option value="used">Most Used</option>
         </select>
-        <input type="date" aria-label="Start date" value={startDate} onChange={e => { setStartDate(e.target.value); setPage(1); }} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px] text-primary" />
-        <input type="date" aria-label="End date" value={endDate} onChange={e => { setEndDate(e.target.value); setPage(1); }} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px] text-primary" />
+        <input
+          type="date"
+          aria-label="Start date"
+          value={startDate}
+          onChange={e => { setStartDate(e.target.value); setPage(1); }}
+          className="w-full h-10 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 text-[12px] text-primary"
+        />
+        <input
+          type="date"
+          aria-label="End date"
+          value={endDate}
+          onChange={e => { setEndDate(e.target.value); setPage(1); }}
+          className="w-full h-10 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 text-[12px] text-primary"
+        />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
