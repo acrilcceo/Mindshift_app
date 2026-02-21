@@ -81,7 +81,7 @@ const AffirmationForm: React.FC<Props> = ({ open, onClose, editing, onSaved }) =
           minLength={10}
           maxLength={500}
           placeholder="I am..."
-          className="w-full bg-white/50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-[1.5rem] p-4 text-slate-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/50 min-h-[120px]"
+          className="w-full bg-white/50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-[1.5rem] p-4 text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-amber-500/50 min-h-[120px]"
         />
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>

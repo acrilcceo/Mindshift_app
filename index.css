@@ -9,6 +9,8 @@
   --text-primary: #0F172A;
   --text-secondary: #334155;
   --text-muted: #64748B;
+  --text-disabled: #9CA3AF;
+  --text-placeholder: #9CA3AF;
   --accent: #14B8A6;
   --brand: #8B5CF6;
   --border: #E2E8F0;
@@ -17,11 +19,13 @@
   --bg: #0a0a0c;
   --surface: #020617;
   --surface-soft: #020617;
-  --text-primary: #E5E7EB; /* gray-200 */
-  --text-secondary: #CBD5E1; /* slate-300 */
-  --text-muted: #94A3B8; /* slate-400 */
-  --accent: #F59E0B; /* amber-500 */
-  --brand: #A78BFA; /* purple-400 */
+  --text-primary: #E5E7EB;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
+  --text-disabled: #4B5563;
+  --text-placeholder: #9CA3AF;
+  --accent: #F59E0B;
+  --brand: #A78BFA;
   --border: rgba(255, 255, 255, 0.08);
 }
 :root { --auto-text: #000000; }
@@ -34,6 +38,8 @@ body {
 .text-primary { color: var(--text-primary); }
 .text-secondary { color: var(--text-secondary); }
 .text-muted { color: var(--text-muted); }
+.text-disabled { color: var(--text-disabled); }
+.placeholder-muted::placeholder { color: var(--text-placeholder); opacity: 1; }
 .border-neutral { border-color: var(--border); }
 .accent { color: var(--accent); }
 .brand { color: var(--brand); }

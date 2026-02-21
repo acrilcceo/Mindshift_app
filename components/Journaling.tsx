@@ -315,9 +315,9 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                         placeholder="Search cycles..."
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
-                        className="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-purple-500/50"
+                        className="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2 text-xs text-primary placeholder-muted focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/40"
                       />
-                      <span className="absolute right-3 top-2 text-slate-300 dark:text-gray-600">🔍</span>
+                      <span className="absolute right-3 top-2 text-muted">🔍</span>
                    </div>
                    <select 
                      value={`${sortKey}-${sortOrder}`}
@@ -326,7 +326,7 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                         setSortKey(key);
                         setSortOrder(order);
                      }}
-                     className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-gray-400 focus:outline-none focus:border-purple-500/50"
+                     className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[10px] uppercase tracking-widest font-bold text-secondary focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/40"
                    >
                       <option value="timestamp-desc">Newest First</option>
                       <option value="timestamp-asc">Oldest First</option>
@@ -342,14 +342,14 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                     type="date" 
                     value={startDate}
                     onChange={e => setStartDate(e.target.value)}
-                    className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-2 py-1 text-[10px] text-slate-600 dark:text-gray-400 focus:outline-none"
+                    className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-2 py-1 text-[10px] text-primary focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/40"
                   />
-                  <span className="text-slate-300 dark:text-gray-700 text-[10px]">to</span>
+                  <span className="text-[10px] text-muted">to</span>
                   <input 
                     type="date" 
                     value={endDate}
                     onChange={e => setEndDate(e.target.value)}
-                    className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-2 py-1 text-[10px] text-slate-600 dark:text-gray-400 focus:outline-none"
+                    className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-2 py-1 text-[10px] text-primary focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/40"
                   />
                   {(startDate || endDate || searchTerm) && (
                     <button 
@@ -370,7 +370,7 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                       onChange={toggleSelectAll}
                       className="w-4 h-4 rounded accent-purple-500 cursor-pointer"
                     />
-                    <span className="text-[10px] text-slate-600 dark:text-gray-400 uppercase tracking-widest font-bold">
+                    <span className="text-[10px] text-secondary uppercase tracking-widest font-bold">
                       {selectedIds.size > 0 ? `${selectedIds.size} Selected` : 'Select All Cycles'}
                     </span>
                   </div>
@@ -441,7 +441,7 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                           </div>
                         </div>
                         <div className="space-y-3 text-[11px] leading-relaxed">
-                          <p className="text-slate-600 dark:text-gray-300 italic">"I felt <span className="text-purple-700 dark:text-purple-300 font-medium">{e.feel}</span> because <span className="text-slate-500 dark:text-gray-400">{e.trigger || '...'}</span>. I told myself <span className="text-slate-500 dark:text-gray-400">{e.belief || '...'}</span>. Now, I choose to <span className="text-purple-600 dark:text-purple-400 font-bold">{e.action}</span>."</p>
+                          <p className="text-secondary italic">"I felt <span className="text-purple-700 dark:text-purple-300 font-medium">{e.feel}</span> because <span className="text-muted">{e.trigger || '...'}</span>. I told myself <span className="text-muted">{e.belief || '...'}</span>. Now, I choose to <span className="text-purple-600 dark:text-purple-400 font-bold">{e.action}</span>."</p>
                         </div>
                       </>
                     )}
@@ -462,7 +462,7 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                     
                     <h5 className="text-xl font-serif text-slate-800 dark:text-purple-100 mb-4 tracking-tight font-bold">The Neural Map is Clear</h5>
                     
-                    <p className="text-slate-500 dark:text-gray-500 text-[13px] max-w-[320px] leading-relaxed italic mb-10">
+                    <p className="text-muted text-[13px] max-w-[320px] leading-relaxed italic mb-10">
                       {searchTerm || startDate || endDate 
                         ? "No entries match your search parameters. Try widening your perspective."
                         : "Neural decoding is the act of observing your automatic responses to reclaim your sovereignty."}
@@ -473,8 +473,8 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                         <div className="flex gap-4 items-start p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.02] border border-slate-100 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-white/[0.04] transition-all">
                           <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center text-[10px] font-bold">1</span>
                           <div>
-                            <p className="text-[11px] font-bold text-slate-700 dark:text-gray-300 uppercase tracking-wider mb-1">Notice the Vibration</p>
-                            <p className="text-[10px] text-slate-500 dark:text-gray-500 leading-normal">The next time a sudden emotion hits—anxiety, anger, or fear—stop and identify the raw feeling.</p>
+                            <p className="text-[11px] font-bold text-secondary uppercase tracking-wider mb-1">Notice the Vibration</p>
+                            <p className="text-[10px] text-muted leading-normal">The next time a sudden emotion hits—anxiety, anger, or fear—stop and identify the raw feeling.</p>
                           </div>
                         </div>
                         <div className="flex gap-4 items-start p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.02] border border-slate-100 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-white/[0.04] transition-all">
@@ -488,7 +488,7 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                           <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center text-[10px] font-bold">3</span>
                           <div>
                             <p className="text-[11px] font-bold text-slate-700 dark:text-gray-300 uppercase tracking-wider mb-1">Override the Script</p>
-                            <p className="text-[10px] text-slate-500 dark:text-gray-500 leading-normal">Log it above. By writing it down, you move from the reactive 'Feel' to the conscious 'Action'.</p>
+                            <p className="text-[10px] text-muted leading-normal">Log it above. By writing it down, you move from the reactive 'Feel' to the conscious 'Action'.</p>
                           </div>
                         </div>
                         
@@ -511,12 +511,12 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
           <div className="glass-card p-6 rounded-3xl shadow-xl">
              <h3 className="text-sm font-serif text-slate-800 dark:text-amber-200 mb-4 font-bold">I am grateful for...</h3>
              <div className="flex gap-2">
-                <input value={gratitudeInput} onChange={e => setGratitudeInput(e.target.value)} placeholder="The morning sun..." className="flex-1 bg-white/50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-500" onKeyDown={e => e.key === 'Enter' && addGratitude()} />
+                <input value={gratitudeInput} onChange={e => setGratitudeInput(e.target.value)} placeholder="The morning sun..." className="flex-1 bg-white/50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm text-primary placeholder-muted focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/40" onKeyDown={e => e.key === 'Enter' && addGratitude()} />
                 <button onClick={addGratitude} className="bg-amber-600 w-12 rounded-xl hover:bg-amber-500 font-bold transition-all active:scale-95 shadow-lg shadow-amber-900/20 text-white">+</button>
              </div>
              <div className="mt-8 space-y-4">
                 {state.gratitudeList.map((item, i) => (
-                  <div key={i} className="text-sm text-slate-700 dark:text-gray-300 border-b border-slate-100 dark:border-white/5 pb-3 animate-in slide-in-from-left-2 flex gap-3">
+                  <div className="text-sm text-secondary border-b border-slate-100 dark:border-white/5 pb-3 animate-in slide-in-from-left-2 flex gap-3">
                     <span className="text-amber-500/50">✨</span>
                     <span>{item}</span>
                   </div>
@@ -532,7 +532,7 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
           <div className="glass-card p-6 rounded-3xl shadow-xl">
             <h3 className="text-sm font-serif text-slate-800 dark:text-blue-200 mb-4 font-bold">Intention Checklist</h3>
             <div className="flex gap-2 mb-8">
-                <input value={goalInput} onChange={e => setGoalInput(e.target.value)} placeholder="I will manifest..." className="flex-1 bg-white/50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500" onKeyDown={e => e.key === 'Enter' && addGoal()} />
+                <input value={goalInput} onChange={e => setGoalInput(e.target.value)} placeholder="I will manifest..." className="flex-1 bg-white/50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm text-primary placeholder-muted focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/40" onKeyDown={e => e.key === 'Enter' && addGoal()} />
                 <button onClick={addGoal} className="bg-blue-600 w-12 rounded-xl hover:bg-blue-500 font-bold transition-all active:scale-95 shadow-lg shadow-blue-900/20 text-white">+</button>
              </div>
              <div className="space-y-3">

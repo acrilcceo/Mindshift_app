@@ -133,7 +133,7 @@ const MyAffirmations: React.FC = () => {
             placeholder="Search..."
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="w-full h-10 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 text-[12px] text-primary"
+            className="w-full h-10 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 text-[12px] text-primary placeholder-muted"
           />
         </div>
         <select
@@ -208,7 +208,7 @@ const MyAffirmations: React.FC = () => {
                 <summary className="cursor-pointer text-[12px] text-secondary">Version History</summary>
                 <ul className="mt-2 space-y-2">
                   {a.versions.map((v, i) => (
-                    <li key={i} className="text-[12px] text-slate-600 dark:text-gray-400">
+                    <li key={i} className="text-[12px] text-secondary">
                       <span className="font-mono">{new Date(v.timestamp).toLocaleString()}</span> — {v.text}
                     </li>
                   ))}
@@ -220,7 +220,7 @@ const MyAffirmations: React.FC = () => {
       </div>
 
       <div className="mt-6 flex items-center justify-between">
-        <div className="text-[10px] text-slate-500 dark:text-gray-500">Showing {pageItems.length} of {processed.length}</div>
+        <div className="text-[10px] text-muted">Showing {pageItems.length} of {processed.length}</div>
         <div className="flex gap-2" role="navigation" aria-label="Pagination">
           <button className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-white/5 text-[12px]" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} aria-disabled={page === 1}>Prev</button>
           <span className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-white/5 text-[12px]">{page} / {totalPages}</span>

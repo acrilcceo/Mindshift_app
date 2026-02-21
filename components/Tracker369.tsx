@@ -79,7 +79,7 @@ const Tracker369: React.FC<Tracker369Props> = ({ state, onUpdate }) => {
             onChange={(e) => setInput(e.target.value)}
             disabled={currentEntry[activeTab].length >= (activeTab === 'morning' ? 3 : activeTab === 'afternoon' ? 6 : 9)}
             placeholder={`Whisper your ${activeTab} reality...`}
-            className="flex-1 bg-white/50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+            className="flex-1 bg-white/50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
             onKeyDown={(e) => e.key === 'Enter' && addAffirmation()}
           />
           <button 
@@ -92,12 +92,12 @@ const Tracker369: React.FC<Tracker369Props> = ({ state, onUpdate }) => {
 
         <div className="space-y-3 mt-8 max-h-[350px] overflow-y-auto no-scrollbar">
           {currentEntry[activeTab].map((text, i) => (
-            <div key={i} className="bg-white/40 dark:bg-white/5 p-5 rounded-2xl border border-slate-200 dark:border-white/5 text-sm text-slate-700 dark:text-gray-300 animate-in fade-in slide-in-from-left-2 transition-all hover:border-indigo-500/30">
+            <div key={i} className="bg-white/40 dark:bg-white/5 p-5 rounded-2xl border border-slate-200 dark:border-white/5 text-sm text-secondary animate-in fade-in slide-in-from-left-2 transition-all hover:border-indigo-500/30">
               {text}
             </div>
           ))}
           {currentEntry[activeTab].length === 0 && (
-            <div className="text-center text-slate-400 dark:text-gray-600 py-10 text-xs italic tracking-wide">Enter the first spark of your {activeTab} frequency.</div>
+            <div className="text-center text-muted py-10 text-xs italic tracking-wide">Enter the first spark of your {activeTab} frequency.</div>
           )}
         </div>
       </div>
