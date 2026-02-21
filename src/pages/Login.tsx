@@ -10,8 +10,13 @@ const Login: React.FC = () => {
   const [name, setName] = useState('');
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
 
   useEffect(() => {
+    const stateMessage = (location.state as any)?.message;
+    if (stateMessage) {
+      setInfo(stateMessage);
+    }
     if (currentUser && !loading) {
       const to = location.state?.from?.pathname || '/dashboard';
       navigate(to, { replace: true });
@@ -61,6 +66,12 @@ const Login: React.FC = () => {
             />
           </div>
         </div>
+
+        {info && (
+          <div role="status" className="text-[12px] text-emerald-700 dark:text-emerald-400">
+            {info}
+          </div>
+        )}
 
         {error && (
           <div role="alert" className="text-[12px] text-red-600 dark:text-red-400">

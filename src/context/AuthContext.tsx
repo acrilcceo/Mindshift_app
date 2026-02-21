@@ -56,6 +56,13 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     try {
       if (typeof window !== 'undefined') {
         window.localStorage.removeItem(STORAGE_KEY);
+        window.localStorage.clear();
+        const cookies = document.cookie.split(';');
+        for (const raw of cookies) {
+          const [name] = raw.split('=');
+          if (!name) continue;
+          document.cookie = `${name.trim()}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        }
       }
     } catch {}
   };
