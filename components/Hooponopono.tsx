@@ -195,11 +195,11 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
   return (
     <div className="flex flex-col items-center space-y-8 py-10 animate-in fade-in duration-1000">
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-serif text-teal-100">Frequency Alignment</h2>
+        <h2 className="text-2xl font-serif text-primary dark:text-teal-100">Frequency Alignment</h2>
         <div className="flex items-center justify-center gap-3 mt-1">
-          <p className="text-gray-500 text-[10px] tracking-widest uppercase">Breathing Ritual</p>
-          <span className="w-1 h-1 bg-gray-700 rounded-full"></span>
-          <span className="text-[10px] font-mono text-teal-500/80">{formatTime(totalSessionSeconds)}</span>
+          <p className="text-[10px] tracking-widest uppercase text-muted">Breathing Ritual</p>
+          <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-gray-700"></span>
+          <span className="text-[10px] font-mono text-teal-600 dark:text-teal-500/80">{formatTime(totalSessionSeconds)}</span>
         </div>
       </div>
 
@@ -224,10 +224,10 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
           </div>
           {timerStatus !== 'idle' && (
             <>
-              <div className="text-4xl font-mono text-white/80 font-bold">
+              <div className="text-4xl font-mono font-bold auto-text">
                 {secondsRemaining}s
               </div>
-              <div className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mt-2">
+              <div className="text-[10px] text-muted uppercase tracking-widest font-bold mt-2">
                 Cycle {cyclesCompleted + 1}
               </div>
             </>
@@ -240,29 +240,29 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
         {timerStatus !== 'running' ? (
           <button 
             onClick={handleStart}
-            className="px-8 py-3 rounded-2xl bg-teal-600 text-white font-bold hover:bg-teal-500 transition-all shadow-lg active:scale-95"
+            className="px-8 py-3 rounded-2xl bg-accent ensure-contrast font-bold hover:opacity-95 transition-all shadow-lg active:scale-95"
           >
             {timerStatus === 'paused' ? 'Resume' : 'Start Session'}
           </button>
         ) : (
           <button 
             onClick={handlePause}
-            className="px-8 py-3 rounded-2xl bg-gray-800 text-gray-300 font-bold hover:bg-gray-700 transition-all shadow-lg active:scale-95"
+            className="px-8 py-3 rounded-2xl bg-gray-900 text-gray-100 font-bold hover:bg-gray-800 transition-all shadow-lg active:scale-95"
           >
             Pause
           </button>
         )}
         <button 
           onClick={handleReset}
-          className="px-6 py-3 rounded-2xl border border-white/10 text-gray-500 font-bold hover:text-white transition-all active:scale-95"
+          className="px-6 py-3 rounded-2xl border border-slate-200 text-muted dark:border-white/10 dark:text-gray-400 font-bold hover:text-primary dark:hover:text-white transition-all active:scale-95"
         >
           {timerStatus === 'idle' ? 'Reset' : 'Finish Session'}
         </button>
       </div>
 
       {/* Configuration Section */}
-      <div className="glass-card p-6 rounded-3xl w-full max-w-sm border-white/5 space-y-4 shadow-xl">
-        <h3 className="text-[10px] uppercase tracking-widest text-gray-500 font-bold text-center">Customize Rhythm (Seconds)</h3>
+      <div className="glass-card p-6 rounded-3xl w-full max-w-sm border border-subtle dark:border-white/5 space-y-4 shadow-xl">
+        <h3 className="text-[10px] uppercase tracking-widest text-muted font-bold text-center">Customize Rhythm (Seconds)</h3>
         <div className="grid grid-cols-3 gap-4">
           <div className="space-y-1">
             <label className="text-[9px] text-teal-400/70 font-bold uppercase block text-center">Inhale</label>
@@ -270,7 +270,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
               type="number" 
               value={inhaleTime} 
               onChange={(e) => setInhaleTime(Math.max(1, parseInt(e.target.value) || 1))}
-              className="w-full bg-black/40 border border-white/10 rounded-xl px-2 py-2 text-center text-sm focus:outline-none focus:border-teal-500"
+              className="w-full bg-white/70 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-2 py-2 text-center text-sm text-primary dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-transparent"
             />
           </div>
           <div className="space-y-1">
@@ -279,7 +279,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
               type="number" 
               value={holdTime} 
               onChange={(e) => setHoldTime(Math.max(0, parseInt(e.target.value) || 0))}
-              className="w-full bg-black/40 border border-white/10 rounded-xl px-2 py-2 text-center text-sm focus:outline-none focus:border-amber-500"
+              className="w-full bg-white/70 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-2 py-2 text-center text-sm text-primary dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-transparent"
             />
           </div>
           <div className="space-y-1">
@@ -288,21 +288,21 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
               type="number" 
               value={exhaleTime} 
               onChange={(e) => setExhaleTime(Math.max(1, parseInt(e.target.value) || 1))}
-              className="w-full bg-black/40 border border-white/10 rounded-xl px-2 py-2 text-center text-sm focus:outline-none focus:border-blue-500"
+              className="w-full bg-white/70 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-2 py-2 text-center text-sm text-primary dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-transparent"
             />
           </div>
         </div>
       </div>
 
       {/* Ritual Text */}
-      <div className="glass-card p-8 rounded-[2rem] max-w-sm w-full text-center space-y-8 border-teal-500/10 shadow-2xl">
-        <div className="space-y-4 text-sm font-medium tracking-wide text-gray-200 whitespace-pre-line">
+      <div className="glass-card p-8 rounded-[2rem] max-w-sm w-full text-center space-y-8 border border-teal-500/10 shadow-2xl">
+        <div className="space-y-4 text-sm font-medium tracking-wide text-primary dark:text-gray-200 whitespace-pre-line">
           {mantra}
         </div>
 
         <div className="h-px bg-white/5 w-full"></div>
 
-        <div className="text-xs text-gray-400 italic leading-relaxed px-4 min-h-[40px] flex items-center justify-center">
+        <div className="text-xs text-muted dark:text-gray-400 italic leading-relaxed px-4 min-h-[40px] flex items-center justify-center">
           {loading ? 'Aligning frequencies...' : prompt}
         </div>
 
@@ -311,7 +311,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
             <button
               aria-label="Count tap"
               onClick={handleTapCount}
-              className="px-4 py-2 rounded-xl bg-teal-600 auto-text text-[12px] font-bold hover:bg-teal-500 active:scale-95 transition-theme"
+              className="px-4 py-2 rounded-xl bg-accent ensure-contrast text-[12px] font-bold active:scale-95 transition-theme"
             >
               Tap to Count
             </button>
@@ -326,7 +326,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
             <button
               aria-label="Reset chant"
               onClick={handleResetChant}
-              className="px-4 py-2 rounded-xl bg-gray-800 auto-text text-[12px] font-bold hover:bg-gray-700 active:scale-95 transition-theme"
+              className="px-4 py-2 rounded-xl bg-gray-900 auto-text text-[12px] font-bold hover:bg-gray-800 active:scale-95 transition-theme"
             >
               Reset
             </button>
@@ -335,14 +335,14 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
           <div className="grid grid-cols-3 gap-2">
             <button
               aria-label="Set target 50"
-              className={`px-3 py-2 rounded-xl text-[12px] ${target === 50 ? 'bg-amber-500 text-black' : 'bg-white/5 text-gray-300'}`}
+              className={`px-3 py-2 rounded-xl text-[12px] ${target === 50 ? 'bg-amber-500 text-black' : 'bg-white border border-slate-200 text-slate-900 dark:bg-white/5 dark:border-white/10 dark:text-gray-300'}`}
               onClick={() => setTarget(50)}
             >
               50
             </button>
             <button
               aria-label="Set target 108"
-              className={`px-3 py-2 rounded-xl text-[12px] ${target === 108 ? 'bg-amber-500 text-black' : 'bg-white/5 text-gray-300'}`}
+              className={`px-3 py-2 rounded-xl text-[12px] ${target === 108 ? 'bg-amber-500 text-black' : 'bg-white border border-slate-200 text-slate-900 dark:bg-white/5 dark:border-white/10 dark:text-gray-300'}`}
               onClick={() => setTarget(108)}
             >
               108
@@ -353,20 +353,20 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
               min={1}
               value={target}
               onChange={e => setTarget(Math.max(1, parseInt(e.target.value || '1')))}
-              className="px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-[12px] text-center"
+              className="px-3 py-2 rounded-xl bg-white/70 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-[12px] text-center text-primary dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-transparent"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Custom Mantra</label>
+            <label className="text-[10px] uppercase tracking-widest text-muted font-bold">Custom Mantra</label>
             <textarea
               aria-label="Mantra text"
               value={mantra}
               onChange={e => setMantra(e.target.value)}
               placeholder={defaultMantra}
-              className="w-full bg-black/40 border border-white/10 rounded-2xl p-3 text-[12px] text-gray-200 min-h-[120px]"
+              className="w-full bg-white/70 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-2xl p-3 text-[12px] text-primary dark:text-gray-200 min-h-[120px] focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-transparent"
             />
-            <div className="text-[10px] text-gray-500">Paste any text (e.g., Maha Mrityunjaya Mantra) to chant.</div>
+            <div className="text-[10px] text-muted">Paste any text (e.g., Maha Mrityunjaya Mantra) to chant.</div>
           </div>
         </div>
 
@@ -374,7 +374,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
 
         {askFeeling && (
           <div className="mt-6 space-y-3">
-            <div className="text-[12px] text-gray-200">How are you feeling now?</div>
+            <div className="text-[12px] text-primary dark:text-gray-200">How are you feeling now?</div>
             <div className="flex gap-2 justify-center">
               <button
                 onClick={() => handleFeeling('better')}
@@ -402,7 +402,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
       {/* Session History Section */}
       <div className="w-full max-w-sm space-y-4">
         <div className="flex justify-between items-center px-4">
-          <h3 className="text-[10px] uppercase tracking-[0.2em] text-teal-400/70 font-bold">Session History</h3>
+          <h3 className="text-[10px] uppercase tracking-[0.2em] text-teal-600 dark:text-teal-400/70 font-bold">Session History</h3>
           {state.breathingSessions.length > 0 && (
             <button 
               onClick={clearHistory}
@@ -415,19 +415,19 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
 
         <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
           {state.breathingSessions.length === 0 ? (
-            <div className="glass-card p-6 rounded-3xl text-center border-dashed border-white/5 opacity-50">
-              <p className="text-[10px] text-gray-500 uppercase tracking-widest">No sessions recorded yet.</p>
+            <div className="glass-card p-6 rounded-3xl text-center border-dashed border-subtle dark:border-white/5 opacity-80">
+              <p className="text-[10px] text-muted uppercase tracking-widest">No sessions recorded yet.</p>
             </div>
           ) : (
             state.breathingSessions.map((session) => (
-              <div key={session.id} className="glass-card p-4 rounded-2xl flex justify-between items-center border-white/5 animate-in fade-in slide-in-from-bottom-2">
+              <div key={session.id} className="glass-card p-4 rounded-2xl flex justify-between items-center border border-subtle dark:border-white/5 animate-in fade-in slide-in-from-bottom-2">
                 <div className="space-y-1">
-                  <div className="text-[10px] text-gray-400 font-mono">{formatTimestamp(session.timestamp)}</div>
-                  <div className="text-xs text-gray-200 font-medium">{session.cycles} {session.cycles === 1 ? 'Cycle' : 'Cycles'} Completed</div>
+                  <div className="text-[10px] text-muted dark:text-gray-400 font-mono">{formatTimestamp(session.timestamp)}</div>
+                  <div className="text-xs text-primary dark:text-gray-200 font-medium">{session.cycles} {session.cycles === 1 ? 'Cycle' : 'Cycles'} Completed</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-[10px] uppercase tracking-widest text-teal-500 font-bold">Duration</div>
-                  <div className="text-sm font-mono text-white/80">{formatTime(session.durationSeconds)}</div>
+                  <div className="text-[10px] uppercase tracking-widest text-teal-600 dark:text-teal-500 font-bold">Duration</div>
+                  <div className="text-sm font-mono auto-text">{formatTime(session.durationSeconds)}</div>
                 </div>
               </div>
             ))
