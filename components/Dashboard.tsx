@@ -174,7 +174,7 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
         <div className="mb-4">
           <button
             aria-label="Add New Affirmation"
-            className="px-4 py-2 rounded-xl bg-slate-900 dark:bg-amber-500 text-white dark:text-black text-[12px] font-bold"
+            className="px-4 py-2 rounded-xl bg-accent ensure-contrast text-[12px] font-bold shadow-md shadow-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/25 transition-all active:scale-95"
             onClick={() => window.dispatchEvent(new CustomEvent('openAddAffirmation'))}
           >
             Add New Affirmation

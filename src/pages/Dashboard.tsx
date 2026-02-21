@@ -133,7 +133,7 @@ const DashboardPage: React.FC = () => {
               </div>
               <button 
                 onClick={toggleTheme}
-                className="w-full h-10 rounded-xl bg-slate-900 ensure-contrast dark:bg-amber-500 flex items-center justify-center gap-2 group transition-all active:scale-95"
+                className="w-full h-10 rounded-xl bg-slate-900 ensure-contrast dark:bg-amber-500 flex items-center justify-center gap-2 group transition-all shadow-md shadow-slate-900/10 hover:shadow-lg hover:shadow-amber-500/30 active:scale-95"
               >
                 <span className="text-lg transition-transform group-hover:rotate-12">{state.theme === 'dark' ? '☀️' : '🌙'}</span>
                 <span className="text-[10px] font-bold uppercase tracking-widest ensure-contrast">
