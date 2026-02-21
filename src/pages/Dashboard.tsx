@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AppState, Theme } from '../../types';
 import { loadState, saveState } from '../../services/storageService';
 import Dashboard from '../../components/Dashboard';
-import SoundShiftStudio from '../../components/SoundShiftStudio';
+import SoundShiftStudio from '../../../components/SoundShiftStudio';
 import BeliefReframer from '../../components/BeliefReframer';
 import Tracker369 from '../../components/Tracker369';
 import Module555 from '../../components/Module555';

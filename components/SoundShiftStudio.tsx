@@ -115,43 +115,52 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
   };
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700">
+    <div className="soundshift-atmosphere space-y-10 animate-in fade-in duration-700">
       <div className="flex justify-between items-end px-2">
         <div>
-          <h2 className="text-3xl sm:text-4xl font-serif text-slate-800 dark:text-amber-100 font-bold">SoundShift Studio</h2>
-          <p className="text-secondary body-sm mt-1">Regulate your state through sound and subtle frequency.</p>
+          <h2 className="text-3xl sm:text-4xl font-serif font-semibold" style={{ color: '#2F3A4A', letterSpacing: '0.03em' }}>
+            SoundShift Studio
+          </h2>
+          <p className="body-sm mt-1" style={{ color: '#566074' }}>
+            Regulate your state through sound and subtle frequency.
+          </p>
         </div>
         <div className="text-right">
-          <div className="text-sm text-secondary">Today</div>
-          <div className="text-3xl font-bold text-amber-500 dark:text-amber-400">{totalMinutesToday} min</div>
-          <div className="label text-secondary mt-1">Listening</div>
+          <div className="text-xs" style={{ color: '#6B7280' }}>Today</div>
+          <div className="text-3xl font-semibold" style={{ color: '#C6A96E' }}>
+            {totalMinutesToday} min
+          </div>
+          <div className="text-[11px] mt-1" style={{ color: '#9CA3AF' }}>Listening</div>
         </div>
       </div>
 
-      <div className="glass-card p-6 rounded-[2rem] border-slate-200 dark:border-white/5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="glass-card p-6 rounded-[2rem] border-slate-200/70 dark:border-white/5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between" style={{ backgroundColor: '#EEF2F5' }}>
         <div>
-          <div className="label brand mb-1">Last Sound</div>
-          <div className="text-base sm:text-lg text-primary font-semibold">
+          <div className="text-[11px] font-semibold tracking-wide" style={{ color: '#5E6C9E' }}>
+            Last sound
+          </div>
+          <div className="text-base sm:text-lg mt-1 font-semibold" style={{ color: '#2F3A4A' }}>
             {lastMix ? lastMix.name : 'No mix played yet'}
           </div>
-          <div className="text-[11px] text-muted mt-1">
+          <div className="text-[11px] mt-1" style={{ color: '#6B7280' }}>
             Tap a tile below to build a calming or focusing soundscape.
           </div>
         </div>
         <button
           type="button"
-          className="px-5 py-3 rounded-2xl bg-accent ensure-contrast text-xs font-bold shadow-md hover:shadow-lg active:scale-95 transition-all disabled:opacity-40"
+          className="px-5 py-3 rounded-full text-xs font-semibold shadow-md hover:shadow-lg active:scale-95 transition-all disabled:opacity-40"
+          style={{ backgroundColor: '#A8C3B8', color: '#2F3A4A' }}
           disabled={!lastMix}
         >
           Quick Resume
         </button>
       </div>
 
-      <div className="glass-card p-6 rounded-[2rem] border-slate-200 dark:border-white/5">
+      <div className="glass-card p-6 rounded-[2rem] border-slate-200/70 dark:border-white/5" style={{ backgroundColor: '#F4F6F8' }}>
         <div className="flex justify-between items-center mb-4">
           <div>
-            <div className="label text-secondary">How are you feeling?</div>
-            <p className="text-[11px] text-muted mt-1">Select an emotional state to see suggested sound patterns.</p>
+            <div className="text-sm font-semibold" style={{ color: '#2F3A4A' }}>How are you feeling?</div>
+            <p className="text-[11px] mt-1" style={{ color: '#6B7280' }}>Select an emotional state to see suggested sound patterns.</p>
           </div>
         </div>
         <div className="flex flex-wrap gap-3 mt-2">
@@ -160,7 +169,7 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
               key={es.id}
               type="button"
               onClick={() => handleSelectEmotionalState(es.id)}
-              className="px-4 py-2 rounded-2xl bg-surface-soft dark:bg-white/5 text-[11px] font-bold uppercase tracking-widest text-secondary hover:text-primary hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
+              className="soundshift-chip"
             >
               {es.label}
             </button>
@@ -170,8 +179,8 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
 
       <div className="space-y-4">
         <div className="flex justify-between items-center px-1">
-          <h3 className="label text-secondary">Sound Palette</h3>
-          <span className="label brand">Frequencies • Binaural • Nature • Tones</span>
+          <h3 className="text-sm font-semibold" style={{ color: '#2F3A4A' }}>Sound Palette</h3>
+          <span className="text-[11px]" style={{ color: '#6B7280' }}>Frequencies • Binaural • Nature • Tones</span>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <SoundTile label="528 Hz" tag="For emotional balance" />
@@ -198,28 +207,25 @@ const SoundTile: React.FC<SoundTileProps> = ({ label, tag, onClick, active }) =>
     <button
       type="button"
       onClick={onClick}
-      className={`relative group overflow-hidden rounded-3xl aspect-[4/3] flex flex-col justify-between p-4 shadow-lg hover:shadow-xl transition-all ${
-        active
-          ? 'bg-emerald-500/20 border border-emerald-400/60 dark:border-emerald-300/70'
-          : 'bg-slate-900/70 dark:bg-slate-900/80 border border-slate-700/60 dark:border-white/5'
+      className={`soundshift-tile relative group aspect-[4/3] flex flex-col justify-between p-4 border ${
+        active ? 'soundshift-tile-active' : ''
       }`}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-slate-900/40 to-emerald-500/10 pointer-events-none" />
       <div className="relative z-10">
-        <div className="text-xs uppercase tracking-widest text-slate-300/80 mb-1">{tag}</div>
-        <div className="text-lg font-semibold text-white">{label}</div>
+        <div className="text-xs mb-1" style={{ color: '#E5E7EB' }}>{tag}</div>
+        <div className="text-lg font-semibold" style={{ color: '#F9FAFB' }}>{label}</div>
       </div>
       <div className="relative z-10 flex items-end justify-between mt-3">
-        <div className="flex items-center gap-1 text-[10px] text-slate-300">
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+        <div className="flex items-center gap-1 text-[10px]" style={{ color: '#E5F3EC' }}>
+          <span className="inline-block w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#B8E3D4' }} />
           <span>∞ loop</span>
         </div>
-        <div className="flex gap-0.5 items-end h-5">
-          <span className="w-0.5 bg-emerald-300/40 group-hover:bg-emerald-300/80 h-2 rounded-full transition-all" />
-          <span className="w-0.5 bg-emerald-300/30 group-hover:bg-emerald-300/70 h-3 rounded-full transition-all" />
-          <span className="w-0.5 bg-emerald-300/40 group-hover:bg-emerald-300/80 h-4 rounded-full transition-all" />
-          <span className="w-0.5 bg-emerald-300/30 group-hover:bg-emerald-300/70 h-3 rounded-full transition-all" />
-          <span className="w-0.5 bg-emerald-300/40 group-hover:bg-emerald-300/80 h-2 rounded-full transition-all" />
+        <div className="soundshift-wave">
+          <span className="soundshift-wave-bar" />
+          <span className="soundshift-wave-bar" />
+          <span className="soundshift-wave-bar" />
+          <span className="soundshift-wave-bar" />
+          <span className="soundshift-wave-bar" />
         </div>
       </div>
     </button>

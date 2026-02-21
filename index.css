@@ -53,6 +53,88 @@ body {
 .dark .text-black { color: #FFFFFF !important; }
 .transition-theme { transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease; }
 
+/* SoundShift Studio calming visuals */
+.soundshift-atmosphere {
+  position: relative;
+}
+.soundshift-atmosphere::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(circle at top, rgba(159, 211, 199, 0.08), transparent 55%);
+  opacity: 1;
+  pointer-events: none;
+  z-index: -1;
+  animation: soundshiftBreath 8s ease-in-out infinite;
+}
+@keyframes soundshiftBreath {
+  0% { opacity: 0.96; }
+  50% { opacity: 1; }
+  100% { opacity: 0.96; }
+}
+
+.soundshift-tile {
+  position: relative;
+  border-radius: 22px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  background: linear-gradient(to bottom, rgba(94, 108, 158, 0.18), rgba(123, 141, 183, 0.26));
+  overflow: hidden;
+}
+.soundshift-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.12), transparent 60%);
+  opacity: 0.6;
+  pointer-events: none;
+}
+.soundshift-tile-active {
+  animation: soundshiftTileGlow 6s ease-in-out infinite;
+}
+@keyframes soundshiftTileGlow {
+  0% { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); }
+  50% { box-shadow: 0 8px 24px rgba(159, 211, 199, 0.28); }
+  100% { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); }
+}
+
+.soundshift-chip {
+  border-radius: 9999px;
+  background-color: #E8F1EF;
+  padding: 0.4rem 1rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  transition: background-color 180ms ease, color 180ms ease, box-shadow 200ms ease, transform 120ms ease;
+}
+.soundshift-chip:active {
+  transform: scale(0.97);
+}
+.soundshift-chip-active {
+  background-color: #A8C3B8;
+  color: #2F3A4A;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.soundshift-wave {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 20px;
+}
+.soundshift-wave-bar {
+  width: 2px;
+  border-radius: 9999px;
+  background-color: rgba(184, 227, 212, 0.7);
+  opacity: 0.7;
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+.soundshift-tile:hover .soundshift-wave-bar {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
 /* Typography scale (both themes) */
 .heading-xl { font-size: 2rem; line-height: 2.5rem; font-weight: 700; }
 .heading-lg { font-size: 1.5rem; line-height: 2rem; font-weight: 700; }
