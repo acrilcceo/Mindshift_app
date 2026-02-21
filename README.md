@@ -1,3 +1,11 @@
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/dc3eda94-5992-4286-b685-abe5bf4605f3"
+    alt="MindShift Manifest preview"
+    width="1024"
+  />
+</p>
+
 <div align="center">
   <h1>MindShift Manifest</h1>
   <p>A daily mental reprogramming and manifestation companion built as a local‑first MVP.</p>
