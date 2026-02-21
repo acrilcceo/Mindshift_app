@@ -108,7 +108,7 @@ const curatedProducts: MarketplaceProduct[] = [
     imageUrl: '/images/marketplace/herbal-tea.jpg',
     shortDescription: 'A gentle herbal blend often chosen for quiet evening routines.',
     oftenUsedFor: 'Sipping during journaling or visualization before sleep.',
-    ritualTags: ['journal', 'visualize'],
+    ritualTags: ['journal'],
     sellerName: 'Quiet Cup Collective',
     ratingAverage: 4.5,
     ratingCount: 52,

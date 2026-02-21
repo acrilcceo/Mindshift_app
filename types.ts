@@ -170,7 +170,9 @@ export interface MarketplaceProduct {
   imageUrl: string;
   shortDescription: string;
   oftenUsedFor: string;
-  ritualTags: Array<'555' | '369' | 'soundshift' | 'whisper' | 'release' | 'journal'>;
+  ritualTags: Array<
+    '555' | '369' | 'soundshift' | 'whisper' | 'release' | 'journal' | 'visualize'
+  >;
   sellerName: string;
   ratingAverage: number;
   ratingCount: number;
