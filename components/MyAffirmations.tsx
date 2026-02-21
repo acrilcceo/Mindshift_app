@@ -99,23 +99,27 @@ const MyAffirmations: React.FC = () => {
 
   return (
     <section aria-labelledby="myAffirmationsTitle" className="glass-card p-8 rounded-[2rem] mt-10">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
         <div>
           <h3 id="myAffirmationsTitle" className="label text-secondary">My Affirmations</h3>
           <p className="body-sm text-muted">Create, edit, search, and organize your personal invocations.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-end gap-2 w-full md:w-auto max-w-full box-border">
           <button
             onClick={() => { setEditing(null); setOpenForm(true); }}
-            className="px-5 py-2.5 rounded-2xl bg-accent ensure-contrast text-[12px] font-semibold shadow-md shadow-emerald-500/15 hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-200 ease-out transform hover:-translate-y-0.5 active:scale-95 dark:bg-amber-500"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-accent ensure-contrast text-[12px] font-semibold shadow-md shadow-emerald-500/15 hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-200 ease-out transform hover:-translate-y-0.5 active:scale-95 dark:bg-amber-500"
             aria-label="Add New Affirmation"
           >
             Add New Affirmation
           </button>
-          <button onClick={handleExport} className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-gray-300 text-[12px]" aria-label="Export affirmations">
+          <button
+            onClick={handleExport}
+            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-gray-300 text-[12px]"
+            aria-label="Export affirmations"
+          >
             Export
           </button>
-          <label className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-gray-300 text-[12px] cursor-pointer" aria-label="Import affirmations">
+          <label className="hidden md:inline-flex items-center px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-gray-300 text-[12px] cursor-pointer" aria-label="Import affirmations">
             Import
             <input type="file" accept="application/json" className="hidden" onChange={e => e.target.files && handleImport(e.target.files[0])} />
           </label>
