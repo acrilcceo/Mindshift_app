@@ -11,6 +11,12 @@ declare module 'axe-core' {
 declare module '@testing-library/react' {
   export const render: (ui: any) => { container: HTMLElement } & Record<string, any>;
   export const screen: Record<string, any>;
+  export const renderHook: (callback: () => any, options?: any) => {
+    result: { current: any };
+    rerender: (callback?: () => any) => void;
+    unmount: () => void;
+  };
+  export function act(callback: () => void | Promise<void>): Promise<void> | void;
 }
 
 declare module '@testing-library/user-event' {

@@ -1,30 +1,47 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import React from 'react';
-import { renderHook, act } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
 
+type AuthContextValue = ReturnType<typeof useAuth>;
+
 function setup() {
-  const wrapper: React.FC<React.PropsWithChildren> = ({ children }) => (
-    <AuthProvider>{children}</AuthProvider>
+  const ref: { current: AuthContextValue | null } = { current: null };
+
+  const Capture: React.FC = () => {
+    ref.current = useAuth();
+    return null;
+  };
+
+  render(
+    <AuthProvider>
+      <Capture />
+    </AuthProvider>
   );
-  return renderHook(() => useAuth(), { wrapper });
+
+  if (!ref.current) {
+    throw new Error('Auth context not captured');
+  }
+
+  return ref;
 }
 
 describe('AuthContext logout', () => {
   it('clears currentUser and localStorage on logout', () => {
-    const { result } = setup();
+    const ref = setup();
 
     act(() => {
-      result.current.loginWithName('Tester');
+      ref.current!.loginWithName('Tester');
     });
 
-    expect(result.current.currentUser?.name).toBe('Tester');
+    expect(ref.current!.currentUser?.name).toBe('Tester');
 
     act(() => {
-      result.current.logout();
+      ref.current!.logout();
     });
 
-    expect(result.current.currentUser).toBeNull();
+    expect(ref.current!.currentUser).toBeNull();
     expect(window.localStorage.getItem('mindshift_user_name')).toBeNull();
   });
 });
