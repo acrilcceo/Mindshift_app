@@ -41,6 +41,7 @@ body {
 .bg-app { background-color: var(--bg); }
 .bg-surface { background-color: var(--surface); }
 .bg-surface-soft { background-color: var(--surface-soft); }
+.bg-accent { background-color: var(--accent); }
 .border-subtle { border-color: var(--border); }
 .light .text-white { color: #000000 !important; }
 .dark .text-black { color: #FFFFFF !important; }

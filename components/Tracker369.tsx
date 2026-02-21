@@ -44,7 +44,7 @@ const Tracker369: React.FC<Tracker369Props> = ({ state, onUpdate }) => {
       </div>
 
       <div className="glass-card p-6 rounded-[2rem]">
-        <div className="flex justify-between text-[10px] uppercase tracking-[0.3em] text-slate-500 dark:text-gray-400 mb-3 font-bold">
+        <div className="flex justify-between text-[10px] uppercase tracking-[0.3em] text-muted mb-3 font-bold">
           <span>Daily Resonance</span>
           <span>{Math.round(progress)}% Focused</span>
         </div>
@@ -56,12 +56,12 @@ const Tracker369: React.FC<Tracker369Props> = ({ state, onUpdate }) => {
         </div>
       </div>
 
-      <div className="flex bg-slate-200/50 dark:bg-gray-900/50 p-1.5 rounded-2xl">
+      <div className="flex bg-surface-soft dark:bg-gray-900/50 p-1.5 rounded-2xl border border-subtle dark:border-white/10">
         {(['morning', 'afternoon', 'night'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`flex-1 py-3.5 rounded-xl text-[10px] uppercase tracking-[0.2em] font-bold transition-all ${activeTab === tab ? 'bg-indigo-600 ensure-contrast shadow-xl shadow-indigo-600/20' : 'text-muted hover:text-slate-800 dark:hover:text-gray-300'}`}
+            className={`flex-1 py-3.5 rounded-xl text-[10px] uppercase tracking-[0.2em] font-bold transition-all ${activeTab === tab ? 'bg-accent ensure-contrast shadow-md shadow-emerald-500/20' : 'text-muted hover:text-primary dark:hover:text-gray-300'}`}
           >
             {tab}
           </button>
@@ -70,7 +70,7 @@ const Tracker369: React.FC<Tracker369Props> = ({ state, onUpdate }) => {
 
       <div className="glass-card p-8 rounded-[2rem] space-y-6">
         <div className="flex justify-between items-center text-[10px] uppercase tracking-[0.2em] text-muted font-bold">
-          <span className="text-indigo-600 dark:text-indigo-400">{activeTab} Transmission</span>
+          <span className="accent">{activeTab} Transmission</span>
           <span className="bg-slate-100 dark:bg-white/5 px-3 py-1 rounded-full">{currentEntry[activeTab].length} / {activeTab === 'morning' ? 3 : activeTab === 'afternoon' ? 6 : 9}</span>
         </div>
         <div className="flex gap-3">
@@ -84,7 +84,7 @@ const Tracker369: React.FC<Tracker369Props> = ({ state, onUpdate }) => {
           />
           <button 
             onClick={addAffirmation}
-            className="bg-indigo-600 px-6 rounded-2xl hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-600/20 active:scale-95 text-white font-bold"
+            className="bg-accent ensure-contrast px-6 rounded-2xl hover:opacity-95 transition-all shadow-lg shadow-emerald-500/20 active:scale-95 font-bold"
           >
             +
           </button>
