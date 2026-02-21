@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AppState, Theme } from '../../types';
 import { loadState, saveState } from '../../services/storageService';
 import Dashboard from '../../components/Dashboard';
+import SoundShiftStudio from '../../components/SoundShiftStudio';
 import BeliefReframer from '../../components/BeliefReframer';
 import Tracker369 from '../../components/Tracker369';
 import Module555 from '../../components/Module555';
@@ -10,7 +11,7 @@ import Journaling from '../../components/Journaling';
 import Visualization from '../../components/Visualization';
 import ProfileSettings from '../components/ProfileSettings';
 
-type View = 'dashboard' | 'beliefs' | '369' | '555' | 'release' | 'journal' | 'visualize' | 'profile';
+type View = 'dashboard' | 'soundshift' | 'beliefs' | '369' | '555' | 'release' | 'journal' | 'visualize' | 'profile';
 
 const DashboardPage: React.FC = () => {
   const [state, setState] = useState<AppState>(loadState());
@@ -74,6 +75,7 @@ const DashboardPage: React.FC = () => {
 
           <div className="space-y-3">
             <NavItem icon="🏠" label="Focus Dashboard" active={activeView === 'dashboard'} onClick={() => navigate('dashboard')} />
+            <NavItem icon="🎧" label="SoundShift Studio" active={activeView === 'soundshift'} onClick={() => navigate('soundshift')} />
             <NavItem icon="🧠" label="Neural Reframer" active={activeView === 'beliefs'} onClick={() => navigate('beliefs')} />
             <NavItem icon="⚡" label="3-6-9 Ritual" active={activeView === '369'} onClick={() => navigate('369')} />
             <NavItem icon="🔁" label="5-5-5 Ritual" active={activeView === '555'} onClick={() => navigate('555')} />
@@ -116,6 +118,7 @@ const DashboardPage: React.FC = () => {
         
         <div className="space-y-2 flex-1">
           <NavItem icon="🏠" label="Focus" active={activeView === 'dashboard'} onClick={() => navigate('dashboard')} />
+          <NavItem icon="🎧" label="SoundShift" active={activeView === 'soundshift'} onClick={() => navigate('soundshift')} />
           <NavItem icon="🧠" label="Reframer" active={activeView === 'beliefs'} onClick={() => navigate('beliefs')} />
           <NavItem icon="⚡" label="3-6-9" active={activeView === '369'} onClick={() => navigate('369')} />
           <NavItem icon="🔁" label="5-5-5" active={activeView === '555'} onClick={() => navigate('555')} />
@@ -150,6 +153,7 @@ const DashboardPage: React.FC = () => {
       <main className="w-full max-w-5xl mx-auto px-4 sm:px-8 lg:px-12 py-24 lg:py-20 transition-all">
         <div className="max-w-xl mx-auto">
           {activeView === 'dashboard' && <Dashboard state={state} onUpdate={handleUpdate} />}
+          {activeView === 'soundshift' && <SoundShiftStudio state={state} onUpdate={handleUpdate} />}
           {activeView === 'beliefs' && <BeliefReframer state={state} onUpdate={handleUpdate} />}
           {activeView === '369' && <Tracker369 state={state} onUpdate={handleUpdate} />}
           {activeView === '555' && <Module555 state={state} onUpdate={handleUpdate} />}

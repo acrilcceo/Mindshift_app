@@ -127,6 +127,20 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
           </div>
         </div>
 
+        <div className="glass-card p-6 rounded-[2rem] border-slate-200 dark:border-white/5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h3 className="label brand flex items-center gap-2">
+              <span>SoundShift Studio</span>
+            </h3>
+            <p className="text-[11px] text-muted mt-1">
+              Regulate your state through sound. Last session and listening time appear here.
+            </p>
+          </div>
+          <div className="flex flex-col items-end gap-1 text-right">
+            <div className="text-xs text-secondary">Audio contribution coming soon</div>
+          </div>
+        </div>
+
         {/* Mood History Chart */}
         <div className="glass-card p-6 rounded-[2rem] border-slate-200 dark:border-white/5">
           <div className="flex justify-between items-center mb-4 px-2">

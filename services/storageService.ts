@@ -17,7 +17,31 @@ const initialData: AppState = {
   breathingSessions: [],
   whisperGoals: [],
   theme: 'dark',
-  userAffirmations: []
+  userAffirmations: [],
+  soundMixes: [],
+  soundSessions: [],
+  soundPreferences: {
+    todayListeningMs: 0,
+    headphonePromptShown: false,
+    batterySaver: false
+  },
+  whisperGoalAnchors: [],
+  soundAnalytics: {
+    totalListeningMs: 0,
+    frequencyUsageMs: {},
+    emotionalUsageMs: {
+      anxiety: 0,
+      overthinking: 0,
+      sadness: 0,
+      melancholy: 0,
+      panic: 0,
+      stress: 0
+    },
+    sleepVsFocusMs: {
+      sleep: 0,
+      focus: 0
+    }
+  }
 };
 
 export const saveState = (state: AppState) => {
@@ -35,6 +59,34 @@ export const loadState = (): AppState => {
   if (!parsed.whisperGoals) parsed.whisperGoals = [];
   if (!parsed.theme) parsed.theme = 'dark';
   if (!parsed.userAffirmations) parsed.userAffirmations = [];
+  if (!parsed.soundMixes) parsed.soundMixes = [];
+  if (!parsed.soundSessions) parsed.soundSessions = [];
+  if (!parsed.soundPreferences) {
+    parsed.soundPreferences = {
+      todayListeningMs: 0,
+      headphonePromptShown: false,
+      batterySaver: false
+    };
+  }
+  if (!parsed.whisperGoalAnchors) parsed.whisperGoalAnchors = [];
+  if (!parsed.soundAnalytics) {
+    parsed.soundAnalytics = {
+      totalListeningMs: 0,
+      frequencyUsageMs: {},
+      emotionalUsageMs: {
+        anxiety: 0,
+        overthinking: 0,
+        sadness: 0,
+        melancholy: 0,
+        panic: 0,
+        stress: 0
+      },
+      sleepVsFocusMs: {
+        sleep: 0,
+        focus: 0
+      }
+    };
+  }
   
   // Basic streak logic
   const lastVisitDate = new Date(parsed.lastVisit).toDateString();

@@ -2,6 +2,10 @@
 export type Mood = 'Radiant' | 'Balanced' | 'Quiet' | 'Challenged' | 'Heavy';
 export type Theme = 'light' | 'dark';
 
+export type SoundCategory = 'frequency' | 'binaural' | 'isochronic' | 'ambient' | 'chantVoice';
+export type SoundUsageMode = 'sleep' | 'focus' | 'calm' | 'meditation' | 'energy';
+export type EmotionalState = 'anxiety' | 'overthinking' | 'sadness' | 'melancholy' | 'panic' | 'stress';
+
 export type AffirmationCategory = 'Gratitude' | 'Self-Love' | 'Success' | 'Health' | 'Relationships' | 'Custom';
 export type ReminderFrequency = 'None' | 'Daily' | 'Weekly' | 'Monthly' | 'Custom';
 
@@ -76,6 +80,83 @@ export interface WhisperGoal {
   timestamp: number;
 }
 
+export interface SoundAsset {
+  id: string;
+  category: SoundCategory;
+  title: string;
+  description: string;
+  supportTag: string;
+  emotionalTags: EmotionalState[];
+  sourceType: 'file' | 'generated';
+  url?: string;
+  loop: boolean;
+  metadata?: {
+    frequencyHz?: number;
+    binauralBand?: 'delta' | 'theta' | 'alpha' | 'beta' | 'gamma';
+    isochronicPreset?: 'focus' | 'calm' | 'energy' | 'deep_rest';
+    recommendedUsage?: SoundUsageMode[];
+    recommendedCopy?: string;
+  };
+}
+
+export type SoundLayerType = 'baseFrequency' | 'ambient' | 'binaural' | 'isochronic' | 'chantVoice';
+
+export interface SoundLayer {
+  id: string;
+  layerType: SoundLayerType;
+  assetId: string;
+  volume: number;
+  muted: boolean;
+  fadeInMs: number;
+  fadeOutMs: number;
+}
+
+export interface SoundMix {
+  id: string;
+  name: string;
+  layers: SoundLayer[];
+  usageMode: SoundUsageMode;
+  emotionalState?: EmotionalState;
+  loop: boolean;
+  createdFromSuggestion: boolean;
+  createdAt: number;
+}
+
+export interface SoundListeningSession {
+  id: string;
+  mixId: string;
+  startedAt: number;
+  endedAt?: number;
+  durationMs?: number;
+  usageMode: SoundUsageMode;
+  emotionalState?: EmotionalState;
+  isCalming: boolean;
+  layersUsed: { layerType: SoundLayerType; assetId: string }[];
+}
+
+export interface SoundPreferences {
+  lastPlayedMixId?: string;
+  lastPlayedAt?: number;
+  todayListeningMs: number;
+  headphonePromptShown: boolean;
+  batterySaver: boolean;
+}
+
+export interface WhisperGoalAnchor {
+  goalId: string;
+  mixId: string;
+  playCount: number;
+}
+
+export interface SoundAnalyticsProfile {
+  firstSessionAt?: number;
+  totalListeningMs: number;
+  frequencyUsageMs: Record<string, number>;
+  emotionalUsageMs: Record<EmotionalState, number>;
+  sleepVsFocusMs: { sleep: number; focus: number };
+  mostRegulatingPattern?: { description: string; computedAt: number };
+}
+
 export interface AppState {
   streak: number;
   lastVisit: number;
@@ -91,4 +172,9 @@ export interface AppState {
   whisperGoals: WhisperGoal[];
   theme: Theme;
   userAffirmations?: UserAffirmation[];
+  soundMixes?: SoundMix[];
+  soundSessions?: SoundListeningSession[];
+  soundPreferences?: SoundPreferences;
+  whisperGoalAnchors?: WhisperGoalAnchor[];
+  soundAnalytics?: SoundAnalyticsProfile;
 }
