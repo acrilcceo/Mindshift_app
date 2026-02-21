@@ -13,6 +13,82 @@ import ProfileSettings from '../components/ProfileSettings';
 
 type View = 'dashboard' | 'soundshift' | 'beliefs' | '369' | '555' | 'release' | 'journal' | 'visualize' | 'profile';
 
+const FocusIcon: React.FC = () => (
+  <svg viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="6" />
+    <path d="M4 12h2" />
+    <path d="M18 12h2" />
+    <path d="M12 4v2" />
+    <path d="M12 18v2" />
+  </svg>
+);
+
+const SoundshiftIcon: React.FC = () => (
+  <svg viewBox="0 0 24 24">
+    <rect x="5" y="9" width="3" height="6" rx="1" />
+    <rect x="16" y="9" width="3" height="6" rx="1" />
+    <path d="M8 11a4 4 0 0 1 8 0v2" />
+    <path d="M5 15a3 3 0 0 0 3 3" />
+    <path d="M16 18a3 3 0 0 0 3-3" />
+  </svg>
+);
+
+const ReframerIcon: React.FC = () => (
+  <svg viewBox="0 0 24 24">
+    <path d="M8 7h8" />
+    <path d="M8 12h8" />
+    <path d="M8 17h5" />
+    <path d="M6 5h12v14H6z" />
+  </svg>
+);
+
+const Ritual369Icon: React.FC = () => (
+  <svg viewBox="0 0 24 24">
+    <path d="M6 7h4v4H6z" />
+    <path d="M14 7h4v4h-4z" />
+    <path d="M10 13h4v4h-4z" />
+  </svg>
+);
+
+const Ritual555Icon: React.FC = () => (
+  <svg viewBox="0 0 24 24">
+    <path d="M6 8h4l-1 3h3" />
+    <path d="M6 13h4l-1 3h3" />
+    <path d="M6 18h4l-1 3h3" />
+  </svg>
+);
+
+const VisualizeIcon: React.FC = () => (
+  <svg viewBox="0 0 24 24">
+    <path d="M3 12s3.5-5 9-5 9 5 9 5-3.5 5-9 5-9-5-9-5z" />
+    <circle cx="12" cy="12" r="2.5" />
+  </svg>
+);
+
+const ReleaseIcon: React.FC = () => (
+  <svg viewBox="0 0 24 24">
+    <path d="M7 18c1-3 2.5-5.5 5-8" />
+    <path d="M11 20c1-3 2.5-5.5 5-8" />
+    <path d="M6 8c1.5-1 3.5-2 6-2 2.5 0 4.5 1 6 2" />
+  </svg>
+);
+
+const JournalIcon: React.FC = () => (
+  <svg viewBox="0 0 24 24">
+    <path d="M7 4h10v16H7z" />
+    <path d="M9 8h6" />
+    <path d="M9 12h4" />
+    <path d="M5 6v12" />
+  </svg>
+);
+
+const ProfileIcon: React.FC = () => (
+  <svg viewBox="0 0 24 24">
+    <circle cx="12" cy="9" r="3" />
+    <path d="M6 19a6 6 0 0 1 12 0" />
+  </svg>
+);
+
 const DashboardPage: React.FC = () => {
   const [state, setState] = useState<AppState>(loadState());
   const [activeView, setActiveView] = useState<View>('dashboard');
@@ -73,16 +149,16 @@ const DashboardPage: React.FC = () => {
             <button onClick={() => setIsMenuOpen(false)} className="text-muted hover:text-red-500">✕</button>
           </div>
 
-          <div className="space-y-3">
-            <NavItem icon="🏠" label="Focus Dashboard" active={activeView === 'dashboard'} onClick={() => navigate('dashboard')} />
-            <NavItem icon="🎧" label="SoundShift Studio" active={activeView === 'soundshift'} onClick={() => navigate('soundshift')} />
-            <NavItem icon="🧠" label="Neural Reframer" active={activeView === 'beliefs'} onClick={() => navigate('beliefs')} />
-            <NavItem icon="⚡" label="3-6-9 Ritual" active={activeView === '369'} onClick={() => navigate('369')} />
-            <NavItem icon="🔁" label="5-5-5 Ritual" active={activeView === '555'} onClick={() => navigate('555')} />
-            <NavItem icon="✨" label="Whisper Visualize" active={activeView === 'visualize'} onClick={() => navigate('visualize')} />
-            <NavItem icon="🌊" label="Emotional Release" active={activeView === 'release'} onClick={() => navigate('release')} />
-            <NavItem icon="📓" label="Daily Journal" active={activeView === 'journal'} onClick={() => navigate('journal')} />
-            <NavItem icon="⚙️" label="Profile Settings" active={activeView === 'profile'} onClick={() => navigate('profile')} />
+          <div className="space-y-4">
+            <NavItem icon={<FocusIcon />} label="Focus Dashboard" active={activeView === 'dashboard'} onClick={() => navigate('dashboard')} />
+            <NavItem icon={<SoundshiftIcon />} label="SoundShift Studio" active={activeView === 'soundshift'} onClick={() => navigate('soundshift')} />
+            <NavItem icon={<ReframerIcon />} label="Neural Reframer" active={activeView === 'beliefs'} onClick={() => navigate('beliefs')} />
+            <NavItem icon={<Ritual369Icon />} label="3-6-9 Ritual" active={activeView === '369'} onClick={() => navigate('369')} />
+            <NavItem icon={<Ritual555Icon />} label="5-5-5 Ritual" active={activeView === '555'} onClick={() => navigate('555')} />
+            <NavItem icon={<VisualizeIcon />} label="Whisper Visualize" active={activeView === 'visualize'} onClick={() => navigate('visualize')} />
+            <NavItem icon={<ReleaseIcon />} label="Emotional Release" active={activeView === 'release'} onClick={() => navigate('release')} />
+            <NavItem icon={<JournalIcon />} label="Daily Journal" active={activeView === 'journal'} onClick={() => navigate('journal')} />
+            <NavItem icon={<ProfileIcon />} label="Profile Settings" active={activeView === 'profile'} onClick={() => navigate('profile')} />
           </div>
 
           <div className="mt-auto pt-8 border-t border-slate-100 dark:border-white/5 space-y-4">
@@ -107,7 +183,7 @@ const DashboardPage: React.FC = () => {
         </nav>
       </div>
 
-      <nav className="hidden lg:flex fixed top-0 left-0 bottom-0 w-72 bg-white/70 dark:bg-black/60 backdrop-blur-2xl border-r border-slate-200 dark:border-white/10 z-50 p-8 flex-col">
+110→      <nav className="hidden lg:flex fixed top-0 left-0 bottom-0 w-72 sidebar-shell backdrop-blur-2xl border-r border-slate-200 dark:border-white/10 z-50 p-8 flex-col">
         <div className="mb-12">
           <div className="flex items-center gap-3">
              <div className="w-10 h-10 rounded-2xl bg-amber-500 flex items-center justify-center text-black font-bold text-xl shadow-lg shadow-amber-500/20">M</div>
@@ -116,16 +192,16 @@ const DashboardPage: React.FC = () => {
           <p className="text-[10px] text-slate-500 dark:text-gray-500 uppercase tracking-widest mt-2 font-bold px-1">Neural Empowerment</p>
         </div>
         
-        <div className="space-y-2 flex-1">
-          <NavItem icon="🏠" label="Focus" active={activeView === 'dashboard'} onClick={() => navigate('dashboard')} />
-          <NavItem icon="🎧" label="SoundShift" active={activeView === 'soundshift'} onClick={() => navigate('soundshift')} />
-          <NavItem icon="🧠" label="Reframer" active={activeView === 'beliefs'} onClick={() => navigate('beliefs')} />
-          <NavItem icon="⚡" label="3-6-9" active={activeView === '369'} onClick={() => navigate('369')} />
-          <NavItem icon="🔁" label="5-5-5" active={activeView === '555'} onClick={() => navigate('555')} />
-          <NavItem icon="✨" label="Visualize" active={activeView === 'visualize'} onClick={() => navigate('visualize')} />
-          <NavItem icon="🌊" label="Release" active={activeView === 'release'} onClick={() => navigate('release')} />
-          <NavItem icon="📓" label="Journal" active={activeView === 'journal'} onClick={() => navigate('journal')} />
-          <NavItem icon="⚙️" label="Profile" active={activeView === 'profile'} onClick={() => navigate('profile')} />
+        <div className="space-y-4 flex-1">
+          <NavItem icon={<FocusIcon />} label="Focus" active={activeView === 'dashboard'} onClick={() => navigate('dashboard')} />
+          <NavItem icon={<SoundshiftIcon />} label="SoundShift" active={activeView === 'soundshift'} onClick={() => navigate('soundshift')} />
+          <NavItem icon={<ReframerIcon />} label="Reframer" active={activeView === 'beliefs'} onClick={() => navigate('beliefs')} />
+          <NavItem icon={<Ritual369Icon />} label="3-6-9" active={activeView === '369'} onClick={() => navigate('369')} />
+          <NavItem icon={<Ritual555Icon />} label="5-5-5" active={activeView === '555'} onClick={() => navigate('555')} />
+          <NavItem icon={<VisualizeIcon />} label="Visualize" active={activeView === 'visualize'} onClick={() => navigate('visualize')} />
+          <NavItem icon={<ReleaseIcon />} label="Release" active={activeView === 'release'} onClick={() => navigate('release')} />
+          <NavItem icon={<JournalIcon />} label="Journal" active={activeView === 'journal'} onClick={() => navigate('journal')} />
+          <NavItem icon={<ProfileIcon />} label="Profile" active={activeView === 'profile'} onClick={() => navigate('profile')} />
         </div>
 
         <div className="mt-auto space-y-6">
@@ -173,7 +249,7 @@ const DashboardPage: React.FC = () => {
 };
 
 interface NavItemProps {
-  icon: string;
+  icon: React.ReactNode;
   label: string;
   active: boolean;
   onClick: () => void;
@@ -182,11 +258,15 @@ interface NavItemProps {
 const NavItem: React.FC<NavItemProps> = ({ icon, label, active, onClick }) => (
   <button
     onClick={onClick}
-    className={`flex items-center space-x-4 p-4 lg:px-5 lg:py-4 rounded-2xl transition-all duration-300 group w-full border ${active ? 'bg-surface-soft border-subtle text-primary shadow-md shadow-emerald-500/10 dark:bg-white/10 dark:border-transparent dark:text-white dark:shadow-none' : 'border-transparent text-muted dark:text-gray-500 hover:text-primary dark:hover:text-gray-300 hover:bg-surface-soft dark:hover:bg-white/5'}`}
+    className={`nav-item ${active ? 'nav-item-active' : ''}`}
   >
-    <span className={`text-xl lg:text-2xl transition-transform duration-300 ${active ? 'scale-110' : 'group-hover:scale-105'}`}>{icon}</span>
-    <span className="text-xs lg:text-sm font-bold lg:font-semibold uppercase lg:capitalize tracking-widest lg:tracking-normal">{label}</span>
-    {active && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></div>}
+    <span className="nav-item-icon">
+      {icon}
+    </span>
+    <span className="nav-item-label">
+      {label}
+    </span>
+    {active && <span className="nav-item-dot" />}
   </button>
 );
 

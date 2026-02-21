@@ -53,6 +53,13 @@ body {
 .dark .text-black { color: #FFFFFF !important; }
 .transition-theme { transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease; }
 
+.sidebar-shell {
+  background-color: rgba(255, 255, 255, 0.86);
+}
+.dark .sidebar-shell {
+  background: linear-gradient(to bottom, #0F1720, #0C141C);
+}
+
 /* SoundShift Studio calming visuals */
 .soundshift-atmosphere {
   position: relative;
@@ -75,6 +82,66 @@ body {
 
 .dark .soundshift-atmosphere {
   background: linear-gradient(to bottom, #0F1720, #0C141C);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #8FA3B8;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease, box-shadow 200ms ease;
+}
+.dark .nav-item {
+  color: #8FA3B8;
+}
+.nav-item:hover {
+  background-color: rgba(30, 42, 56, 0.7);
+  border-color: #2F445A;
+  color: #C9D4E2;
+}
+.dark .nav-item:hover {
+  background-color: #1B2430;
+}
+.nav-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+.nav-item-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.nav-item-label {
+  color: inherit;
+}
+.nav-item-active {
+  background-color: #1E2A38;
+  border-color: #2F445A;
+  color: #E6EDF5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.nav-item-dot {
+  margin-left: auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #D4B483;
 }
 
 .soundshift-tile {
