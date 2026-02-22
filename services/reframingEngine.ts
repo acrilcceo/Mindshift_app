@@ -4,6 +4,7 @@ import { themeKeywords } from "./themeLibrary";
 import { themeClusters } from "./themeClusters";
 import { extremeNegativeWords } from "./riskLexicon";
 import { storageGet, storageSet } from "./storageService";
+import { getSoundSuggestion, getRecommendedDurationMinutes } from "./soundRiskMapping";
 
 export type NegativePattern =
   | "self_doubt"
@@ -29,6 +30,9 @@ export type ReframeResult = {
   themes: string[];
   clusters: string[];
   riskLevel: RiskLevel;
+  suggestCalmingSound: boolean;
+  suggestedPresetId: string | null;
+  suggestedDurationMinutes: number | null;
 };
 
 export function tokenize(input: string): string[] {
@@ -324,6 +328,10 @@ export function reframeBelief(input: string): ReframeResult {
 
   const confidence = calculateConfidence(subject, pattern, domain);
 
+  const suggestCalmingSound = riskLevel === "elevated" || riskLevel === "high";
+  const suggestedPresetId = getSoundSuggestion(riskLevel);
+  const suggestedDurationMinutes = getRecommendedDurationMinutes(riskLevel);
+
   return {
     reframed,
     domain,
@@ -333,6 +341,9 @@ export function reframeBelief(input: string): ReframeResult {
     intensity,
     themes,
     clusters,
-    riskLevel
+    riskLevel,
+    suggestCalmingSound,
+    suggestedPresetId,
+    suggestedDurationMinutes
   };
 }

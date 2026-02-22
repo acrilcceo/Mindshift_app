@@ -67,6 +67,7 @@ class SoundMixEngine {
 
   ambientBuffers: Map<string, AudioBuffer> = new Map();
   activePresetId: string | null = null;
+  sleepTimeout: number | null = null;
 
   private async ensureContext(): Promise<AudioContext | null> {
     if (this.audioContext) return this.audioContext;
@@ -394,10 +395,47 @@ class SoundMixEngine {
     }
 
     this.activePresetId = null;
+    if (typeof window !== "undefined" && this.sleepTimeout !== null) {
+      window.clearTimeout(this.sleepTimeout);
+      this.sleepTimeout = null;
+    }
+  }
+
+  async fadeOutAndStop(durationSeconds = 15): Promise<void> {
+    const ctx = await this.ensureContext();
+    if (!ctx || !this.masterGain) return;
+    const now = ctx.currentTime;
+    const gain = this.masterGain.gain;
+    gain.cancelScheduledValues(now);
+    gain.setValueAtTime(gain.value, now);
+    gain.linearRampToValueAtTime(0, now + durationSeconds);
+
+    setTimeout(() => {
+      void this.stopAll(0);
+    }, durationSeconds * 1000);
+  }
+
+  startSleepTimer(minutes: number): void {
+    if (typeof window === "undefined") return;
+    if (this.sleepTimeout !== null) {
+      window.clearTimeout(this.sleepTimeout);
+      this.sleepTimeout = null;
+    }
+    const durationMs = minutes * 60 * 1000;
+    this.sleepTimeout = window.setTimeout(() => {
+      void this.fadeOutAndStop(15);
+    }, durationMs);
+  }
+
+  cancelSleepTimer(): void {
+    if (typeof window === "undefined") return;
+    if (this.sleepTimeout !== null) {
+      window.clearTimeout(this.sleepTimeout);
+      this.sleepTimeout = null;
+    }
   }
 }
 
 export const soundMixEngine = new SoundMixEngine();
 
 export const applyPresetById = (id: string) => soundMixEngine.applyPreset(id);
-
