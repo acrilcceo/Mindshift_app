@@ -9,6 +9,12 @@ let activeFrequencyGain: GainNode | null = null;
 let activeAmbientSource: AudioBufferSourceNode | null = null;
 let activeAmbientGain: GainNode | null = null;
 
+const FREQUENCY_MAP: Record<string, number> = {
+  "528": 528,
+  "432": 432,
+  "174": 174
+};
+
 const getAudioContext = async () => {
   if (typeof window === 'undefined') return null;
   if (audioContext) return audioContext;
@@ -23,18 +29,48 @@ const getAudioContext = async () => {
   return ctx;
 };
 
-const stopActiveNodes = () => {
-  if (activeFrequencyNode) {
+export const stop = (duration = 1.5) => {
+  if (!audioContext || !activeFrequencyNode || !activeFrequencyGain) return;
+
+  const ctx = audioContext;
+  const osc = activeFrequencyNode;
+  const gain = activeFrequencyGain;
+  const now = ctx.currentTime;
+
+  gain.gain.cancelScheduledValues(now);
+  gain.gain.setValueAtTime(gain.gain.value, now);
+  gain.gain.linearRampToValueAtTime(0, now + duration);
+
+  try {
+    osc.stop(now + duration);
+  } catch {
     try {
-      activeFrequencyNode.stop();
+      osc.stop();
     } catch {
     }
-    activeFrequencyNode.disconnect();
-    activeFrequencyNode = null;
   }
-  if (activeFrequencyGain) {
-    activeFrequencyGain.disconnect();
-    activeFrequencyGain = null;
+
+  setTimeout(() => {
+    try {
+      osc.disconnect();
+    } catch {
+    }
+    try {
+      gain.disconnect();
+    } catch {
+    }
+    if (activeFrequencyNode === osc) {
+      activeFrequencyNode = null;
+    }
+    if (activeFrequencyGain === gain) {
+      activeFrequencyGain = null;
+    }
+  }, duration * 1000);
+};
+
+const stopActiveNodes = () => {
+  if (activeFrequencyNode || activeFrequencyGain) {
+    stop(0.2);
   }
   if (activeAmbientSource) {
     try {
@@ -48,6 +84,43 @@ const stopActiveNodes = () => {
     activeAmbientGain.disconnect();
     activeAmbientGain = null;
   }
+};
+
+export const playFrequency = async (id: string, fadeDuration = 1.5) => {
+  const hz = FREQUENCY_MAP[id];
+  const ctx = await getAudioContext();
+  if (!ctx || !masterGain || !hz) return;
+
+  const now = ctx.currentTime;
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = hz;
+  osc.connect(gain);
+  gain.connect(masterGain);
+
+  gain.gain.setValueAtTime(0, now);
+  gain.gain.linearRampToValueAtTime(1, now + fadeDuration);
+
+  osc.start(now);
+
+  if (activeFrequencyNode && activeFrequencyGain) {
+    activeFrequencyGain.gain.cancelScheduledValues(now);
+    activeFrequencyGain.gain.setValueAtTime(activeFrequencyGain.gain.value, now);
+    activeFrequencyGain.gain.linearRampToValueAtTime(0, now + fadeDuration);
+    try {
+      activeFrequencyNode.stop(now + fadeDuration);
+    } catch {
+      try {
+        activeFrequencyNode.stop();
+      } catch {
+      }
+    }
+  }
+
+  activeFrequencyNode = osc;
+  activeFrequencyGain = gain;
 };
 
 const loadAudioBuffer = async (ctx: AudioContext, url: string) => {
