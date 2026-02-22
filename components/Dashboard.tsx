@@ -63,9 +63,25 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
         recentWhispers ? `Whisper Goals: ${recentWhispers}` : ''
       ].filter(Boolean).join('; ');
 
-      const affirmations = await generateAffirmations(mood, context);
-      onUpdate({ dailyAffirmation: affirmations });
-      setAffirmationIndex(0);
+      const result = await generateAffirmations(mood, context);
+      const candidate = result[0];
+      const existing = state.dailyAffirmation || [];
+      if (!candidate) {
+        if (!existing.length) {
+          onUpdate({ dailyAffirmation: [] });
+          setAffirmationIndex(0);
+        }
+        return;
+      }
+      let next = existing;
+      if (!existing.includes(candidate)) {
+        next = [...existing, candidate];
+        if (next.length > 3) {
+          next = next.slice(-3);
+        }
+      }
+      onUpdate({ dailyAffirmation: next });
+      setAffirmationIndex(next.length ? next.length - 1 : 0);
     } finally {
       setLoading(false);
     }
@@ -217,7 +233,7 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
           </button>
         </div>
         <div className="affirmation-body text-center">
-          {state.dailyAffirmation ? (
+          {state.dailyAffirmation && state.dailyAffirmation.length > 0 ? (
             <>
               <div className="w-full transition-all duration-500 transform animate-in fade-in zoom-in-95 affirmation-text-block" key={affirmationIndex}>
                 <p className="affirmation-text font-serif text-primary italic">
@@ -235,13 +251,17 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
               </div>
               <div className="affirmation-controls">
                 <button 
-                  onClick={() => setAffirmationIndex(prev => (prev > 0 ? prev - 1 : state.dailyAffirmation!.length - 1))}
+                  onClick={() => setAffirmationIndex(prev => (prev > 0 ? prev - 1 : prev))}
+                  disabled={affirmationIndex === 0}
+                  aria-disabled={affirmationIndex === 0}
                   className="p-2 text-secondary hover:text-purple-500 transition-colors"
                 >
                   <span className="text-[10px] label">Prev</span>
                 </button>
                 <button 
-                  onClick={() => setAffirmationIndex(prev => (prev < state.dailyAffirmation!.length - 1 ? prev + 1 : 0))}
+                  onClick={() => setAffirmationIndex(prev => (prev < state.dailyAffirmation!.length - 1 ? prev + 1 : prev))}
+                  disabled={affirmationIndex === state.dailyAffirmation.length - 1}
+                  aria-disabled={affirmationIndex === state.dailyAffirmation.length - 1}
                   className="p-2 text-secondary hover:text-purple-500 transition-colors"
                 >
                   <span className="text-[10px] label">Next</span>

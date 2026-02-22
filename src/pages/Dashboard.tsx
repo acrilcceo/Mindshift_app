@@ -204,7 +204,7 @@ const DashboardPage: React.FC = () => {
         </nav>
       </div>
 
-110→      <nav className="hidden lg:flex fixed top-0 left-0 bottom-0 w-72 sidebar-shell backdrop-blur-2xl border-r border-slate-200 dark:border-white/10 z-50 p-8 flex-col">
+      <nav className="hidden lg:flex fixed top-0 left-0 bottom-0 w-72 sidebar-shell backdrop-blur-2xl border-r border-slate-200 dark:border-white/10 z-50 p-8 flex-col">
         <div className="mb-12">
           <div className="flex items-center gap-3">
              <div className="w-10 h-10 rounded-2xl bg-amber-500 flex items-center justify-center text-black font-bold text-xl shadow-lg shadow-amber-500/20">M</div>
