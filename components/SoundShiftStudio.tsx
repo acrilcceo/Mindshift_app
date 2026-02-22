@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { AppState, EmotionalState, SoundMix } from '../types';
 import { createDefault432RainMix } from '../services/soundLibrary';
-import { startMixSession, endCurrentSession, playFrequency, stop } from '../services/soundEngine';
+import { startMixSession, endCurrentSession } from '../services/soundEngine';
+import { soundMixEngine, applyPresetById } from '../services/soundMixEngine';
 
 interface SoundShiftStudioProps {
   state: AppState;
@@ -19,7 +20,7 @@ const emotionalStates: { id: EmotionalState; label: string }[] = [
 
 const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [activeFrequencyId, setActiveFrequencyId] = useState<string | null>(null);
+  const [activePresetId, setActivePresetId] = useState<string | null>(null);
   const [selectedEmotion, setSelectedEmotion] = useState<EmotionalState | null>(null);
 
   const totalMinutesToday = useMemo(() => {
@@ -59,7 +60,6 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
       if (!existing) {
         onUpdate({ soundMixes: [mixToUse, ...mixes] });
       }
-      stop(0.2);
       const session = await startMixSession(mixToUse);
       const prefs = ensureSoundPreferences();
       onUpdate({
@@ -70,15 +70,12 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
         }
       });
       setIsPlaying(true);
-      setActiveFrequencyId('432');
       return;
     }
 
     const finished = await endCurrentSession();
     if (!finished) {
-      stop(0.2);
       setIsPlaying(false);
-      setActiveFrequencyId(null);
       return;
     }
     const durationMs = finished.durationMs || 0;
@@ -118,20 +115,17 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
       },
       soundAnalytics: nextAnalytics
     });
-    stop(0.2);
     setIsPlaying(false);
-    setActiveFrequencyId(null);
   };
 
-  const handleFrequencyClick = async (frequencyId: string) => {
-    if (activeFrequencyId === frequencyId) {
-      stop(1.5);
-      setActiveFrequencyId(null);
+  const handlePresetClick = async (presetId: string) => {
+    if (activePresetId === presetId) {
+      await soundMixEngine.stopAll(1.5);
+      setActivePresetId(null);
       return;
     }
-
-    await playFrequency(frequencyId, 1.5);
-    setActiveFrequencyId(frequencyId);
+    await applyPresetById(presetId);
+    setActivePresetId(presetId);
   };
 
   return (
@@ -206,20 +200,20 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
           <SoundTile
             label="528 Hz"
             tag="For emotional balance"
-            onClick={() => handleFrequencyClick('528')}
-            active={activeFrequencyId === '528'}
+            onClick={() => handlePresetClick('ground')}
+            active={activePresetId === 'ground'}
           />
           <SoundTile
             label="432 Hz"
             tag="For grounding"
-            onClick={handleToggle432Rain}
-            active={activeFrequencyId === '432'}
+            onClick={() => handlePresetClick('focus')}
+            active={activePresetId === 'focus'}
           />
           <SoundTile
             label="174 Hz"
             tag="For deep rest"
-            onClick={() => handleFrequencyClick('174')}
-            active={activeFrequencyId === '174'}
+            onClick={() => handlePresetClick('deep_rest')}
+            active={activePresetId === 'deep_rest'}
           />
           <SoundTile label="Rain" tag="For soft focus" />
           <SoundTile label="Ocean Waves" tag="For overthinking" />
