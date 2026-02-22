@@ -1,4 +1,5 @@
 import { getRandomAffirmationExcluding, affirmationPool } from "./affirmationLibrary";
+import { reframeBelief as coreReframeBelief } from "./reframingEngine";
 
 const TEMPLATES = [
   "I {verb} {quality} in every {context}.",
@@ -302,36 +303,9 @@ export const generateAffirmations = async (mood?: string, context?: string): Pro
   return [chosen];
 };
 
-function toPositive(input: string) {
-  let s = input.trim();
-  const map: [RegExp, string][] = [
-    [/\bcan't\b/gi, "can"],
-    [/\bwon't\b/gi, "choose to"],
-    [/\bnever\b/gi, "always"],
-    [/\bnot\b/gi, ""],
-    [/\bcannot\b/gi, "can"],
-    [/\bafraid\b/gi, "courageous"],
-    [/\bweak\b/gi, "strong"],
-    [/\black\b/gi, "abundance"],
-    [/\bimpossible\b/gi, "possible"]
-  ];
-  for (const [re, rep] of map) s = s.replace(re, rep);
-  s = s.replace(/\s+/g, " ").trim();
-  if (!/^i\b/i.test(s)) s = `I ${s}`;
-  s = s.replace(/^i\s+/i, "I ");
-  if (!/[.!?]$/.test(s)) s += ".";
-  const endings = [
-    "I am capable, deserving, and ready now.",
-    "I choose mastery and abundance now.",
-    "I move forward with clarity and trust.",
-    "I act in aligned, confident presence."
-  ];
-  const final = `I transmute that story. ${endings[hashSeed(input) % endings.length]}`;
-  return final;
-}
-
 export const reframeBelief = async (limitingBelief: string): Promise<string> => {
-  return toPositive(limitingBelief);
+  const result = coreReframeBelief(limitingBelief || "");
+  return result.reframed;
 };
 
 export const generateEmotionalReleasePrompt = async (currentMood: string): Promise<string> => {
