@@ -263,16 +263,30 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
         <div className="frequency-tabs-viewport">
           <div ref={moodTabsRef} className="frequency-tabs-wrapper">
             {(['Radiant', 'Balanced', 'Quiet', 'Challenged', 'Heavy'] as Mood[]).map((m) => (
-              <button
+              <div
                 key={m}
-                onClick={() => handleMoodSelect(m)}
-                className={`frequency-tab flex flex-col items-center space-y-3 transition-all transform hover:scale-110 ${currentMood === m ? 'scale-115' : 'opacity-40 grayscale hover:grayscale-0 hover:opacity-100'}`}
+                className={`frequency-item transition-all transform hover:scale-110 ${
+                  currentMood === m
+                    ? 'scale-115'
+                    : 'opacity-40 grayscale hover:grayscale-0 hover:opacity-100'
+                }`}
               >
-                <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-[1.5rem] flex items-center justify-center text-2xl transition-all shadow-xl ${currentMood === m ? 'ring-2 ring-amber-500 bg-amber-500/10 dark:bg-amber-400/10' : 'bg-white/60 dark:bg-white/10'}`}>
-                  <span className="label text-secondary">{m[0]}</span>
-                </div>
-                <span className="label text-secondary">{m}</span>
-              </button>
+                <button
+                  type="button"
+                  onClick={() => handleMoodSelect(m)}
+                  className={`frequency-circle shadow-xl ${
+                    currentMood === m
+                      ? 'ring-2 ring-amber-500 bg-amber-500/10 dark:bg-amber-400/10'
+                      : 'bg-white/60 dark:bg-white/10'
+                  }`}
+                  aria-label={m}
+                >
+                  <span className="label text-secondary text-2xl">{m[0]}</span>
+                </button>
+                <span className="frequency-label label text-secondary">
+                  {m}
+                </span>
+              </div>
             ))}
           </div>
           {showMoodLeftFade && <div className="frequency-tabs-fade frequency-tabs-fade-left" />}
