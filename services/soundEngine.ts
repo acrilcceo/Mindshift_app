@@ -8,12 +8,21 @@ let activeFrequencyNode: OscillatorNode | null = null;
 let activeFrequencyGain: GainNode | null = null;
 let activeAmbientSource: AudioBufferSourceNode | null = null;
 let activeAmbientGain: GainNode | null = null;
+let activeAmbientKey: string | null = null;
 
 const FREQUENCY_MAP: Record<string, number> = {
   "528": 528,
   "432": 432,
   "174": 174
 };
+
+const AMBIENT_MAP: Record<string, string> = {
+  rain: "/sounds/rain.mp3",
+  ocean: "/sounds/ocean.mp3",
+  forest: "/sounds/forest.mp3"
+};
+
+const ambientBuffers: Record<string, AudioBuffer> = {};
 
 const getAudioContext = async () => {
   if (typeof window === 'undefined') return null;
@@ -68,21 +77,53 @@ export const stop = (duration = 1.5) => {
   }, duration * 1000);
 };
 
+export const stopAmbient = (duration = 1.5) => {
+  if (!audioContext || !activeAmbientSource || !activeAmbientGain) return;
+
+  const ctx = audioContext;
+  const source = activeAmbientSource;
+  const gain = activeAmbientGain;
+  const now = ctx.currentTime;
+
+  gain.gain.cancelScheduledValues(now);
+  gain.gain.setValueAtTime(gain.gain.value, now);
+  gain.gain.linearRampToValueAtTime(0, now + duration);
+
+  try {
+    source.stop(now + duration);
+  } catch {
+    try {
+      source.stop();
+    } catch {
+    }
+  }
+
+  const timeoutMs = duration * 1000;
+  setTimeout(() => {
+    try {
+      source.disconnect();
+    } catch {
+    }
+    try {
+      gain.disconnect();
+    } catch {
+    }
+    if (activeAmbientSource === source) {
+      activeAmbientSource = null;
+    }
+    if (activeAmbientGain === gain) {
+      activeAmbientGain = null;
+    }
+    activeAmbientKey = null;
+  }, timeoutMs);
+};
+
 const stopActiveNodes = () => {
   if (activeFrequencyNode || activeFrequencyGain) {
     stop(0.2);
   }
-  if (activeAmbientSource) {
-    try {
-      activeAmbientSource.stop();
-    } catch {
-    }
-    activeAmbientSource.disconnect();
-    activeAmbientSource = null;
-  }
-  if (activeAmbientGain) {
-    activeAmbientGain.disconnect();
-    activeAmbientGain = null;
+  if (activeAmbientSource || activeAmbientGain) {
+    stopAmbient(0.2);
   }
 };
 
@@ -129,6 +170,89 @@ const loadAudioBuffer = async (ctx: AudioContext, url: string) => {
   return ctx.decodeAudioData(arrayBuffer);
 };
 
+export const preloadAmbients = async () => {
+  const ctx = await getAudioContext();
+  if (!ctx) return;
+  const keys = Object.keys(AMBIENT_MAP);
+  for (let i = 0; i < keys.length; i += 1) {
+    const key = keys[i];
+    if (ambientBuffers[key]) continue;
+    const url = AMBIENT_MAP[key];
+    try {
+      const res = await fetch(url);
+      const arrayBuffer = await res.arrayBuffer();
+      const buffer = await ctx.decodeAudioData(arrayBuffer);
+      ambientBuffers[key] = buffer;
+    } catch {
+    }
+  }
+};
+
+export const playAmbient = async (key: string, fadeDuration = 1.5) => {
+  const ctx = await getAudioContext();
+  if (!ctx || !masterGain) return;
+  if (!ambientBuffers[key]) return;
+
+  const buffer = ambientBuffers[key];
+  const now = ctx.currentTime;
+
+  const source = ctx.createBufferSource();
+  const gain = ctx.createGain();
+  source.buffer = buffer;
+  source.loop = true;
+  gain.gain.setValueAtTime(0, now);
+  source.connect(gain);
+  gain.connect(masterGain);
+  source.start(now);
+
+  gain.gain.linearRampToValueAtTime(0.6, now + fadeDuration);
+
+  if (activeAmbientSource && activeAmbientGain) {
+    const prevSource = activeAmbientSource;
+    const prevGain = activeAmbientGain;
+    prevGain.gain.cancelScheduledValues(now);
+    prevGain.gain.setValueAtTime(prevGain.gain.value, now);
+    prevGain.gain.linearRampToValueAtTime(0, now + fadeDuration);
+    try {
+      prevSource.stop(now + fadeDuration);
+    } catch {
+      try {
+        prevSource.stop();
+      } catch {
+      }
+    }
+    const timeoutMs = fadeDuration * 1000;
+    setTimeout(() => {
+      try {
+        prevSource.disconnect();
+      } catch {
+      }
+      try {
+        prevGain.disconnect();
+      } catch {
+      }
+      if (activeAmbientSource === prevSource) {
+        activeAmbientSource = null;
+      }
+      if (activeAmbientGain === prevGain) {
+        activeAmbientGain = null;
+      }
+    }, timeoutMs);
+  }
+
+  activeAmbientSource = source;
+  activeAmbientGain = gain;
+  activeAmbientKey = key;
+};
+
+export const toggleAmbient = async (key: string, fadeDuration = 1.5) => {
+  if (activeAmbientKey === key) {
+    stopAmbient(fadeDuration);
+    return;
+  }
+  await playAmbient(key, fadeDuration);
+};
+
 const playMixLayers = async (mix: SoundMix) => {
   const ctx = await getAudioContext();
   if (!ctx || !masterGain) return;
@@ -167,6 +291,7 @@ const playMixLayers = async (mix: SoundMix) => {
       source.start();
       activeAmbientSource = source;
       activeAmbientGain = gain;
+      activeAmbientKey = null;
     }
   }
 };
