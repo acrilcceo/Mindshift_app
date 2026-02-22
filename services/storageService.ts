@@ -107,3 +107,20 @@ export const loadState = (): AppState => {
   
   return parsed;
 };
+
+export const storageGet = (key: string): any => {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+};
+
+export const storageSet = (key: string, value: any): void => {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+  }
+};

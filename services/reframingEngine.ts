@@ -1,4 +1,9 @@
 import { domainKeywords, ReframeDomain } from "./reframingLibrary";
+import { negativeWords, positiveWords } from "./sentimentLexicon";
+import { themeKeywords } from "./themeLibrary";
+import { themeClusters } from "./themeClusters";
+import { extremeNegativeWords } from "./riskLexicon";
+import { storageGet, storageSet } from "./storageService";
 
 export type NegativePattern =
   | "self_doubt"
@@ -8,11 +13,22 @@ export type NegativePattern =
   | "comparison"
   | "unknown";
 
+export type RiskLevel =
+  | "low"
+  | "moderate"
+  | "elevated"
+  | "high";
+
 export type ReframeResult = {
   reframed: string;
   domain: ReframeDomain;
   pattern: NegativePattern;
   confidence: number;
+  sentiment: number;
+  intensity: number;
+  themes: string[];
+  clusters: string[];
+  riskLevel: RiskLevel;
 };
 
 export function tokenize(input: string): string[] {
@@ -21,6 +37,29 @@ export function tokenize(input: string): string[] {
     .replace(/[^\w\s]/g, "")
     .split(" ")
     .filter(Boolean);
+}
+
+function calculateSentiment(input: string): number {
+  const tokens = tokenize(input);
+  let score = 0;
+
+  tokens.forEach(token => {
+    if (negativeWords[token]) score += negativeWords[token];
+    if (positiveWords[token]) score += positiveWords[token];
+  });
+
+  return Math.max(-100, Math.min(100, score));
+}
+
+function calculateIntensity(input: string, sentiment: number): number {
+  let intensity = Math.abs(sentiment);
+  const lower = input.toLowerCase();
+
+  if (lower.includes("always") || lower.includes("never")) {
+    intensity += 15;
+  }
+
+  return Math.min(100, intensity);
 }
 
 export function extractSubject(input: string): string {
@@ -62,6 +101,62 @@ export function detectDomain(input: string): ReframeDomain {
     }
   }
   return "mindset";
+}
+
+export function detectThemes(input: string): string[] {
+  const detected: string[] = [];
+  const lower = input.toLowerCase();
+
+  for (const theme in themeKeywords) {
+    if (themeKeywords[theme].some(keyword => lower.includes(keyword))) {
+      detected.push(theme);
+    }
+  }
+
+  return detected;
+}
+
+function detectClusters(themes: string[]): string[] {
+  const clusters: string[] = [];
+
+  for (const cluster in themeClusters) {
+    if (themeClusters[cluster].some(theme => themes.includes(theme))) {
+      clusters.push(cluster);
+    }
+  }
+
+  return clusters;
+}
+
+type ThemeStats = {
+  [theme: string]: number;
+};
+
+type ClusterStats = {
+  [cluster: string]: number;
+};
+
+const THEME_STATS_KEY = "reframer_theme_stats_v1";
+const CLUSTER_STATS_KEY = "reframer_cluster_stats_v1";
+
+function loadThemeStats(): ThemeStats {
+  const stats = storageGet(THEME_STATS_KEY);
+  if (!stats || typeof stats !== "object") return {};
+  return stats as ThemeStats;
+}
+
+function saveThemeStats(stats: ThemeStats) {
+  storageSet(THEME_STATS_KEY, stats);
+}
+
+function loadClusterStats(): ClusterStats {
+  const stats = storageGet(CLUSTER_STATS_KEY);
+  if (!stats || typeof stats !== "object") return {};
+  return stats as ClusterStats;
+}
+
+function saveClusterStats(stats: ClusterStats) {
+  storageSet(CLUSTER_STATS_KEY, stats);
 }
 
 const patternTemplates: Record<NegativePattern, string[]> = {
@@ -121,12 +216,102 @@ function calculateConfidence(subject: string, pattern: NegativePattern, domain: 
   return Math.max(0, Math.min(100, score));
 }
 
+function detectRiskLevel(
+  input: string,
+  sentiment: number,
+  intensity: number
+): RiskLevel {
+  const lower = input.toLowerCase();
+
+  const extremeMatch = extremeNegativeWords.some(word =>
+    lower.includes(word.toLowerCase())
+  );
+
+  if (extremeMatch) return "high";
+
+  if (sentiment <= -70 && intensity > 60) {
+    return "high";
+  }
+
+  if (sentiment <= -50) {
+    return "elevated";
+  }
+
+  if (sentiment <= -25) {
+    return "moderate";
+  }
+
+  return "low";
+}
+
+function updateThemeStats(detectedThemes: string[]): ThemeStats {
+  const stats = loadThemeStats();
+
+  detectedThemes.forEach(theme => {
+    stats[theme] = (stats[theme] || 0) + 1;
+  });
+
+  saveThemeStats(stats);
+  return stats;
+}
+
+function updateClusterStats(clusters: string[]): void {
+  const stats = loadClusterStats();
+
+  clusters.forEach(cluster => {
+    stats[cluster] = (stats[cluster] || 0) + 1;
+  });
+
+  saveClusterStats(stats);
+}
+
+function amplifyRiskIfRecurring(
+  themes: string[],
+  baseRisk: RiskLevel,
+  stats: ThemeStats
+): RiskLevel {
+  const recurring = themes.some(theme => (stats[theme] || 0) >= 5);
+
+  if (!recurring) return baseRisk;
+
+  if (baseRisk === "elevated") return "high";
+  if (baseRisk === "moderate") return "elevated";
+
+  return baseRisk;
+}
+
+export function getTopRecurringTheme(): string | null {
+  const stats = loadThemeStats();
+  const entries = Object.entries(stats);
+  if (!entries.length) return null;
+  const sorted = entries.sort((a, b) => b[1] - a[1]);
+  return sorted[0][0];
+}
+
+export function getDominantCluster(): string | null {
+  const stats = loadClusterStats();
+  const entries = Object.entries(stats);
+  if (!entries.length) return null;
+  const sorted = entries.sort((a, b) => b[1] - a[1]);
+  return sorted[0][0];
+}
+
 let lastOutputs: string[] = [];
 
 export function reframeBelief(input: string): ReframeResult {
   const subject = extractSubject(input);
   const pattern = detectPattern(input);
   const domain = detectDomain(input);
+  const sentiment = calculateSentiment(input);
+  const intensity = calculateIntensity(input, sentiment);
+  const themes = detectThemes(input);
+  const clusters = detectClusters(themes);
+
+  const updatedThemeStats = updateThemeStats(themes);
+  updateClusterStats(clusters);
+
+  const baseRisk = detectRiskLevel(input, sentiment, intensity);
+  const riskLevel = amplifyRiskIfRecurring(themes, baseRisk, updatedThemeStats);
 
   let reframed = buildReframe(subject, pattern, domain);
   let attempts = 0;
@@ -139,6 +324,15 @@ export function reframeBelief(input: string): ReframeResult {
 
   const confidence = calculateConfidence(subject, pattern, domain);
 
-  return { reframed, domain, pattern, confidence };
+  return {
+    reframed,
+    domain,
+    pattern,
+    confidence,
+    sentiment,
+    intensity,
+    themes,
+    clusters,
+    riskLevel
+  };
 }
-
