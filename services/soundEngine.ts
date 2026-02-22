@@ -38,6 +38,18 @@ const getAudioContext = async () => {
   return ctx;
 };
 
+const ensureContextRunning = async () => {
+  const ctx = await getAudioContext();
+  if (!ctx) return null;
+  if (ctx.state === 'suspended') {
+    try {
+      await ctx.resume();
+    } catch {
+    }
+  }
+  return ctx;
+};
+
 export const stop = (duration = 1.5) => {
   if (!audioContext || !activeFrequencyNode || !activeFrequencyGain) return;
 
@@ -129,7 +141,7 @@ const stopActiveNodes = () => {
 
 export const playFrequency = async (id: string, fadeDuration = 1.5) => {
   const hz = FREQUENCY_MAP[id];
-  const ctx = await getAudioContext();
+  const ctx = await ensureContextRunning();
   if (!ctx || !masterGain || !hz) return;
 
   const now = ctx.currentTime;
@@ -189,9 +201,12 @@ export const preloadAmbients = async () => {
 };
 
 export const playAmbient = async (key: string, fadeDuration = 1.5) => {
-  const ctx = await getAudioContext();
+  const ctx = await ensureContextRunning();
   if (!ctx || !masterGain) return;
-  if (!ambientBuffers[key]) return;
+  if (!ambientBuffers[key]) {
+    console.warn('Ambient not loaded yet', key);
+    return;
+  }
 
   const buffer = ambientBuffers[key];
   const now = ctx.currentTime;
@@ -246,15 +261,18 @@ export const playAmbient = async (key: string, fadeDuration = 1.5) => {
 };
 
 export const toggleAmbient = async (key: string, fadeDuration = 1.5) => {
+  const ctx = await ensureContextRunning();
+  if (!ctx) return;
   if (activeAmbientKey === key) {
     stopAmbient(fadeDuration);
+    activeAmbientKey = null;
     return;
   }
   await playAmbient(key, fadeDuration);
 };
 
 const playMixLayers = async (mix: SoundMix) => {
-  const ctx = await getAudioContext();
+  const ctx = await ensureContextRunning();
   if (!ctx || !masterGain) return;
 
   stopActiveNodes();
@@ -331,4 +349,11 @@ export const endCurrentSession = async () => {
   };
   currentSession = null;
   return finished;
+};
+
+export const soundEngine = {
+  preloadAmbients,
+  toggleAmbient,
+  playAmbient,
+  stopAmbient
 };

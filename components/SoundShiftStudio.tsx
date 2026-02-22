@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { AppState, EmotionalState, SoundMix } from '../types';
 import { createDefault432RainMix } from '../services/soundLibrary';
-import { startMixSession, endCurrentSession } from '../services/soundEngine';
+import { startMixSession, endCurrentSession, soundEngine } from '../services/soundEngine';
 import { soundMixEngine, applyPresetById } from '../services/soundMixEngine';
 
 interface SoundShiftStudioProps {
@@ -49,6 +49,10 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
     const updated: SoundMix = { ...existing, emotionalState: value };
     const mixes = [updated, ...state.soundMixes!.slice(1)];
     onUpdate({ soundMixes: mixes });
+  };
+
+  const handleAmbientClick = async (key: string) => {
+    await soundEngine.toggleAmbient(key);
   };
 
   const handleToggle432Rain = async () => {
@@ -215,9 +219,9 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
             onClick={() => handlePresetClick('deep_rest')}
             active={activePresetId === 'deep_rest'}
           />
-          <SoundTile label="Rain" tag="For soft focus" />
-          <SoundTile label="Ocean Waves" tag="For overthinking" />
-          <SoundTile label="Forest" tag="For calm presence" />
+          <SoundTile label="Rain" tag="For soft focus" onClick={() => handleAmbientClick('rain')} />
+          <SoundTile label="Ocean Waves" tag="For overthinking" onClick={() => handleAmbientClick('ocean')} />
+          <SoundTile label="Forest" tag="For calm presence" onClick={() => handleAmbientClick('forest')} />
         </div>
       </div>
     </div>
