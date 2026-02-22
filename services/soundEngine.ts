@@ -23,6 +23,8 @@ const AMBIENT_MAP: Record<string, string> = {
 };
 
 const ambientBuffers: Record<string, AudioBuffer> = {};
+let ambientsLoaded = false;
+let loadingPromise: Promise<void> | null = null;
 
 const getAudioContext = async () => {
   if (typeof window === 'undefined') return null;
@@ -182,31 +184,34 @@ const loadAudioBuffer = async (ctx: AudioContext, url: string) => {
   return ctx.decodeAudioData(arrayBuffer);
 };
 
-export const preloadAmbients = async () => {
-  const ctx = await getAudioContext();
-  if (!ctx) return;
-  const keys = Object.keys(AMBIENT_MAP);
-  for (let i = 0; i < keys.length; i += 1) {
-    const key = keys[i];
-    if (ambientBuffers[key]) continue;
-    const url = AMBIENT_MAP[key];
-    try {
-      const res = await fetch(url);
-      const arrayBuffer = await res.arrayBuffer();
-      const buffer = await ctx.decodeAudioData(arrayBuffer);
-      ambientBuffers[key] = buffer;
-    } catch {
+export const preloadAmbients = async (): Promise<void> => {
+  if (loadingPromise) return loadingPromise;
+
+  loadingPromise = (async () => {
+    const ctx = await ensureContextRunning();
+    if (!ctx) return;
+    const keys = Object.keys(AMBIENT_MAP);
+    for (let i = 0; i < keys.length; i += 1) {
+      const key = keys[i];
+      if (ambientBuffers[key]) continue;
+      const url = AMBIENT_MAP[key];
+      try {
+        const res = await fetch(url);
+        const arrayBuffer = await res.arrayBuffer();
+        const buffer = await ctx.decodeAudioData(arrayBuffer);
+        ambientBuffers[key] = buffer;
+      } catch {
+      }
     }
-  }
+    ambientsLoaded = true;
+  })();
+
+  return loadingPromise;
 };
 
 export const playAmbient = async (key: string, fadeDuration = 1.5) => {
   const ctx = await ensureContextRunning();
   if (!ctx || !masterGain) return;
-  if (!ambientBuffers[key]) {
-    console.warn('Ambient not loaded yet', key);
-    return;
-  }
 
   const buffer = ambientBuffers[key];
   const now = ctx.currentTime;
@@ -263,6 +268,9 @@ export const playAmbient = async (key: string, fadeDuration = 1.5) => {
 export const toggleAmbient = async (key: string, fadeDuration = 1.5) => {
   const ctx = await ensureContextRunning();
   if (!ctx) return;
+  if (!ambientsLoaded) {
+    await preloadAmbients();
+  }
   if (activeAmbientKey === key) {
     stopAmbient(fadeDuration);
     activeAmbientKey = null;
