@@ -54,11 +54,13 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
       const recentGratitude = state.gratitudeList.slice(0, 3).join('. ');
       const recentBeliefs = state.beliefs.slice(0, 3).map(b => b.reframed).join('. ');
       const recentActions = state.ftbaEntries.slice(0, 3).map(e => e.action).join('. ');
+      const recentWhispers = state.whisperGoals.slice(0, 3).map(w => w.text).join('. ');
       
       const context = [
         recentGratitude ? `Focuses of Gratitude: ${recentGratitude}` : '',
         recentBeliefs ? `Reframed Empowering Beliefs: ${recentBeliefs}` : '',
-        recentActions ? `Intended Neural Actions: ${recentActions}` : ''
+        recentActions ? `Intended Neural Actions: ${recentActions}` : '',
+        recentWhispers ? `Whisper Goals: ${recentWhispers}` : ''
       ].filter(Boolean).join('; ');
 
       const affirmations = await generateAffirmations(mood, context);
