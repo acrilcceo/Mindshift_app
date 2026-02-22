@@ -190,9 +190,9 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
       </div>
 
       {/* Affirmation Carousel */}
-      <div className="glass-card soft-glow-purple p-10 rounded-[2.5rem] relative overflow-hidden shadow-2xl transition-all">
+      <div className="glass-card soft-glow-purple rounded-[2.5rem] relative overflow-hidden shadow-2xl transition-all invocation-card">
         <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-purple-500 via-amber-400 to-purple-500 opacity-80"></div>
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-6">
           <div className="space-y-1">
             <h3 className="label brand">Daily Invocations</h3>
             <p className="text-[10px] text-muted italic">Core Frequency Alignment</p>
@@ -205,7 +205,7 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
             {loading ? 'Aligning...' : 'Refresh'}
           </button>
         </div>
-        <div className="mb-4">
+        <div className="mb-2">
           <button
             aria-label="Add New Affirmation"
             className="px-4 py-2 rounded-xl bg-accent ensure-contrast text-[12px] font-bold shadow-md shadow-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/25 transition-all active:scale-95"
@@ -214,11 +214,11 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
             Add New Affirmation
           </button>
         </div>
-        <div className="relative min-h-[140px] flex flex-col justify-center items-center text-center">
+        <div className="affirmation-body text-center">
           {state.dailyAffirmation ? (
             <>
-              <div className="w-full transition-all duration-500 transform animate-in fade-in zoom-in-95" key={affirmationIndex}>
-                <p className="text-2xl font-serif text-primary italic leading-relaxed px-4">
+              <div className="w-full transition-all duration-500 transform animate-in fade-in zoom-in-95 affirmation-text-block" key={affirmationIndex}>
+                <p className="affirmation-text font-serif text-primary italic">
                   "{state.dailyAffirmation[affirmationIndex]}"
                 </p>
                 <div className="mt-8 flex justify-center gap-2">
@@ -231,16 +231,13 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
                   ))}
                 </div>
               </div>
-              
-              <div className="absolute inset-y-0 left-0 flex items-center">
+              <div className="affirmation-controls">
                 <button 
                   onClick={() => setAffirmationIndex(prev => (prev > 0 ? prev - 1 : state.dailyAffirmation!.length - 1))}
                   className="p-2 text-secondary hover:text-purple-500 transition-colors"
                 >
                   <span className="text-[10px] label">Prev</span>
                 </button>
-              </div>
-              <div className="absolute inset-y-0 right-0 flex items-center">
                 <button 
                   onClick={() => setAffirmationIndex(prev => (prev < state.dailyAffirmation!.length - 1 ? prev + 1 : 0))}
                   className="p-2 text-secondary hover:text-purple-500 transition-colors"

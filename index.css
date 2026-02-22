@@ -402,6 +402,50 @@ body {
   width: 100%;
 }
 
+.invocation-card {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 40px 24px;
+}
+
+.affirmation-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.affirmation-text-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.affirmation-text {
+  font-size: clamp(20px, 4vw, 32px);
+  line-height: 1.5;
+  text-align: center;
+  max-width: 90%;
+  margin: 0 auto 16px;
+  word-wrap: break-word;
+  white-space: normal;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .affirmation-text {
+    font-size: 20px;
+    line-height: 1.6;
+  }
+}
+
+.affirmation-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 /* SoundShift Studio calming visuals */
 .soundshift-atmosphere {
   position: relative;
