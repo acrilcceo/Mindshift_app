@@ -446,6 +446,38 @@ body {
   align-items: center;
 }
 
+.carousel-wrapper {
+  overflow: hidden;
+  width: 100%;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 24px;
+  transition: transform 0.4s ease-in-out;
+}
+
+.affirmation-card {
+  min-width: 20%;
+  flex: 0 0 20%;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 1024px) {
+  .affirmation-card {
+    min-width: 33.3333%;
+    flex-basis: 33.3333%;
+  }
+}
+
+@media (max-width: 768px) {
+  .affirmation-card {
+    min-width: 100%;
+    flex-basis: 100%;
+  }
+}
+
 /* SoundShift Studio calming visuals */
 .soundshift-atmosphere {
   position: relative;

@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { generateAffirmations } from '../services/affirmationEngine';
+import { affirmationPool } from '../services/affirmationLibrary';
 import { Mood, AppState } from '../types';
 import MyAffirmations from './MyAffirmations';
 
@@ -20,6 +21,9 @@ const MOOD_VALUES: Record<Mood, number> = {
 const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
   const [loading, setLoading] = useState(false);
   const [affirmationIndex, setAffirmationIndex] = useState(0);
+  const [currentStartIndex, setCurrentStartIndex] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(5);
+  const [carouselPool, setCarouselPool] = useState<string[]>(affirmationPool);
   const moodTabsRef = useRef<HTMLDivElement | null>(null);
   const [showMoodLeftFade, setShowMoodLeftFade] = useState(false);
   const [showMoodRightFade, setShowMoodRightFade] = useState(false);
@@ -28,6 +32,23 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
     if (!state.dailyAffirmation) {
       handleRefreshAffirmations();
     }
+  }, []);
+
+  useEffect(() => {
+    const updateVisibleCount = () => {
+      if (typeof window === 'undefined') return;
+      const width = window.innerWidth;
+      if (width < 640) {
+        setVisibleCount(1);
+      } else if (width < 1024) {
+        setVisibleCount(3);
+      } else {
+        setVisibleCount(5);
+      }
+    };
+    updateVisibleCount();
+    window.addEventListener('resize', updateVisibleCount);
+    return () => window.removeEventListener('resize', updateVisibleCount);
   }, []);
 
   useEffect(() => {
@@ -82,6 +103,7 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
       }
       onUpdate({ dailyAffirmation: next });
       setAffirmationIndex(next.length ? next.length - 1 : 0);
+      setCarouselPool(prev => (prev.includes(candidate) ? prev : [...prev, candidate]));
     } finally {
       setLoading(false);
     }
@@ -94,6 +116,31 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
   };
 
   const currentMood = state.moodHistory.find(h => h.date === new Date().toDateString())?.mood;
+
+  const totalAffirmations = carouselPool.length;
+  const effectiveVisibleCount = totalAffirmations === 0
+    ? 0
+    : Math.min(visibleCount, totalAffirmations);
+  const step = totalAffirmations === 0
+    ? 0
+    : (totalAffirmations < effectiveVisibleCount ? totalAffirmations : effectiveVisibleCount);
+
+  const visibleAffirmations =
+    totalAffirmations === 0 || effectiveVisibleCount === 0
+      ? []
+      : Array.from({ length: effectiveVisibleCount }).map((_, i) =>
+          carouselPool[(currentStartIndex + i) % totalAffirmations]
+        );
+
+  const handleNextCarousel = () => {
+    if (!totalAffirmations || !step) return;
+    setCurrentStartIndex(prev => (prev + step) % totalAffirmations);
+  };
+
+  const handlePrevCarousel = () => {
+    if (!totalAffirmations || !step) return;
+    setCurrentStartIndex(prev => (prev - step + totalAffirmations) % totalAffirmations);
+  };
 
   const calculateVibrationScore = () => {
     let score = state.streak * 5;
@@ -233,35 +280,33 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
           </button>
         </div>
         <div className="affirmation-body text-center">
-          {state.dailyAffirmation && state.dailyAffirmation.length > 0 ? (
+          {visibleAffirmations.length > 0 ? (
             <>
-              <div className="w-full transition-all duration-500 transform animate-in fade-in zoom-in-95 affirmation-text-block" key={affirmationIndex}>
-                <p className="affirmation-text font-serif text-primary italic">
-                  "{state.dailyAffirmation[affirmationIndex]}"
-                </p>
-                <div className="mt-8 flex justify-center gap-2">
-                  {state.dailyAffirmation.map((_, i) => (
-                    <button 
-                      key={i} 
-                      onClick={() => setAffirmationIndex(i)}
-                      className={`h-1 rounded-full transition-all duration-300 ${i === affirmationIndex ? 'w-6 bg-purple-500' : 'w-2 bg-white/60 dark:bg-white/10'}`}
-                    />
+              <div className="carousel-wrapper">
+                <div className="carousel-track">
+                  {visibleAffirmations.map((text, idx) => (
+                    <div
+                      key={`${currentStartIndex}-${idx}`}
+                      className="affirmation-card"
+                    >
+                      <div className="w-full transition-all duration-500 transform animate-in fade-in zoom-in-95 affirmation-text-block">
+                        <p className="affirmation-text font-serif text-primary italic">
+                          "{text}"
+                        </p>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
               <div className="affirmation-controls">
                 <button 
-                  onClick={() => setAffirmationIndex(prev => (prev > 0 ? prev - 1 : prev))}
-                  disabled={affirmationIndex === 0}
-                  aria-disabled={affirmationIndex === 0}
+                  onClick={handlePrevCarousel}
                   className="p-2 text-secondary hover:text-purple-500 transition-colors"
                 >
                   <span className="text-[10px] label">Prev</span>
                 </button>
                 <button 
-                  onClick={() => setAffirmationIndex(prev => (prev < state.dailyAffirmation!.length - 1 ? prev + 1 : prev))}
-                  disabled={affirmationIndex === state.dailyAffirmation.length - 1}
-                  aria-disabled={affirmationIndex === state.dailyAffirmation.length - 1}
+                  onClick={handleNextCarousel}
                   className="p-2 text-secondary hover:text-purple-500 transition-colors"
                 >
                   <span className="text-[10px] label">Next</span>
