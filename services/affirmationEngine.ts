@@ -1,3 +1,5 @@
+import { getRandomAffirmationExcluding, affirmationPool } from "./affirmationLibrary";
+
 const TEMPLATES = [
   "I {verb} {quality} in every {context}.",
   "With ease, I {verb} and allow {outcome}.",
@@ -284,18 +286,9 @@ export const generateAffirmations = async (mood?: string, context?: string): Pro
     .filter(entry => !!entry.text)
     .slice(-HISTORY_LIMIT)
     .map(entry => entry.text);
-  let attempt = 0;
-  let chosen = "";
-  while (attempt < 5) {
-    const seed = `${baseSeed}|${attempt}`;
-    const candidate = buildAffirmation(seed, mood, context);
-    if (!recentTexts.includes(candidate)) {
-      chosen = candidate;
-      break;
-    }
-    chosen = candidate;
-    attempt += 1;
-  }
+  const seed = `${baseSeed}|${affirmationPool.length}`;
+  const candidate = getRandomAffirmationExcluding(recentTexts);
+  const chosen = candidate;
   const nextHistory: HistoryEntry[] = [
     ...history,
     {
