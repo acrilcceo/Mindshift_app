@@ -20,9 +20,7 @@ const MOOD_VALUES: Record<Mood, number> = {
 
 const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
   const [loading, setLoading] = useState(false);
-  const [affirmationIndex, setAffirmationIndex] = useState(0);
-  const [currentStartIndex, setCurrentStartIndex] = useState(0);
-  const [visibleCount, setVisibleCount] = useState(5);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [carouselPool, setCarouselPool] = useState<string[]>(affirmationPool);
   const moodTabsRef = useRef<HTMLDivElement | null>(null);
   const [showMoodLeftFade, setShowMoodLeftFade] = useState(false);
@@ -32,23 +30,6 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
     if (!state.dailyAffirmation) {
       handleRefreshAffirmations();
     }
-  }, []);
-
-  useEffect(() => {
-    const updateVisibleCount = () => {
-      if (typeof window === 'undefined') return;
-      const width = window.innerWidth;
-      if (width < 640) {
-        setVisibleCount(1);
-      } else if (width < 1024) {
-        setVisibleCount(3);
-      } else {
-        setVisibleCount(5);
-      }
-    };
-    updateVisibleCount();
-    window.addEventListener('resize', updateVisibleCount);
-    return () => window.removeEventListener('resize', updateVisibleCount);
   }, []);
 
   useEffect(() => {
@@ -90,7 +71,6 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
       if (!candidate) {
         if (!existing.length) {
           onUpdate({ dailyAffirmation: [] });
-          setAffirmationIndex(0);
         }
         return;
       }
@@ -102,7 +82,6 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
         }
       }
       onUpdate({ dailyAffirmation: next });
-      setAffirmationIndex(next.length ? next.length - 1 : 0);
       setCarouselPool(prev => (prev.includes(candidate) ? prev : [...prev, candidate]));
     } finally {
       setLoading(false);
@@ -116,30 +95,16 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
   };
 
   const currentMood = state.moodHistory.find(h => h.date === new Date().toDateString())?.mood;
+  const totalSlides = carouselPool.length;
 
-  const totalAffirmations = carouselPool.length;
-  const effectiveVisibleCount = totalAffirmations === 0
-    ? 0
-    : Math.min(visibleCount, totalAffirmations);
-  const step = totalAffirmations === 0
-    ? 0
-    : (totalAffirmations < effectiveVisibleCount ? totalAffirmations : effectiveVisibleCount);
-
-  const visibleAffirmations =
-    totalAffirmations === 0 || effectiveVisibleCount === 0
-      ? []
-      : Array.from({ length: effectiveVisibleCount }).map((_, i) =>
-          carouselPool[(currentStartIndex + i) % totalAffirmations]
-        );
-
-  const handleNextCarousel = () => {
-    if (!totalAffirmations || !step) return;
-    setCurrentStartIndex(prev => (prev + step) % totalAffirmations);
+  const handleNext = () => {
+    if (!totalSlides) return;
+    setCurrentIndex(prev => (prev + 1) % totalSlides);
   };
 
-  const handlePrevCarousel = () => {
-    if (!totalAffirmations || !step) return;
-    setCurrentStartIndex(prev => (prev - step + totalAffirmations) % totalAffirmations);
+  const handlePrev = () => {
+    if (!totalSlides) return;
+    setCurrentIndex(prev => (prev - 1 + totalSlides) % totalSlides);
   };
 
   const calculateVibrationScore = () => {
@@ -280,14 +245,17 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
           </button>
         </div>
         <div className="affirmation-body text-center">
-          {visibleAffirmations.length > 0 ? (
+          {carouselPool.length > 0 ? (
             <>
               <div className="carousel-wrapper">
-                <div className="carousel-track">
-                  {visibleAffirmations.map((text, idx) => (
+                <div
+                  className="carousel-track"
+                  style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+                >
+                  {carouselPool.map((text, index) => (
                     <div
-                      key={`${currentStartIndex}-${idx}`}
-                      className="affirmation-card"
+                      key={index}
+                      className="carousel-slide"
                     >
                       <div className="w-full transition-all duration-500 transform animate-in fade-in zoom-in-95 affirmation-text-block">
                         <p className="affirmation-text font-serif text-primary italic">
@@ -300,13 +268,13 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
               </div>
               <div className="affirmation-controls">
                 <button 
-                  onClick={handlePrevCarousel}
+                  onClick={handlePrev}
                   className="p-2 text-secondary hover:text-purple-500 transition-colors"
                 >
                   <span className="text-[10px] label">Prev</span>
                 </button>
                 <button 
-                  onClick={handleNextCarousel}
+                  onClick={handleNext}
                   className="p-2 text-secondary hover:text-purple-500 transition-colors"
                 >
                   <span className="text-[10px] label">Next</span>
