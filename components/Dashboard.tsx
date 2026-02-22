@@ -261,7 +261,7 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
       <div className="glass-card p-8 rounded-[2rem] shadow-lg border-white/5 dark:border-white/5 frequency-card">
         <h3 className="label accent mb-8 text-center">Frequency Input</h3>
         <div className="frequency-tabs-viewport">
-          <div ref={moodTabsRef} className="frequency-tabs-wrapper">
+          <div ref={moodTabsRef} className="frequency-tabs-wrapper frequency-container">
             {(['Radiant', 'Balanced', 'Quiet', 'Challenged', 'Heavy'] as Mood[]).map((m) => (
               <div
                 key={m}
