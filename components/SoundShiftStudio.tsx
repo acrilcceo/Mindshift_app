@@ -1,7 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { AppState, EmotionalState, SoundMix } from '../types';
 import { createDefault432RainMix } from '../services/soundLibrary';
-import { startMixSession, endCurrentSession, soundEngine } from '../services/soundEngine';
+import { startMixSession, endCurrentSession, soundEngine, getCurrentSession } from '../services/soundEngine';
 import { soundMixEngine, applyPresetById } from '../services/soundMixEngine';
 
 interface SoundShiftStudioProps {
@@ -28,6 +28,29 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
     return Math.floor(state.soundPreferences.todayListeningMs / 60000);
   }, [state.soundPreferences]);
 
+  const [listeningMinutes, setListeningMinutes] = useState(totalMinutesToday);
+
+  useEffect(() => {
+    setListeningMinutes(totalMinutesToday);
+  }, [totalMinutesToday]);
+
+  useEffect(() => {
+    const update = () => {
+      const baseMs = state.soundPreferences?.todayListeningMs ?? 0;
+      const session = getCurrentSession();
+      if (session) {
+        const extra = Date.now() - session.startedAt;
+        setListeningMinutes(Math.floor((baseMs + extra) / 60000));
+      } else {
+        setListeningMinutes(Math.floor(baseMs / 60000));
+      }
+    };
+
+    update();
+    const id = window.setInterval(update, 10000);
+    return () => window.clearInterval(id);
+  }, [state.soundPreferences]);
+
   const lastMix = useMemo<SoundMix | null>(() => {
     if (!state.soundPreferences || !state.soundMixes || !state.soundPreferences.lastPlayedMixId) return null;
     return state.soundMixes.find(m => m.id === state.soundPreferences!.lastPlayedMixId) || null;
@@ -42,17 +65,50 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
     };
   };
 
-  const handleSelectEmotionalState = (value: EmotionalState) => {
+  const handleSelectEmotionalState = async (value: EmotionalState) => {
     setSelectedEmotion(value);
     const existing = state.soundMixes && state.soundMixes[0];
     if (!existing) return;
     const updated: SoundMix = { ...existing, emotionalState: value };
     const mixes = [updated, ...state.soundMixes!.slice(1)];
     onUpdate({ soundMixes: mixes });
+
+    const emotionPresetMap: Record<EmotionalState, string> = {
+      anxiety: 'deep_rest',
+      overthinking: 'focus',
+      sadness: 'ground',
+      melancholy: 'ground',
+      panic: 'deep_rest',
+      stress: 'focus'
+    };
+
+    const presetId = emotionPresetMap[value];
+    if (presetId) {
+      await applyPresetById(presetId);
+      setActivePresetId(presetId);
+    }
   };
 
   const handleAmbientClick = async (key: string) => {
     await soundEngine.toggleAmbient(key);
+  };
+
+  const hasLastMix = Boolean(lastMix);
+  const canQuickResume = hasLastMix && !isPlaying;
+
+  const handleQuickResume = async () => {
+    if (!lastMix || !canQuickResume) return;
+    const session = await startMixSession(lastMix);
+    const prefs = ensureSoundPreferences();
+    onUpdate({
+      soundPreferences: {
+        ...prefs,
+        lastPlayedMixId: lastMix.id,
+        lastPlayedAt: session.startedAt
+      }
+    });
+    setIsPlaying(true);
+    setActivePresetId(null);
   };
 
   const handleToggle432Rain = async () => {
@@ -146,7 +202,7 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
         <div className="text-right">
           <div className="text-xs soundshift-muted">Today</div>
           <div className="text-3xl font-semibold soundshift-listening-value">
-            {totalMinutesToday} min
+            {listeningMinutes} min
           </div>
           <div className="text-[11px] mt-1 soundshift-listening-label">Listening</div>
         </div>
@@ -166,9 +222,9 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
         </div>
         <button
           type="button"
-          className="px-5 py-3 rounded-full text-xs font-semibold shadow-md hover:shadow-lg active:scale-95 transition-all disabled:opacity-40"
-          style={{ backgroundColor: '#A8C3B8', color: '#2F3A4A' }}
-          disabled={!lastMix}
+          className="soundshift-quick-resume px-5 py-3 rounded-full text-xs font-semibold"
+          disabled={!canQuickResume}
+          onClick={handleQuickResume}
         >
           Quick Resume
         </button>

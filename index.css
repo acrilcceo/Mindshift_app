@@ -548,7 +548,13 @@ body {
   border-radius: 22px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   background: linear-gradient(to bottom, #1E2A38, #223247);
+  border: 1px solid rgba(148, 163, 184, 0.35);
   overflow: hidden;
+  transition:
+    transform 180ms ease,
+    box-shadow 200ms ease,
+    border-color 180ms ease,
+    background 200ms ease;
 }
 .soundshift-tile::after {
   content: "";
@@ -561,11 +567,32 @@ body {
 }
 .soundshift-tile-active {
   animation: soundshiftTileGlow 6s ease-in-out infinite;
+  border-color: rgba(56, 189, 248, 0.5);
 }
 @keyframes soundshiftTileGlow {
   0% { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); }
   50% { box-shadow: 0 8px 24px rgba(159, 211, 199, 0.28); }
   100% { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); }
+}
+
+.soundshift-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.7);
+}
+
+.soundshift-tile:active {
+  transform: translateY(0);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.6);
+}
+
+.soundshift-tile:focus-visible {
+  outline: 2px solid #4fd1c5;
+  outline-offset: 3px;
+}
+
+.soundshift-tile:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .soundshift-chip {
@@ -576,9 +603,23 @@ body {
   letter-spacing: 0.08em;
   text-transform: none;
   transition: background-color 180ms ease, color 180ms ease, box-shadow 200ms ease, transform 120ms ease, border-color 180ms ease;
+  cursor: pointer;
+  outline: none;
+}
+.soundshift-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.35);
 }
 .soundshift-chip:active {
   transform: scale(0.97);
+}
+.soundshift-chip:focus-visible {
+  outline: 2px solid #4fd1c5;
+  outline-offset: 2px;
+}
+.soundshift-chip:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .dark .soundshift-chip {
@@ -587,9 +628,10 @@ body {
   border: 1px solid #2F445A;
 }
 .dark .soundshift-chip-active {
-  background-color: #2E5564;
-  color: #E6F4F8;
-  box-shadow: 0 0 8px rgba(159, 211, 199, 0.25);
+  background: linear-gradient(90deg, #4fd1c5, #63b3ed);
+  color: #020617;
+  border-color: transparent;
+  box-shadow: 0 0 12px rgba(79, 209, 197, 0.45);
 }
 
 .light .soundshift-chip,
@@ -624,23 +666,34 @@ body {
 }
 
 .soundshift-heading {
-  letter-spacing: 0.03em;
-  color: #2F3A4A;
+  letter-spacing: 0.02em;
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  line-height: 1.15;
+  font-weight: 600;
+  background: linear-gradient(120deg, #e5f2ff, #c4f1f9, #a7f3d0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 24px rgba(56, 189, 248, 0.32);
 }
 .dark .soundshift-heading {
-  color: #E6EDF5;
+  text-shadow: 0 0 32px rgba(34, 197, 235, 0.55);
 }
 .soundshift-subheading {
   color: #2F3A4A;
+  opacity: 0.8;
 }
 .dark .soundshift-subheading {
   color: #C9D4E2;
+  opacity: 0.86;
 }
 .soundshift-body {
   color: #566074;
+  opacity: 0.78;
 }
 .dark .soundshift-body {
   color: #AAB6C4;
+  opacity: 0.9;
 }
 .soundshift-muted {
   color: #6B7280;
@@ -661,16 +714,22 @@ body {
   color: #7F8C9D;
 }
 .soundshift-card-primary {
-  background-color: #EEF2F5;
+  background: rgba(20, 30, 45, 0.12);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
 }
 .dark .soundshift-card-primary {
-  background-color: #1B2430;
+  background: rgba(10, 17, 30, 0.9);
 }
 .soundshift-card-secondary {
-  background-color: #F4F6F8;
+  background: rgba(20, 30, 45, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.32);
 }
 .dark .soundshift-card-secondary {
-  background-color: #1B2430;
+  background: rgba(11, 18, 28, 0.92);
 }
 .soundshift-card-title {
   color: #2F3A4A;
@@ -684,6 +743,39 @@ body {
 }
 .soundshift-tile-subtitle {
   color: #A8B8C8;
+}
+
+.soundshift-quick-resume {
+  background: linear-gradient(120deg, #a5f3fc, #6ee7b7);
+  color: #022c22;
+  border: none;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.45);
+  transition:
+    transform 180ms ease,
+    box-shadow 200ms ease,
+    filter 200ms ease,
+    opacity 160ms ease;
+}
+
+.soundshift-quick-resume:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.7);
+  filter: brightness(1.03);
+}
+
+.soundshift-quick-resume:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.6);
+}
+
+.soundshift-quick-resume:focus-visible {
+  outline: 2px solid #4fd1c5;
+  outline-offset: 2px;
+}
+
+.soundshift-quick-resume:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .dark footer {
