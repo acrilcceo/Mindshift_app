@@ -13,11 +13,20 @@ type BreathingPhase = 'Inhale' | 'Hold' | 'Exhale' | 'Prepare';
 const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
   const [prompt, setPrompt] = useState('Breathe in peace, exhale tension.');
   const [loading, setLoading] = useState(false);
-  
-  // Custom Breathing Durations (seconds)
-  const [inhaleTime, setInhaleTime] = useState(4);
-  const [holdTime, setHoldTime] = useState(4);
-  const [exhaleTime, setExhaleTime] = useState(4);
+
+  const [inhaleInput, setInhaleInput] = useState('4');
+  const [holdInput, setHoldInput] = useState('4');
+  const [exhaleInput, setExhaleInput] = useState('4');
+
+  const parseDuration = (value: string, min: number) => {
+    const num = parseInt(value, 10);
+    if (Number.isNaN(num) || num < min) return min;
+    return num;
+  };
+
+  const inhaleTime = parseDuration(inhaleInput, 1);
+  const holdTime = parseDuration(holdInput, 1);
+  const exhaleTime = parseDuration(exhaleInput, 1);
 
   // Timer, Phase, Cycle & Session Duration State
   const [phase, setPhase] = useState<BreathingPhase>('Prepare');
@@ -338,27 +347,78 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
           <div className="space-y-1">
             <label className="text-[9px] text-teal-400/70 font-bold uppercase block text-center">Inhale</label>
             <input 
-              type="number" 
-              value={inhaleTime} 
-              onChange={(e) => setInhaleTime(Math.max(1, parseInt(e.target.value) || 1))}
+              type="text" 
+              value={inhaleInput} 
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const value = e.target.value;
+                if (value === '') {
+                  setInhaleInput('');
+                  return;
+                }
+                if (/^\d+$/.test(value)) {
+                  setInhaleInput(value);
+                }
+              }}
+              onBlur={() => {
+                const num = parseInt(inhaleInput, 10);
+                if (Number.isNaN(num) || num < 1) {
+                  setInhaleInput('1');
+                } else {
+                  setInhaleInput(String(num));
+                }
+              }}
               className="w-full bg-white/70 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-2 py-2 text-center text-sm text-primary dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-transparent"
             />
           </div>
           <div className="space-y-1">
             <label className="text-[9px] text-amber-400/70 font-bold uppercase block text-center">Hold</label>
             <input 
-              type="number" 
-              value={holdTime} 
-              onChange={(e) => setHoldTime(Math.max(0, parseInt(e.target.value) || 0))}
+              type="text" 
+              value={holdInput} 
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const value = e.target.value;
+                if (value === '') {
+                  setHoldInput('');
+                  return;
+                }
+                if (/^\d+$/.test(value)) {
+                  setHoldInput(value);
+                }
+              }}
+              onBlur={() => {
+                const num = parseInt(holdInput, 10);
+                if (Number.isNaN(num) || num < 1) {
+                  setHoldInput('1');
+                } else {
+                  setHoldInput(String(num));
+                }
+              }}
               className="w-full bg-white/70 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-2 py-2 text-center text-sm text-primary dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-transparent"
             />
           </div>
           <div className="space-y-1">
             <label className="text-[9px] text-blue-400/70 font-bold uppercase block text-center">Exhale</label>
             <input 
-              type="number" 
-              value={exhaleTime} 
-              onChange={(e) => setExhaleTime(Math.max(1, parseInt(e.target.value) || 1))}
+              type="text" 
+              value={exhaleInput} 
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const value = e.target.value;
+                if (value === '') {
+                  setExhaleInput('');
+                  return;
+                }
+                if (/^\d+$/.test(value)) {
+                  setExhaleInput(value);
+                }
+              }}
+              onBlur={() => {
+                const num = parseInt(exhaleInput, 10);
+                if (Number.isNaN(num) || num < 1) {
+                  setExhaleInput('1');
+                } else {
+                  setExhaleInput(String(num));
+                }
+              }}
               className="w-full bg-white/70 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-2 py-2 text-center text-sm text-primary dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-transparent"
             />
           </div>
