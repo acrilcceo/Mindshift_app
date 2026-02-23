@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { AppState, EmotionalState, SoundMix } from '../types';
 import { createDefault432RainMix } from '../services/soundLibrary';
 import { startMixSession, endCurrentSession, soundEngine, getCurrentSession } from '../services/soundEngine';
-import { soundMixEngine, applyPresetById } from '../services/soundMixEngine';
+import { applyPresetById } from '../services/soundMixEngine';
 
 interface SoundShiftStudioProps {
   state: AppState;
@@ -20,8 +20,9 @@ const emotionalStates: { id: EmotionalState; label: string }[] = [
 
 const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [activePresetId, setActivePresetId] = useState<string | null>(null);
   const [selectedEmotion, setSelectedEmotion] = useState<EmotionalState | null>(null);
+  const [activeFrequency, setActiveFrequency] = useState<string | null>(null);
+  const [activeAmbient, setActiveAmbient] = useState<string | null>(null);
 
   const totalMinutesToday = useMemo(() => {
     if (!state.soundPreferences) return 0;
@@ -85,12 +86,29 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
     const presetId = emotionPresetMap[value];
     if (presetId) {
       await applyPresetById(presetId);
-      setActivePresetId(presetId);
+      setActiveFrequency(null);
+      setActiveAmbient(null);
     }
   };
 
+  const handleFrequencyClick = async (hz: string) => {
+    if (activeFrequency === hz) {
+      await soundEngine.stopFrequency();
+      setActiveFrequency(null);
+      return;
+    }
+    await soundEngine.playFrequency(hz);
+    setActiveFrequency(hz);
+  };
+
   const handleAmbientClick = async (key: string) => {
+    if (activeAmbient === key) {
+      await soundEngine.stopAmbient();
+      setActiveAmbient(null);
+      return;
+    }
     await soundEngine.toggleAmbient(key);
+    setActiveAmbient(key);
   };
 
   const hasLastMix = Boolean(lastMix);
@@ -98,6 +116,8 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
 
   const handleQuickResume = async () => {
     if (!lastMix || !canQuickResume) return;
+    setActiveFrequency(null);
+    setActiveAmbient(null);
     const session = await startMixSession(lastMix);
     const prefs = ensureSoundPreferences();
     onUpdate({
@@ -108,7 +128,6 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
       }
     });
     setIsPlaying(true);
-    setActivePresetId(null);
   };
 
   const handleToggle432Rain = async () => {
@@ -175,17 +194,6 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
       },
       soundAnalytics: nextAnalytics
     });
-    setIsPlaying(false);
-  };
-
-  const handlePresetClick = async (presetId: string) => {
-    if (activePresetId === presetId) {
-      await soundMixEngine.stopAll(1.5);
-      setActivePresetId(null);
-      return;
-    }
-    await applyPresetById(presetId);
-    setActivePresetId(presetId);
   };
 
   return (
@@ -260,24 +268,39 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
           <SoundTile
             label="528 Hz"
             tag="For emotional balance"
-            onClick={() => handlePresetClick('ground')}
-            active={activePresetId === 'ground'}
+            onClick={() => handleFrequencyClick('528')}
+            active={activeFrequency === '528'}
           />
           <SoundTile
             label="432 Hz"
             tag="For grounding"
-            onClick={() => handlePresetClick('focus')}
-            active={activePresetId === 'focus'}
+            onClick={() => handleFrequencyClick('432')}
+            active={activeFrequency === '432'}
           />
           <SoundTile
             label="174 Hz"
             tag="For deep rest"
-            onClick={() => handlePresetClick('deep_rest')}
-            active={activePresetId === 'deep_rest'}
+            onClick={() => handleFrequencyClick('174')}
+            active={activeFrequency === '174'}
           />
-          <SoundTile label="Rain" tag="For soft focus" onClick={() => handleAmbientClick('rain')} />
-          <SoundTile label="Ocean Waves" tag="For overthinking" onClick={() => handleAmbientClick('ocean')} />
-          <SoundTile label="Forest" tag="For calm presence" onClick={() => handleAmbientClick('forest')} />
+          <SoundTile
+            label="Rain"
+            tag="For soft focus"
+            onClick={() => handleAmbientClick('rain')}
+            active={activeAmbient === 'rain'}
+          />
+          <SoundTile
+            label="Ocean Waves"
+            tag="For overthinking"
+            onClick={() => handleAmbientClick('ocean')}
+            active={activeAmbient === 'ocean'}
+          />
+          <SoundTile
+            label="Forest"
+            tag="For calm presence"
+            onClick={() => handleAmbientClick('forest')}
+            active={activeAmbient === 'forest'}
+          />
         </div>
       </div>
     </div>

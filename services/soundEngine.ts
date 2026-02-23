@@ -363,5 +363,7 @@ export const soundEngine = {
   preloadAmbients,
   toggleAmbient,
   playAmbient,
-  stopAmbient
+  stopAmbient,
+  playFrequency,
+  stopFrequency: stop
 };
