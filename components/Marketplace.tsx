@@ -29,7 +29,7 @@ const categories: { id: MarketplaceCategoryId; label: string; description: strin
   }
 ];
 
-const curatedProducts: MarketplaceProduct[] = [
+export const curatedProducts: MarketplaceProduct[] = [
   {
     id: 'ritual-journal-linen',
     title: 'Linen Ritual Journal',

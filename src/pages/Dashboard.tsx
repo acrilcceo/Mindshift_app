@@ -12,9 +12,11 @@ import Visualization from '../../components/Visualization';
 import ProfileSettings from '../components/ProfileSettings';
 import Marketplace from '../../components/Marketplace';
 import GuidesPage from './Guides';
+import Home from './Home';
 
-type View =
+export type View =
   | 'dashboard'
+  | 'home'
   | 'soundshift'
   | 'beliefs'
   | '369'
@@ -33,6 +35,13 @@ const FocusIcon: React.FC = () => (
     <path d="M18 12h2" />
     <path d="M12 4v2" />
     <path d="M12 18v2" />
+  </svg>
+);
+
+const HomeIcon: React.FC = () => (
+  <svg viewBox="0 0 24 24">
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+    <polyline points="9 22 9 12 15 12 15 22" />
   </svg>
 );
 
@@ -120,7 +129,7 @@ const ProfileIcon: React.FC = () => (
 
 const DashboardPage: React.FC = () => {
   const [state, setState] = useState<AppState>(loadState());
-  const [activeView, setActiveView] = useState<View>('dashboard');
+  const [activeView, setActiveView] = useState<View>('home');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -179,6 +188,7 @@ const DashboardPage: React.FC = () => {
           </div>
 
           <div className="space-y-4">
+            <NavItem icon={<HomeIcon />} label="Home" active={activeView === 'home'} onClick={() => navigate('home')} />
             <NavItem icon={<FocusIcon />} label="Focus Dashboard" active={activeView === 'dashboard'} onClick={() => navigate('dashboard')} />
             <NavItem icon={<SoundshiftIcon />} label="SoundShift Studio" active={activeView === 'soundshift'} onClick={() => navigate('soundshift')} />
             <NavItem icon={<MarketplaceIcon />} label="Marketplace" active={activeView === 'marketplace'} onClick={() => navigate('marketplace')} />
@@ -259,8 +269,9 @@ const DashboardPage: React.FC = () => {
         </div>
       </nav>
 
-      <main className="w-full max-w-5xl mx-auto px-4 sm:px-8 lg:px-12 py-24 lg:py-20 transition-all">
-        <div className="max-w-xl mx-auto">
+      <main className="min-h-screen pt-20 lg:pt-8 pb-12 px-6">
+        <div className="max-w-6xl mx-auto">
+          {activeView === 'home' && <Home state={state} onUpdate={handleUpdate} onNavigate={(v) => navigate(v as View)} />}
           {activeView === 'dashboard' && <Dashboard state={state} onUpdate={handleUpdate} />}
           {activeView === 'soundshift' && <SoundShiftStudio state={state} onUpdate={handleUpdate} />}
           {activeView === 'beliefs' && <BeliefReframer state={state} onUpdate={handleUpdate} />}

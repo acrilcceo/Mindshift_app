@@ -17,7 +17,7 @@ const App: React.FC = () => {
           <Route path="/reset" element={<ResetPassword />} />
           <Route element={<ProtectedRoute />}>
             <Route
-              path="/dashboard"
+              path="/home"
               element={
                 <React.Suspense
                   fallback={
@@ -31,7 +31,7 @@ const App: React.FC = () => {
               }
             />
           </Route>
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

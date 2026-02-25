@@ -34,7 +34,7 @@ const Login: React.FC = () => {
     setProcessing(true);
     try {
       loginWithName(name);
-      const to = location.state?.from?.pathname || '/dashboard';
+      const to = (location.state as any)?.from?.pathname || '/home';
       navigate(to, { replace: true });
     } finally {
       setProcessing(false);

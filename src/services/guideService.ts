@@ -197,6 +197,25 @@ export const createAppointment = async (appointment: Omit<Appointment, 'id' | 'c
   return docRef.id;
 };
 
+export const getAppointments = async (userId: string): Promise<Appointment[]> => {
+  if (!db) return [];
+
+  try {
+    const q = query(
+      collection(db, APPOINTMENTS_COLLECTION),
+      where('userId', '==', userId),
+      orderBy('date', 'asc'),
+      orderBy('time', 'asc')
+    );
+    
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Appointment));
+  } catch (error) {
+    console.error('Error fetching appointments:', error);
+    return [];
+  }
+};
+
 export const getGuideReviews = async (guideId: string): Promise<GuideReview[]> => {
   if (!db) return [];
 
