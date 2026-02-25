@@ -107,26 +107,26 @@ const MyAffirmations: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-end gap-2 w-full md:w-auto max-w-full box-border">
           <button
             onClick={() => { setEditing(null); setOpenForm(true); }}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-accent ensure-contrast text-[12px] font-semibold shadow-md shadow-emerald-500/15 hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-200 ease-out transform hover:-translate-y-0.5 active:scale-95 dark:bg-amber-500"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-2xl btn-primary-ritual text-[12px] font-semibold transition-all duration-200 ease-out transform hover:-translate-y-0.5 active:scale-95"
             aria-label="Add New Affirmation"
           >
             Add New Affirmation
           </button>
           <button
             onClick={handleExport}
-            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-gray-300 text-[12px]"
+            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-secondary text-secondary hover:text-primary transition-colors text-[12px]"
             aria-label="Export affirmations"
           >
             Export
           </button>
-          <label className="hidden md:inline-flex items-center px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-gray-300 text-[12px] cursor-pointer" aria-label="Import affirmations">
+          <label className="hidden md:inline-flex items-center px-4 py-2 rounded-xl bg-secondary text-secondary hover:text-primary transition-colors text-[12px] cursor-pointer" aria-label="Import affirmations">
             Import
             <input type="file" accept="application/json" className="hidden" onChange={e => e.target.files && handleImport(e.target.files[0])} />
           </label>
         </div>
       </div>
 
-      {importError && <div role="alert" className="mb-3 text-[12px] text-red-600 dark:text-red-400">{importError}</div>}
+      {importError && <div role="alert" className="mb-3 text-[12px] text-red-500">{importError}</div>}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 mb-4">
         <div className="flex flex-col gap-1">
@@ -137,14 +137,14 @@ const MyAffirmations: React.FC = () => {
             placeholder="Search..."
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="w-full h-10 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 text-[12px] text-primary placeholder-muted"
+            className="w-full h-10 bg-card border border-card-border rounded-xl px-4 text-[12px] text-primary placeholder-muted focus:outline-none focus:border-accent-primary"
           />
         </div>
         <select
           aria-label="Filter by category"
           value={category}
           onChange={e => { setCategory(e.target.value as any); setPage(1); }}
-          className="w-full h-10 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 text-[12px] text-primary"
+          className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-[12px] text-primary focus:outline-none focus:border-accent-primary"
         >
           <option value="All">All Categories</option>
           {(['Gratitude','Self-Love','Success','Health','Relationships','Custom'] as AffirmationCategory[]).map(c => <option key={c} value={c}>{c}</option>)}
@@ -153,7 +153,7 @@ const MyAffirmations: React.FC = () => {
           aria-label="Filter by reminder"
           value={reminder}
           onChange={e => { setReminder(e.target.value as any); setPage(1); }}
-          className="w-full h-10 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 text-[12px] text-primary"
+          className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-[12px] text-primary focus:outline-none focus:border-accent-primary"
         >
           <option value="All">All Reminders</option>
           <option value="Has">Has Reminder</option>
@@ -163,7 +163,7 @@ const MyAffirmations: React.FC = () => {
           aria-label="Sort affirmations"
           value={sort}
           onChange={e => setSort(e.target.value as SortKey)}
-          className="w-full h-10 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 text-[12px] text-primary"
+          className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-[12px] text-primary focus:outline-none focus:border-accent-primary"
         >
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>
@@ -175,20 +175,20 @@ const MyAffirmations: React.FC = () => {
           aria-label="Start date"
           value={startDate}
           onChange={e => { setStartDate(e.target.value); setPage(1); }}
-          className="w-full h-10 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 text-[12px] text-primary"
+          className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-[12px] text-primary focus:outline-none focus:border-accent-primary"
         />
         <input
           type="date"
           aria-label="End date"
           value={endDate}
           onChange={e => { setEndDate(e.target.value); setPage(1); }}
-          className="w-full h-10 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 text-[12px] text-primary"
+          className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-[12px] text-primary focus:outline-none focus:border-accent-primary"
         />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {pageItems.map(a => (
-          <div key={a.id} className="glass-card p-6 rounded-3xl border-l-4 border-purple-500/40">
+          <div key={a.id} className="glass-card p-6 rounded-3xl border-l-4 border-accent-secondary">
             <div className="label text-secondary mb-2">{a.category}</div>
             <div className="text-primary leading-relaxed">{a.text}</div>
             <div className="mt-4 flex items-center justify-between text-[10px] text-muted">
@@ -196,15 +196,15 @@ const MyAffirmations: React.FC = () => {
               <span>Used {a.useCount}</span>
             </div>
             <div className="mt-4 flex gap-2">
-              <button className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-white/5 text-[12px]" onClick={() => { setEditing(a); setOpenForm(true); }} aria-label="Edit affirmation">Edit</button>
-              <button className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-white/5 text-[12px]" onClick={() => handleDuplicate(a.id)} aria-label="Duplicate affirmation">Duplicate</button>
-              <button className="px-3 py-1 rounded-xl bg-red-600 text-white text-[12px]" onClick={() => setConfirmId(a.id)} aria-label="Delete affirmation">Delete</button>
+              <button className="px-3 py-1 rounded-xl bg-secondary text-secondary hover:text-primary transition-colors text-[12px]" onClick={() => { setEditing(a); setOpenForm(true); }} aria-label="Edit affirmation">Edit</button>
+              <button className="px-3 py-1 rounded-xl bg-secondary text-secondary hover:text-primary transition-colors text-[12px]" onClick={() => handleDuplicate(a.id)} aria-label="Duplicate affirmation">Duplicate</button>
+              <button className="px-3 py-1 rounded-xl bg-error text-error hover:bg-red-500 hover:text-white transition-colors text-[12px]" onClick={() => setConfirmId(a.id)} aria-label="Delete affirmation">Delete</button>
             </div>
             {confirmId === a.id && (
               <div className="mt-3 flex gap-2 items-center" role="alertdialog" aria-label="Confirm delete">
-                <span className="text-[12px]">Delete this affirmation?</span>
-                <button className="px-3 py-1 rounded-xl bg-red-600 text-white text-[12px]" onClick={() => handleRemove(a.id)}>Confirm</button>
-                <button className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-white/5 text-[12px]" onClick={() => setConfirmId(null)}>Cancel</button>
+                <span className="text-[12px] text-primary">Delete?</span>
+                <button className="px-3 py-1 rounded-xl bg-red-500 text-white text-[12px]" onClick={() => handleRemove(a.id)}>Confirm</button>
+                <button className="px-3 py-1 rounded-xl bg-secondary text-secondary text-[12px]" onClick={() => setConfirmId(null)}>Cancel</button>
               </div>
             )}
             {a.versions.length > 1 && (
@@ -226,9 +226,9 @@ const MyAffirmations: React.FC = () => {
       <div className="mt-6 flex items-center justify-between">
         <div className="text-[10px] text-muted">Showing {pageItems.length} of {processed.length}</div>
         <div className="flex gap-2" role="navigation" aria-label="Pagination">
-          <button className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-white/5 text-[12px]" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} aria-disabled={page === 1}>Prev</button>
-          <span className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-white/5 text-[12px]">{page} / {totalPages}</span>
-          <button className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-white/5 text-[12px]" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} aria-disabled={page === totalPages}>Next</button>
+          <button className="px-3 py-1 rounded-xl bg-secondary text-[12px] text-secondary hover:text-primary" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} aria-disabled={page === 1}>Prev</button>
+          <span className="px-3 py-1 rounded-xl bg-secondary text-[12px] text-primary">{page} / {totalPages}</span>
+          <button className="px-3 py-1 rounded-xl bg-secondary text-[12px] text-secondary hover:text-primary" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} aria-disabled={page === totalPages}>Next</button>
         </div>
       </div>
 

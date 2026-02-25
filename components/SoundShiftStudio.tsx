@@ -216,7 +216,7 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
         </div>
       </div>
 
-      <div className="glass-card p-6 rounded-[2rem] border-slate-200/70 dark:border-white/5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between soundshift-card-primary">
+      <div className="glass-card p-6 rounded-[2rem] flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between soundshift-card-primary">
         <div>
           <div className="text-[11px] font-semibold tracking-wide soundshift-subheading">
             Last sound
@@ -238,7 +238,7 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
         </button>
       </div>
 
-      <div className="glass-card p-6 rounded-[2rem] border-slate-200/70 dark:border-white/5 soundshift-card-secondary">
+      <div className="glass-card p-6 rounded-[2rem] soundshift-card-secondary">
         <div className="flex justify-between items-center mb-4">
           <div>
             <div className="text-sm font-semibold soundshift-subheading">How are you feeling?</div>
@@ -328,8 +328,8 @@ const SoundTile: React.FC<SoundTileProps> = ({ label, tag, onClick, active }) =>
         <div className="text-lg font-semibold soundshift-tile-title">{label}</div>
       </div>
       <div className="relative z-10 flex items-end justify-between mt-3">
-        <div className="flex items-center gap-1 text-[10px]" style={{ color: '#E5F3EC' }}>
-          <span className="inline-block w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#B8E3D4' }} />
+        <div className="flex items-center gap-1 text-[10px] text-muted">
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-secondary" />
           <span>∞ loop</span>
         </div>
         <div className="soundshift-wave">

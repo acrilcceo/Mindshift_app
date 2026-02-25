@@ -21,7 +21,7 @@ const App: React.FC = () => {
               element={
                 <React.Suspense
                   fallback={
-                    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#0a0a0c]">
+                    <div className="min-h-screen flex items-center justify-center bg-primary">
                       <div className="text-secondary text-sm">Loading…</div>
                     </div>
                   }

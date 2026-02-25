@@ -154,25 +154,25 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
     <div className="space-y-10 animate-in fade-in duration-700">
       <div className="flex justify-between items-end px-2">
         <div>
-          <h2 className="text-4xl font-serif text-slate-800 dark:text-amber-100 font-bold">Today's Focus</h2>
+          <h2 className="text-4xl font-serif text-primary font-bold">Today's Focus</h2>
           <p className="text-secondary body-sm mt-1">Aligning your frequency for peak potential.</p>
         </div>
         <div className="text-right">
-          <div className="text-5xl font-bold text-amber-500 dark:text-amber-400 drop-shadow-sm">{state.streak}</div>
+          <div className="text-5xl font-bold text-accent-primary drop-shadow-sm">{state.streak}</div>
           <div className="label text-secondary mt-1">Day Streak</div>
         </div>
       </div>
 
       <div className="space-y-4">
-        <div className="glass-card p-8 rounded-[2rem] flex flex-col sm:flex-row items-center justify-between gap-6 border-blue-500/10 dark:border-blue-500/20 shadow-xl dark:shadow-none">
+        <div className="glass-card p-8 rounded-[2rem] flex flex-col sm:flex-row items-center justify-between gap-6 border-accent-secondary/10 shadow-xl dark:shadow-none">
           <div className="text-center sm:text-left">
             <h3 className="label brand">Vibration Index</h3>
             <p className="body-sm text-muted mt-1">Holistic consistency score</p>
           </div>
           <div className="flex items-center gap-6">
             <div className="text-4xl font-bold text-primary">{calculateVibrationScore()}%</div>
-            <div className="w-24 h-2 bg-white/60 dark:bg-white/10 rounded-full overflow-hidden">
-              <div className="h-full bg-blue-500 transition-all duration-1000 shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{ width: `${calculateVibrationScore()}%` }}></div>
+            <div className="w-24 h-2 bg-surface rounded-full overflow-hidden">
+              <div className="h-full bg-accent-secondary transition-all duration-1000 shadow-[0_0_10px_var(--accent-glow)]" style={{ width: `${calculateVibrationScore()}%` }}></div>
             </div>
           </div>
         </div>

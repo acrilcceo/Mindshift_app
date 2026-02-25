@@ -160,31 +160,31 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="min-h-screen transition-colors duration-300 lg:pl-72">
-      <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white/70 dark:bg.black/40 backdrop-blur-xl border-b border-slate-200 dark:border-white/5 z-40 flex items-center justify-between px-6">
+      <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-primary/80 backdrop-blur-xl border-b border-card-border z-40 flex items-center justify-between px-6">
         <div className="flex items-center gap-2">
-           <div className="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center text-black font-bold text-lg shadow-lg shadow-amber-500/20">M</div>
-           <h1 className="text-lg font-serif text-slate-800 dark:text-amber-500 font-bold tracking-tight">MindShift</h1>
+           <div className="w-8 h-8 rounded-lg bg-accent-primary flex items-center justify-center text-btn-primary-text font-bold text-lg shadow-lg shadow-accent-primary/20">M</div>
+           <h1 className="text-lg font-serif text-primary font-bold tracking-tight">MindShift</h1>
         </div>
         <button 
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="w-10 h-10 flex flex-col items-center justify-center gap-1.5 focus:outline-none"
+          className="w-10 h-10 flex flex-col items-center justify-center gap-1.5 focus:outline-none text-primary"
           aria-label="Toggle Menu"
         >
-          <span className={`h-0.5 w-6 bg-slate-800 dark:bg-amber-400 transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
-          <span className={`h-0.5 w-6 bg-slate-800 dark:bg-amber-400 transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`}></span>
-          <span className={`h-0.5 w-6 bg-slate-800 dark:bg-amber-400 transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+          <span className={`h-0.5 w-6 bg-current transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+          <span className={`h-0.5 w-6 bg-current transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`}></span>
+          <span className={`h-0.5 w-6 bg-current transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
         </button>
       </header>
 
       <div className={`lg:hidden fixed inset-0 z-50 transition-all duration-500 ${isMenuOpen ? 'visible' : 'invisible'}`}>
         <div 
-          className={`absolute inset-0 bg-slate-900/60 dark:bg-black/80 backdrop-blur-md transition-opacity duration-500 ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`}
+          className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-500 ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`}
           onClick={() => setIsMenuOpen(false)}
         ></div>
-        <nav className={`absolute top-0 right-0 bottom-0 w-4/5 max-w-xs bg-white dark:bg-[#0c0c0e] shadow-2xl transition-transform duration-500 ease-out flex flex-col p-8 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <nav className={`absolute top-0 right-0 bottom-0 w-4/5 max-w-xs bg-secondary shadow-2xl transition-transform duration-500 ease-out flex flex-col p-8 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="flex justify-between items-center mb-12">
-            <div className="text-[10px] uppercase tracking-widest text-muted font-bold">Main Navigation</div>
-            <button onClick={() => setIsMenuOpen(false)} className="text-muted hover:text-red-500">✕</button>
+            <div className="text-xs uppercase tracking-widest text-muted font-bold">Main Navigation</div>
+            <button onClick={() => setIsMenuOpen(false)} className="text-muted hover:text-accent-primary">✕</button>
           </div>
 
           <div className="space-y-4">
@@ -202,10 +202,10 @@ const DashboardPage: React.FC = () => {
             <NavItem icon={<ProfileIcon />} label="Profile Settings" active={activeView === 'profile'} onClick={() => navigate('profile')} />
           </div>
 
-          <div className="mt-auto pt-8 border-t border-slate-100 dark:border-white/5 space-y-4">
+          <div className="mt-auto pt-8 border-t border-card-border space-y-4">
             <button 
               onClick={toggleTheme}
-              className="w-full flex items-center justify-between p-4 bg-slate-100 dark:bg-white/5 rounded-2xl"
+              className="w-full flex items-center justify-between p-4 bg-secondary rounded-2xl"
             >
               <div className="flex items-center gap-3">
                 <span className="text-xl">{state.theme === 'dark' ? '☀️' : '🌙'}</span>
@@ -213,7 +213,7 @@ const DashboardPage: React.FC = () => {
                   {state.theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
                 </span>
               </div>
-              <div className={`w-8 h-4 rounded-full relative transition-colors ${state.theme === 'dark' ? 'bg-amber-500' : 'bg-slate-300'}`}>
+              <div className={`w-8 h-4 rounded-full relative transition-colors ${state.theme === 'dark' ? 'bg-accent-primary' : 'bg-muted/30'}`}>
                 <div className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all ${state.theme === 'dark' ? 'right-0.5' : 'left-0.5'}`}></div>
               </div>
             </button>
@@ -224,13 +224,13 @@ const DashboardPage: React.FC = () => {
         </nav>
       </div>
 
-      <nav className="hidden lg:flex fixed top-0 left-0 bottom-0 w-72 sidebar-shell backdrop-blur-2xl border-r border-slate-200 dark:border-white/10 z-50 p-8 flex-col">
+      <nav className="hidden lg:flex fixed top-0 left-0 bottom-0 w-72 bg-secondary border-r border-card-border z-50 p-8 flex-col">
         <div className="mb-12">
           <div className="flex items-center gap-3">
-             <div className="w-10 h-10 rounded-2xl bg-amber-500 flex items-center justify-center text-black font-bold text-xl shadow-lg shadow-amber-500/20">M</div>
-             <h1 className="text-2xl font-serif text-slate-800 dark:text-amber-500 font-bold tracking-tight">MindShift</h1>
+             <div className="w-10 h-10 rounded-2xl bg-accent-primary flex items-center justify-center text-btn-primary-text font-bold text-xl shadow-lg shadow-accent-primary/20">M</div>
+             <h1 className="text-2xl font-serif text-primary font-bold tracking-tight">MindShift</h1>
           </div>
-          <p className="text-[10px] text-slate-500 dark:text-gray-500 uppercase tracking-widest mt-2 font-bold px-1">Neural Empowerment</p>
+          <p className="text-xs text-secondary uppercase tracking-widest mt-2 font-bold px-1">Neural Empowerment</p>
         </div>
         
         <div className="space-y-4 flex-1">
@@ -248,22 +248,22 @@ const DashboardPage: React.FC = () => {
         </div>
 
         <div className="mt-auto space-y-6">
-           <div className="p-5 bg-surface-soft dark:bg-white/5 rounded-3xl border border-subtle dark:border-white/5 shadow-md">
+           <div className="p-5 card-base rounded-3xl shadow-md">
               <div className="flex justify-between items-center mb-3">
-                <span className="text-[9px] uppercase tracking-widest text-muted font-bold">Theme Calibration</span>
+                <span className="text-xs uppercase tracking-widest text-muted font-bold">Theme Calibration</span>
                 <span className="text-xs">{state.theme === 'dark' ? '✨' : '🎨'}</span>
               </div>
               <button 
                 onClick={toggleTheme}
-                className="w-full h-10 rounded-xl bg-slate-900 ensure-contrast dark:bg-amber-500 flex items-center justify-center gap-2 group transition-all shadow-md shadow-slate-900/10 hover:shadow-lg hover:shadow-amber-500/30 active:scale-95"
+                className="w-full h-10 rounded-xl btn-primary-ritual flex items-center justify-center gap-2 group transition-all hover:shadow-lg active:scale-95"
               >
                 <span className="text-lg transition-transform group-hover:rotate-12">{state.theme === 'dark' ? '☀️' : '🌙'}</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest ensure-contrast">
+                <span className="text-xs font-bold uppercase tracking-widest">
                   Switch Mode
                 </span>
               </button>
            </div>
-           <p className="text-[9px] text-center text-muted uppercase tracking-[0.2em] font-medium italic">
+           <p className="text-xs text-center text-muted uppercase tracking-[0.2em] font-medium italic">
              "Thoughts become things."
            </p>
         </div>
@@ -286,7 +286,7 @@ const DashboardPage: React.FC = () => {
         </div>
       </main>
 
-      <footer className="w-full py-8 text-center text-muted text-[10px] uppercase tracking-widest border-t border-slate-100 dark:border-white/5 leading-relaxed">
+      <footer className="w-full py-8 text-center text-muted text-[10px] uppercase tracking-widest border-t border-card-border leading-relaxed">
          &copy; 2026 MindShift Manifest &bull; Elevate your Reality <br />
          Made to heal your inner self - Sambit Ghosh
       </footer>

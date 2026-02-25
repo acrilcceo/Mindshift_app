@@ -210,29 +210,29 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
     <div className="space-y-8 animate-in fade-in duration-500 pb-10 print:p-0">
       {/* Active Goal Reminders - Subtle Notification */}
       {activeGoals.length > 0 && (
-        <div className="mx-2 p-4 bg-blue-500/10 dark:bg-blue-500/5 border border-blue-500/20 rounded-2xl flex items-center justify-between animate-in slide-in-from-top-4 duration-700">
+        <div className="mx-2 p-4 bg-accent-primary/10 border border-accent-primary/20 rounded-2xl flex items-center justify-between animate-in slide-in-from-top-4 duration-700">
           <div className="flex items-center gap-3">
-            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+            <span className="w-2 h-2 rounded-full bg-accent-primary animate-pulse"></span>
             <div>
-              <p className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest">Active Focus</p>
-              <p className="text-xs text-slate-700 dark:text-gray-300 font-medium">{activeGoals[0].text}</p>
+              <p className="text-[10px] font-bold text-accent-primary uppercase tracking-widest">Active Focus</p>
+              <p className="text-xs text-secondary font-medium">{activeGoals[0].text}</p>
             </div>
           </div>
           <button 
             onClick={() => setActiveView('goals')}
-            className="text-[9px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest hover:underline"
+            className="text-[9px] font-bold text-accent-primary uppercase tracking-widest hover:underline"
           >
             View All ({activeGoals.length})
           </button>
         </div>
       )}
 
-      <div className="flex bg-slate-200/50 dark:bg-gray-900/50 p-1 rounded-2xl print:hidden">
+      <div className="flex bg-secondary p-1 rounded-2xl print:hidden">
         {(['ftba', 'gratitude', 'goals'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveView(tab)}
-            className={`flex-1 py-3 rounded-xl text-[10px] uppercase tracking-widest font-bold transition-all ${activeView === tab ? 'bg-purple-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
+            className={`flex-1 py-3 rounded-xl text-[10px] uppercase tracking-widest font-bold transition-all ${activeView === tab ? 'bg-accent-primary text-white shadow-lg' : 'text-muted hover:text-primary'}`}
           >
             {tab === 'ftba' ? 'Neural Journal' : tab}
           </button>
@@ -243,14 +243,14 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
         <div className="space-y-10">
           <section className="space-y-6 print:hidden">
             <div className="text-center px-4">
-              <h3 className="text-xl font-serif text-slate-800 dark:text-purple-200 font-bold">Neural Decoding</h3>
-              <p className="text-slate-500 dark:text-gray-500 text-xs mt-1 italic">Trace the circuitry of your reactions.</p>
+              <h3 className="text-xl font-serif text-primary font-bold">Neural Decoding</h3>
+              <p className="text-muted text-xs mt-1 italic">Trace the circuitry of your reactions.</p>
             </div>
-            <div className="glass-card p-6 rounded-3xl space-y-5 border-purple-500/20 shadow-xl">
+            <div className="card-base p-6 rounded-3xl space-y-5 border-accent-primary/20 shadow-xl">
               <div className="space-y-2">
                 <label className="flex justify-between text-[10px] uppercase tracking-widest font-bold">
-                  <span className="text-purple-600 dark:text-purple-400/70">1. Feel (The Emotion) *</span>
-                  {showErrors && !ftbaForm.feel.trim() && <span className="text-red-500 lowercase">Required</span>}
+                  <span className="text-accent-primary">1. Feel (The Emotion) *</span>
+                  {showErrors && !ftbaForm.feel.trim() && <span className="text-error lowercase">Required</span>}
                 </label>
                 <input 
                   value={ftbaForm.feel} 
@@ -259,21 +259,21 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                     if(e.target.value.trim()) setShowErrors(false);
                   }} 
                   placeholder="What is the raw sensation?" 
-                  className={`w-full bg-white/50 dark:bg-black/40 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors ${showErrors && !ftbaForm.feel.trim() ? 'border-red-500/50 bg-red-500/5' : 'border-slate-200 dark:border-white/5 focus:border-purple-500/50'}`} 
+                  className={`w-full bg-secondary border rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors ${showErrors && !ftbaForm.feel.trim() ? 'border-error bg-error' : 'border-card-border focus:border-accent-primary/50'}`} 
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-widest text-purple-600 dark:text-purple-400/70 font-bold">2. Trigger (The Catalyst)</label>
-                <input value={ftbaForm.trigger} onChange={e => setFtbaForm({...ftbaForm, trigger: e.target.value})} placeholder="What external event sparked this?" className="w-full bg-white/50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500/50 transition-colors" />
+                <label className="text-[10px] uppercase tracking-widest text-accent-primary font-bold">2. Trigger (The Catalyst)</label>
+                <input value={ftbaForm.trigger} onChange={e => setFtbaForm({...ftbaForm, trigger: e.target.value})} placeholder="What external event sparked this?" className="w-full bg-secondary border border-card-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-primary/50 transition-colors" />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-widest text-purple-600 dark:text-purple-400/70 font-bold">3. Belief (The Narrative)</label>
-                <input value={ftbaForm.belief} onChange={e => setFtbaForm({...ftbaForm, belief: e.target.value})} placeholder="What did you tell yourself?" className="w-full bg-white/50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500/50 transition-colors" />
+                <label className="text-[10px] uppercase tracking-widest text-accent-primary font-bold">3. Belief (The Narrative)</label>
+                <input value={ftbaForm.belief} onChange={e => setFtbaForm({...ftbaForm, belief: e.target.value})} placeholder="What did you tell yourself?" className="w-full bg-secondary border border-card-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-primary/50 transition-colors" />
               </div>
               <div className="space-y-2">
                 <label className="flex justify-between text-[10px] uppercase tracking-widest font-bold">
-                  <span className="text-purple-600 dark:text-purple-400/70">4. Action (The Override) *</span>
-                  {showErrors && !ftbaForm.action.trim() && <span className="text-red-500 lowercase">Required</span>}
+                  <span className="text-accent-primary">4. Action (The Override) *</span>
+                  {showErrors && !ftbaForm.action.trim() && <span className="text-error lowercase">Required</span>}
                 </label>
                 <input 
                   value={ftbaForm.action} 
@@ -282,12 +282,12 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                     if(e.target.value.trim()) setShowErrors(false);
                   }} 
                   placeholder="How will you consciously respond?" 
-                  className={`w-full bg-white/50 dark:bg-black/40 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors ${showErrors && !ftbaForm.action.trim() ? 'border-red-500/50 bg-red-500/5' : 'border-slate-200 dark:border-white/5 focus:border-purple-500/50'}`} 
+                  className={`w-full bg-secondary border rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors ${showErrors && !ftbaForm.action.trim() ? 'border-error bg-error' : 'border-card-border focus:border-accent-primary/50'}`} 
                 />
               </div>
               <button 
                 onClick={saveFtba} 
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-purple-700 to-purple-500 text-white font-bold hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] transition-all active:scale-[0.98]"
+                className="w-full py-4 rounded-2xl btn-primary-ritual font-bold transition-all active:scale-[0.98]"
               >
                 Log Neural Shift
               </button>
@@ -299,11 +299,11 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <h4 className="text-[10px] uppercase tracking-widest text-muted font-bold">Evolution History</h4>
-                  <span className="text-[9px] bg-slate-200 dark:bg-white/5 text-slate-600 dark:text-gray-400 px-2 py-0.5 rounded-full font-mono border border-slate-300 dark:border-white/5">
+                  <span className="text-[9px] bg-secondary text-primary px-2 py-0.5 rounded-full font-mono border border-card-border">
                     {state.ftbaEntries.length} total
                   </span>
                 </div>
-                <button onClick={handlePrint} className="text-[10px] text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-white uppercase tracking-widest font-bold px-3 py-1 bg-slate-200 dark:bg-white/5 rounded-full border border-purple-500/10 transition-colors">Export PDF/Print</button>
+                <button onClick={handlePrint} className="text-[10px] text-accent-primary hover:text-primary uppercase tracking-widest font-bold px-3 py-1 bg-secondary rounded-full border border-accent-primary/10 transition-colors">Export PDF/Print</button>
               </div>
 
               {/* Filtering / Search Toolbar */}
@@ -315,7 +315,7 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                         placeholder="Search cycles..."
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
-                        className="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2 text-xs text-primary placeholder-muted focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/40"
+                        className="w-full bg-secondary border border-card-border rounded-xl px-4 py-2 text-xs text-primary placeholder-muted focus:outline-none focus:border-accent-primary/50 focus:ring-1 focus:ring-accent-primary/40"
                       />
                       <span className="absolute right-3 top-2 text-muted">🔍</span>
                    </div>
@@ -326,7 +326,7 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                         setSortKey(key);
                         setSortOrder(order);
                      }}
-                     className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[10px] uppercase tracking-widest font-bold text-secondary focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/40"
+                     className="bg-secondary border border-card-border rounded-xl px-3 py-2 text-[10px] uppercase tracking-widest font-bold text-secondary focus:outline-none focus:border-accent-primary/50 focus:ring-1 focus:ring-accent-primary/40"
                    >
                       <option value="timestamp-desc">Newest First</option>
                       <option value="timestamp-asc">Oldest First</option>
@@ -342,19 +342,19 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                     type="date" 
                     value={startDate}
                     onChange={e => setStartDate(e.target.value)}
-                    className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-2 py-1 text-[10px] text-primary focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/40"
+                    className="bg-secondary border border-card-border rounded-lg px-2 py-1 text-[10px] text-primary focus:outline-none focus:border-accent-primary/50 focus:ring-1 focus:ring-accent-primary/40"
                   />
                   <span className="text-[10px] text-muted">to</span>
                   <input 
                     type="date" 
                     value={endDate}
                     onChange={e => setEndDate(e.target.value)}
-                    className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-2 py-1 text-[10px] text-primary focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/40"
+                    className="bg-secondary border border-card-border rounded-lg px-2 py-1 text-[10px] text-primary focus:outline-none focus:border-accent-primary/50 focus:ring-1 focus:ring-accent-primary/40"
                   />
                   {(startDate || endDate || searchTerm) && (
                     <button 
                       onClick={() => {setStartDate(''); setEndDate(''); setSearchTerm('');}}
-                      className="text-[10px] text-purple-600 dark:text-purple-400 hover:underline"
+                      className="text-[10px] text-accent-primary hover:underline"
                     >Reset</button>
                   )}
                 </div>
@@ -362,13 +362,13 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
 
               {/* Bulk Actions Bar */}
               {processedEntries.length > 0 && (
-                <div className="flex items-center justify-between bg-white dark:bg-white/5 px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 shadow-sm">
+                <div className="flex items-center justify-between bg-secondary px-4 py-3 rounded-xl border border-card-border shadow-sm">
                   <div className="flex items-center gap-3">
                     <input 
                       type="checkbox" 
                       checked={selectedIds.size === processedEntries.length && processedEntries.length > 0} 
                       onChange={toggleSelectAll}
-                      className="w-4 h-4 rounded accent-purple-500 cursor-pointer"
+                      className="w-4 h-4 rounded accent-accent-primary cursor-pointer"
                     />
                     <span className="text-[10px] text-secondary uppercase tracking-widest font-bold">
                       {selectedIds.size > 0 ? `${selectedIds.size} Selected` : 'Select All Cycles'}
@@ -378,13 +378,13 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                     <div className="flex gap-4">
                       <button 
                         onClick={() => setSelectedIds(new Set())}
-                        className="text-[10px] text-muted hover:text-slate-600 dark:hover:text-gray-200 font-bold uppercase tracking-widest"
+                        className="text-[10px] text-muted hover:text-primary font-bold uppercase tracking-widest"
                       >
                         Clear
                       </button>
                       <button 
                         onClick={handleBulkDelete}
-                        className="text-[10px] text-red-500 hover:text-red-400 font-bold uppercase tracking-widest flex items-center gap-1"
+                        className="text-[10px] text-error hover:text-error/80 font-bold uppercase tracking-widest flex items-center gap-1"
                       >
                         <span>🗑️</span> Purge Selected
                       </button>
@@ -398,7 +398,7 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
               {processedEntries.map(e => (
                 <div 
                   key={e.id} 
-                  className={`glass-card p-6 rounded-3xl border-l-4 transition-all duration-300 relative group flex gap-4 ${editingId === e.id ? 'border-amber-500 ring-2 ring-amber-500/20' : 'border-purple-500/40 hover:border-purple-500 shadow-lg'}`}
+                  className={`card-base p-6 rounded-3xl border-l-4 transition-all duration-300 relative group flex gap-4 ${editingId === e.id ? 'border-accent-secondary ring-2 ring-accent-secondary/20' : 'border-accent-primary/40 hover:border-accent-primary shadow-lg'}`}
                 >
                   {/* Selection Checkbox */}
                   <div className="flex-shrink-0 pt-1 print:hidden">
@@ -406,7 +406,7 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                         type="checkbox" 
                         checked={selectedIds.has(e.id)} 
                         onChange={() => toggleSelect(e.id)}
-                        className={`w-5 h-5 rounded-lg accent-purple-500 cursor-pointer transition-opacity ${selectedIds.size > 0 ? 'opacity-100' : 'opacity-20 group-hover:opacity-100'}`}
+                        className={`w-5 h-5 rounded-lg accent-accent-primary cursor-pointer transition-opacity ${selectedIds.size > 0 ? 'opacity-100' : 'opacity-20 group-hover:opacity-100'}`}
                       />
                   </div>
 
@@ -414,34 +414,34 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
                     {editingId === e.id ? (
                       <div className="space-y-4">
                         <div className="flex justify-between items-center mb-2">
-                          <h5 className="text-[10px] uppercase tracking-widest text-amber-600 dark:text-amber-500 font-bold">Editing Evolution</h5>
+                          <h5 className="text-[10px] uppercase tracking-widest text-accent-secondary font-bold">Editing Evolution</h5>
                           <span className="text-[9px] text-muted font-mono tracking-tighter">{formatTimestamp(e.timestamp)}</span>
                         </div>
                         <div className="space-y-3">
-                          <input value={editForm.feel} onChange={ev => setEditForm({...editForm, feel: ev.target.value})} className="w-full bg-slate-50 dark:bg-black/60 border border-amber-500/30 rounded-lg px-3 py-2 text-xs" />
-                          <input value={editForm.trigger} onChange={ev => setEditForm({...editForm, trigger: ev.target.value})} className="w-full bg-slate-50 dark:bg-black/60 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2 text-xs" />
-                          <input value={editForm.belief} onChange={ev => setEditForm({...editForm, belief: ev.target.value})} className="w-full bg-slate-50 dark:bg-black/60 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2 text-xs" />
-                          <input value={editForm.action} onChange={ev => setEditForm({...editForm, action: ev.target.value})} className="w-full bg-slate-50 dark:bg-black/60 border border-amber-500/30 rounded-lg px-3 py-2 text-xs" />
+                          <input value={editForm.feel} onChange={ev => setEditForm({...editForm, feel: ev.target.value})} className="w-full bg-secondary border border-accent-secondary/30 rounded-lg px-3 py-2 text-xs text-primary" />
+                          <input value={editForm.trigger} onChange={ev => setEditForm({...editForm, trigger: ev.target.value})} className="w-full bg-secondary border border-card-border rounded-lg px-3 py-2 text-xs text-primary" />
+                          <input value={editForm.belief} onChange={ev => setEditForm({...editForm, belief: ev.target.value})} className="w-full bg-secondary border border-card-border rounded-lg px-3 py-2 text-xs text-primary" />
+                          <input value={editForm.action} onChange={ev => setEditForm({...editForm, action: ev.target.value})} className="w-full bg-secondary border border-accent-secondary/30 rounded-lg px-3 py-2 text-xs text-primary" />
                         </div>
                         <div className="flex gap-2 pt-2">
-                          <button onClick={saveEdit} className="flex-1 py-2 bg-amber-500 text-black text-[10px] font-bold rounded-xl">Save</button>
-                          <button onClick={cancelEditing} className="flex-1 py-2 bg-slate-200 dark:bg-gray-800 text-slate-700 dark:text-gray-300 text-[10px] font-bold rounded-xl">Cancel</button>
+                          <button onClick={saveEdit} className="flex-1 py-2 btn-primary-ritual text-[10px] font-bold rounded-xl">Save</button>
+                          <button onClick={cancelEditing} className="flex-1 py-2 bg-secondary text-muted hover:text-primary border border-card-border text-[10px] font-bold rounded-xl transition-colors">Cancel</button>
                         </div>
                       </div>
                     ) : (
                       <>
-                        <div className="flex justify-between items-center mb-4 pb-2 border-b border-slate-100 dark:border-white/5">
+                        <div className="flex justify-between items-center mb-4 pb-2 border-b border-border">
                           <div className="flex flex-col">
-                            <span className="text-xs font-bold text-purple-700 dark:text-purple-300 uppercase tracking-wide">{e.feel}</span>
+                            <span className="text-xs font-bold text-accent-primary uppercase tracking-wide">{e.feel}</span>
                             <span className="text-[9px] text-muted font-mono mt-0.5 tracking-tighter uppercase">{formatTimestamp(e.timestamp)}</span>
                           </div>
                           <div className="flex gap-2 print:hidden">
-                            <button onClick={() => startEditing(e)} className="text-[10px] text-muted hover:text-amber-600 transition-colors px-2 py-1 bg-slate-50 dark:bg-white/5 rounded-lg">Edit</button>
-                            <button onClick={() => deleteFtba(e.id)} className="text-[10px] text-muted hover:text-red-600 transition-colors px-2 py-1 bg-slate-50 dark:bg-white/5 rounded-lg">✕</button>
+                            <button onClick={() => startEditing(e)} className="text-[10px] text-muted hover:text-accent-secondary transition-colors px-2 py-1 bg-secondary border border-border rounded-lg">Edit</button>
+                            <button onClick={() => deleteFtba(e.id)} className="text-[10px] text-muted hover:text-error transition-colors px-2 py-1 bg-secondary border border-border rounded-lg">✕</button>
                           </div>
                         </div>
                         <div className="space-y-3 text-[11px] leading-relaxed">
-                          <p className="text-secondary italic">"I felt <span className="text-purple-700 dark:text-purple-300 font-medium">{e.feel}</span> because <span className="text-muted">{e.trigger || '...'}</span>. I told myself <span className="text-muted">{e.belief || '...'}</span>. Now, I choose to <span className="text-purple-600 dark:text-purple-400 font-bold">{e.action}</span>."</p>
+                          <p className="text-secondary italic">"I felt <span className="text-accent-primary font-medium">{e.feel}</span> because <span className="text-muted">{e.trigger || '...'}</span>. I told myself <span className="text-muted">{e.belief || '...'}</span>. Now, I choose to <span className="text-accent-primary font-bold">{e.action}</span>."</p>
                         </div>
                       </>
                     )}
@@ -451,16 +451,16 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
 
               {/* Enhanced Empty State */}
               {processedEntries.length === 0 && (
-                <div className="text-center py-16 px-8 border-2 border-dashed border-purple-500/10 rounded-[3rem] group hover:border-purple-500/30 transition-all duration-700 relative overflow-hidden bg-white dark:bg-white/[0.01] shadow-sm">
-                  <div className="absolute inset-0 bg-gradient-to-b from-purple-500/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="text-center py-16 px-8 border-2 border-dashed border-accent-primary/10 rounded-[3rem] group hover:border-accent-primary/30 transition-all duration-700 relative overflow-hidden card-base shadow-sm">
+                  <div className="absolute inset-0 bg-gradient-to-b from-accent-primary/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   
                   <div className="relative z-10 flex flex-col items-center">
-                    <div className="w-24 h-24 rounded-full bg-slate-50 dark:bg-gray-950 flex items-center justify-center mb-10 shadow-2xl border border-slate-200 dark:border-white/5 group-hover:scale-110 transition-transform duration-700 relative">
-                      <div className="absolute inset-0 rounded-full bg-purple-500/10 blur-xl animate-pulse"></div>
-                      <div className="text-6xl filter drop-shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse relative z-10">👁️</div>
+                    <div className="w-24 h-24 rounded-full bg-secondary flex items-center justify-center mb-10 shadow-2xl border border-border group-hover:scale-110 transition-transform duration-700 relative">
+                      <div className="absolute inset-0 rounded-full bg-accent-primary/10 blur-xl animate-pulse"></div>
+                      <div className="text-6xl filter drop-shadow-[0_0_15px_var(--accent-glow-primary)] animate-pulse relative z-10">👁️</div>
                     </div>
                     
-                    <h5 className="text-xl font-serif text-slate-800 dark:text-purple-100 mb-4 tracking-tight font-bold">The Neural Map is Clear</h5>
+                    <h5 className="text-xl font-serif text-primary mb-4 tracking-tight font-bold">The Neural Map is Clear</h5>
                     
                     <p className="text-muted text-[13px] max-w-[320px] leading-relaxed italic mb-10">
                       {searchTerm || startDate || endDate 
@@ -470,31 +470,31 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
 
                     {!searchTerm && !startDate && !endDate && (
                       <div className="w-full max-w-sm grid grid-cols-1 gap-4 text-left">
-                        <div className="flex gap-4 items-start p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.02] border border-slate-100 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-white/[0.04] transition-all">
-                          <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center text-[10px] font-bold">1</span>
+                        <div className="flex gap-4 items-start p-4 rounded-2xl bg-secondary border border-border hover:bg-primary/5 transition-all">
+                          <span className="flex-shrink-0 w-6 h-6 rounded-full bg-accent-primary/20 text-accent-primary flex items-center justify-center text-[10px] font-bold">1</span>
                           <div>
                             <p className="text-[11px] font-bold text-secondary uppercase tracking-wider mb-1">Notice the Vibration</p>
                             <p className="text-[10px] text-muted leading-normal">The next time a sudden emotion hits—anxiety, anger, or fear—stop and identify the raw feeling.</p>
                           </div>
                         </div>
-                        <div className="flex gap-4 items-start p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.02] border border-slate-100 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-white/[0.04] transition-all">
-                          <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center text-[10px] font-bold">2</span>
+                        <div className="flex gap-4 items-start p-4 rounded-2xl bg-secondary border border-border hover:bg-primary/5 transition-all">
+                          <span className="flex-shrink-0 w-6 h-6 rounded-full bg-accent-primary/20 text-accent-primary flex items-center justify-center text-[10px] font-bold">2</span>
                           <div>
-                            <p className="text-[11px] font-bold text-slate-700 dark:text-gray-300 uppercase tracking-wider mb-1">Trace the Spark</p>
-                            <p className="text-[10px] text-slate-500 dark:text-gray-500 leading-normal">What precisely triggered it? A word, a memory, or an email? Identify the external catalyst.</p>
+                            <p className="text-[11px] font-bold text-primary uppercase tracking-wider mb-1">Trace the Spark</p>
+                            <p className="text-[10px] text-secondary leading-normal">What precisely triggered it? A word, a memory, or an email? Identify the external catalyst.</p>
                           </div>
                         </div>
-                        <div className="flex gap-4 items-start p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.02] border border-slate-100 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-white/[0.04] transition-all">
-                          <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center text-[10px] font-bold">3</span>
+                        <div className="flex gap-4 items-start p-4 rounded-2xl bg-secondary border border-border hover:bg-primary/5 transition-all">
+                          <span className="flex-shrink-0 w-6 h-6 rounded-full bg-accent-primary/20 text-accent-primary flex items-center justify-center text-[10px] font-bold">3</span>
                           <div>
-                            <p className="text-[11px] font-bold text-slate-700 dark:text-gray-300 uppercase tracking-wider mb-1">Override the Script</p>
+                            <p className="text-[11px] font-bold text-primary uppercase tracking-wider mb-1">Override the Script</p>
                             <p className="text-[10px] text-muted leading-normal">Log it above. By writing it down, you move from the reactive 'Feel' to the conscious 'Action'.</p>
                           </div>
                         </div>
                         
                         <div className="mt-6 flex flex-col items-center gap-2 animate-bounce">
-                           <span className="text-[10px] uppercase tracking-widest text-purple-600 dark:text-purple-400 font-bold opacity-80">Ready for your first shift?</span>
-                           <span className="text-xl">↑</span>
+                           <span className="text-[10px] uppercase tracking-widest text-accent-primary font-bold opacity-80">Ready for your first shift?</span>
+                           <span className="text-xl text-primary">↑</span>
                         </div>
                       </div>
                     )}
@@ -508,16 +508,16 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
 
       {activeView === 'gratitude' && (
         <div className="space-y-6 animate-in slide-in-from-right-4">
-          <div className="glass-card p-6 rounded-3xl shadow-xl">
-             <h3 className="text-sm font-serif text-slate-800 dark:text-amber-200 mb-4 font-bold">I am grateful for...</h3>
+          <div className="card-base p-6 rounded-3xl shadow-xl">
+             <h3 className="text-sm font-serif text-primary mb-4 font-bold">I am grateful for...</h3>
              <div className="flex gap-2">
-                <input value={gratitudeInput} onChange={e => setGratitudeInput(e.target.value)} placeholder="The morning sun..." className="flex-1 bg-white/50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm text-primary placeholder-muted focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/40" onKeyDown={e => e.key === 'Enter' && addGratitude()} />
-                <button onClick={addGratitude} className="bg-amber-600 w-12 rounded-xl hover:bg-amber-500 font-bold transition-all active:scale-95 shadow-lg shadow-amber-900/20 text-white">+</button>
+                <input value={gratitudeInput} onChange={e => setGratitudeInput(e.target.value)} placeholder="The morning sun..." className="flex-1 bg-secondary border border-border rounded-xl px-4 py-3 text-sm text-primary placeholder-muted focus:outline-none focus:border-accent-secondary focus:ring-1 focus:ring-accent-secondary/40" onKeyDown={e => e.key === 'Enter' && addGratitude()} />
+                <button onClick={addGratitude} className="bg-accent-secondary w-12 rounded-xl hover:bg-accent-secondary/80 font-bold transition-all active:scale-95 shadow-lg shadow-accent-secondary/20 text-white">+</button>
              </div>
              <div className="mt-8 space-y-4">
                 {state.gratitudeList.map((item, i) => (
-                  <div className="text-sm text-secondary border-b border-slate-100 dark:border-white/5 pb-3 animate-in slide-in-from-left-2 flex gap-3">
-                    <span className="text-amber-500/50">✨</span>
+                  <div className="text-sm text-secondary border-b border-border pb-3 animate-in slide-in-from-left-2 flex gap-3">
+                    <span className="text-accent-secondary/50">✨</span>
                     <span>{item}</span>
                   </div>
                 ))}
@@ -529,22 +529,22 @@ const Journaling: React.FC<JournalingProps> = ({ state, onUpdate }) => {
 
       {activeView === 'goals' && (
         <div className="space-y-6 animate-in slide-in-from-left-4">
-          <div className="glass-card p-6 rounded-3xl shadow-xl">
-            <h3 className="text-sm font-serif text-slate-800 dark:text-blue-200 mb-4 font-bold">Intention Checklist</h3>
+          <div className="card-base p-6 rounded-3xl shadow-xl">
+            <h3 className="text-sm font-serif text-primary mb-4 font-bold">Intention Checklist</h3>
             <div className="flex gap-2 mb-8">
-                <input value={goalInput} onChange={e => setGoalInput(e.target.value)} placeholder="I will manifest..." className="flex-1 bg-white/50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm text-primary placeholder-muted focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/40" onKeyDown={e => e.key === 'Enter' && addGoal()} />
-                <button onClick={addGoal} className="bg-blue-600 w-12 rounded-xl hover:bg-blue-500 font-bold transition-all active:scale-95 shadow-lg shadow-blue-900/20 text-white">+</button>
+                <input value={goalInput} onChange={e => setGoalInput(e.target.value)} placeholder="I will manifest..." className="flex-1 bg-secondary border border-border rounded-xl px-4 py-3 text-sm text-primary placeholder-muted focus:outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary/40" onKeyDown={e => e.key === 'Enter' && addGoal()} />
+                <button onClick={addGoal} className="bg-accent-primary w-12 rounded-xl hover:bg-accent-primary/80 font-bold transition-all active:scale-95 shadow-lg shadow-accent-primary/20 text-white">+</button>
              </div>
              <div className="space-y-3">
                 {state.dailyGoals.map((goal) => (
-                  <div key={goal.id} className="flex items-center justify-between bg-white dark:bg-white/[0.02] p-4 rounded-2xl border border-slate-100 dark:border-white/5 group transition-all hover:bg-slate-50 dark:hover:bg-white/[0.04] shadow-sm">
+                  <div key={goal.id} className="flex items-center justify-between bg-secondary p-4 rounded-2xl border border-border group transition-all hover:bg-primary/5 shadow-sm">
                     <div className="flex items-center gap-4">
-                      <button onClick={() => toggleGoal(goal.id)} className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${goal.completed ? 'bg-blue-500 border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'border-slate-300 dark:border-gray-600 hover:border-blue-400'}`}>
+                      <button onClick={() => toggleGoal(goal.id)} className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${goal.completed ? 'bg-accent-primary border-accent-primary shadow-[0_0_10px_var(--accent-glow-primary)]' : 'border-border hover:border-accent-primary'}`}>
                         {goal.completed && <span className="text-[12px] text-white">✓</span>}
                       </button>
-                      <span className={`text-sm font-medium transition-all ${goal.completed ? 'text-muted line-through' : 'text-slate-800 dark:text-gray-200'}`}>{goal.text}</span>
+                      <span className={`text-sm font-medium transition-all ${goal.completed ? 'text-muted line-through' : 'text-primary'}`}>{goal.text}</span>
                     </div>
-                    <button onClick={() => deleteGoal(goal.id)} className="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-2">✕</button>
+                    <button onClick={() => deleteGoal(goal.id)} className="text-muted hover:text-error opacity-0 group-hover:opacity-100 transition-opacity p-2">✕</button>
                   </div>
                 ))}
                 {state.dailyGoals.length === 0 && <div className="text-center py-10 text-muted text-xs italic">Define your reality for today.</div>}

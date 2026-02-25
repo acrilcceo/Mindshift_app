@@ -78,15 +78,15 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#0c1220] text-slate-200 overflow-hidden relative">
+    <div className="min-h-screen w-full bg-primary text-primary overflow-hidden relative transition-colors duration-500">
       {/* 2. Background - Subtle Neural Glow */}
       <div 
         className="absolute inset-0 z-0 animate-subtle-shift"
         style={{
           background: `
-            radial-gradient(circle at 20% 15%, rgba(120, 80, 255, 0.12), transparent 40%),
-            radial-gradient(circle at 80% 30%, rgba(255, 160, 90, 0.08), transparent 45%),
-            linear-gradient(to bottom, #0c1220, #111827)
+            radial-gradient(circle at 20% 15%, var(--bg-gradient-start), transparent 40%),
+            radial-gradient(circle at 80% 30%, var(--bg-gradient-end), transparent 45%),
+            linear-gradient(to bottom, var(--bg-primary), var(--bg-secondary))
           `,
           backgroundSize: '150% 150%'
         }}
@@ -97,11 +97,11 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
         {/* 1. Header Section */}
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div className="relative group">
-            <h1 className="text-3xl md:text-4xl font-serif font-medium text-slate-100 tracking-wide transition-all duration-300 animate-fade-in">
-              {greeting}, <span className="group-hover:text-white group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] transition-all duration-500">{formattedName}</span>
+            <h1 className="text-3xl md:text-4xl font-serif font-medium text-primary tracking-wide transition-all duration-300 animate-fade-in">
+              {greeting}, <span className="group-hover:text-accent-primary group-hover:drop-shadow-[0_0_8px_var(--accent-glow)] transition-all duration-500">{formattedName}</span>
             </h1>
             <div className="mt-2 flex flex-col items-start gap-1">
-              <p className="text-slate-400/90 font-light text-sm tracking-wide animate-fade-in" style={{ animationDelay: '200ms' }}>
+              <p className="text-secondary font-light text-sm tracking-wide animate-fade-in" style={{ animationDelay: '200ms' }}>
                 {getContextualText()}
               </p>
             </div>
@@ -109,17 +109,17 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
           
           {/* 4. Stats - Floating Glass Pills */}
           <div className="flex gap-4 text-sm flex-wrap">
-            <div className="flex flex-col items-center justify-center px-4 py-2 rounded-full bg-white/5 border border-white/5 backdrop-blur-sm hover:scale-102 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] transition-all duration-300">
-              <span className="text-slate-500 text-[10px] uppercase tracking-wider mb-0.5">Listening</span>
-              <span className="text-slate-200 font-medium">{listeningMinutes} <span className="text-slate-600 text-[10px]">min</span></span>
+            <div className="flex flex-col items-center justify-center px-4 py-2 rounded-full card-base hover:scale-102 transition-all duration-300">
+              <span className="text-muted text-xs uppercase tracking-wider mb-0.5">Listening</span>
+              <span className="text-primary font-medium">{listeningMinutes} <span className="text-muted text-xs">min</span></span>
             </div>
-            <div className="flex flex-col items-center justify-center px-4 py-2 rounded-full bg-white/5 border border-white/5 backdrop-blur-sm hover:scale-102 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] transition-all duration-300">
-              <span className="text-slate-500 text-[10px] uppercase tracking-wider mb-0.5">Sessions</span>
-              <span className="text-slate-200 font-medium">{totalSessions}</span>
+            <div className="flex flex-col items-center justify-center px-4 py-2 rounded-full card-base hover:scale-102 transition-all duration-300">
+              <span className="text-muted text-xs uppercase tracking-wider mb-0.5">Sessions</span>
+              <span className="text-primary font-medium">{totalSessions}</span>
             </div>
-            <div className="flex flex-col items-center justify-center px-4 py-2 rounded-full bg-white/5 border border-white/5 backdrop-blur-sm hover:scale-102 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] transition-all duration-300">
-              <span className="text-slate-500 text-[10px] uppercase tracking-wider mb-0.5">Streak</span>
-              <span className="text-slate-200 font-medium">{streak} <span className="text-slate-600 text-[10px]">day</span></span>
+            <div className="flex flex-col items-center justify-center px-4 py-2 rounded-full card-base hover:scale-102 transition-all duration-300">
+              <span className="text-muted text-xs uppercase tracking-wider mb-0.5">Streak</span>
+              <span className="text-primary font-medium">{streak} <span className="text-muted text-xs">day</span></span>
             </div>
           </div>
         </header>
@@ -127,11 +127,11 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           
           {/* 5. Daily Invocation - Centerpiece Energy Block */}
-          <div className="group relative p-10 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/5 animate-fade-in" style={{ animationDelay: '100ms' }}>
+          <div className="group relative p-10 rounded-[2rem] card-base transition-all duration-500 hover:shadow-2xl hover:shadow-accent-primary/5 animate-fade-in" style={{ animationDelay: '100ms' }}>
             <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               <button 
                 onClick={refreshAffirmation}
-                className="p-2 text-slate-400 hover:text-white transition-colors"
+                className="p-2 text-muted hover:text-primary transition-colors"
                 title="Refresh Invocation"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -140,25 +140,25 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
               </button>
             </div>
             
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-300/60 mb-8">
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-accent-primary/60 mb-8">
               Daily Invocation
             </h3>
             
             <div className="relative">
-              <p className="text-xl md:text-2xl font-serif italic font-light text-slate-200 leading-relaxed text-center px-4 animate-fade-in">
+              <p className="text-xl md:text-2xl font-serif italic font-light text-primary leading-relaxed text-center px-4 animate-fade-in">
                 {randomAffirmation}
               </p>
             </div>
 
             <div className="mt-10 flex flex-col items-center gap-6">
               {/* Breathing Energy Bar */}
-              <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-indigo-400/30 to-transparent relative overflow-hidden">
-                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-400/50 to-transparent animate-[shimmer_3s_infinite]" />
+              <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-accent-primary/30 to-transparent relative overflow-hidden">
+                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-primary/50 to-transparent animate-[shimmer_3s_infinite]" />
               </div>
               
               <button 
                 onClick={() => onNavigate('dashboard')} 
-                className="text-[10px] uppercase tracking-widest text-slate-500 hover:text-indigo-300 transition-colors pt-2"
+                className="text-xs uppercase tracking-widest text-muted hover:text-accent-primary transition-colors pt-2"
               >
                 Go to Full Invocations
               </button>
@@ -166,8 +166,8 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
           </div>
 
           {/* 6. Quick Shift - Modern Ritual Buttons */}
-          <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500 animate-fade-in" style={{ animationDelay: '200ms' }}>
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-300/60 mb-8 text-center">
+          <div className="p-8 rounded-[2rem] card-base transition-all duration-500 animate-fade-in" style={{ animationDelay: '200ms' }}>
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-accent-primary/60 mb-8 text-center">
               Quick Shift
             </h3>
             
@@ -183,17 +183,17 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
                       className={`
                         w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 relative
                         ${isPlaying === sound.id 
-                          ? 'bg-amber-500/20 text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.2)] scale-105' 
-                          : 'bg-white/5 text-slate-400 group-hover:bg-white/10 group-hover:text-slate-200'}
+                          ? 'bg-accent-primary/20 text-accent-primary shadow-[0_0_20px_var(--accent-glow)] scale-105' 
+                          : 'bg-secondary text-muted group-hover:bg-accent-primary/10 group-hover:text-primary'}
                       `}
                     >
                       {/* Pulse ring when idle */}
                       {isPlaying !== sound.id && (
-                        <div className="absolute inset-0 rounded-full border border-white/5 animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite] opacity-0 group-hover:opacity-100" />
+                        <div className="absolute inset-0 rounded-full border border-card-border animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite] opacity-0 group-hover:opacity-100" />
                       )}
                       
                       {isPlaying === sound.id ? (
-                         <div className="absolute inset-0 rounded-full border border-amber-500/30 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]" />
+                         <div className="absolute inset-0 rounded-full border border-accent-primary/30 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]" />
                       ) : null}
 
                       {isPlaying === sound.id ? (
@@ -207,10 +207,10 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
                       )}
                     </button>
                     <div className="flex flex-col">
-                      <span className={`text-sm font-medium transition-colors ${isPlaying === sound.id ? 'text-amber-400' : 'text-slate-300 group-hover:text-white'}`}>
+                      <span className={`text-sm font-medium transition-colors ${isPlaying === sound.id ? 'text-accent-primary' : 'text-secondary group-hover:text-primary'}`}>
                         {sound.label}
                       </span>
-                      <span className="text-[10px] text-slate-500 font-light tracking-wide uppercase">
+                      <span className="text-xs text-muted font-light tracking-wide uppercase">
                         {sound.sub}
                       </span>
                     </div>
@@ -222,7 +222,7 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
             <div className="mt-8 text-center">
               <button 
                 onClick={() => onNavigate('soundshift')}
-                className="text-[10px] uppercase tracking-widest text-slate-500 hover:text-amber-400 transition-colors"
+                className="text-xs uppercase tracking-widest text-muted hover:text-accent-primary transition-colors"
               >
                 Open Sound Studio
               </button>
@@ -230,8 +230,8 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
           </div>
 
           {/* 7. Shift a Story - Transformational */}
-          <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500 flex flex-col animate-fade-in" style={{ animationDelay: '300ms' }}>
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-300/60 mb-6">
+          <div className="p-8 rounded-[2rem] card-base flex flex-col animate-fade-in" style={{ animationDelay: '300ms' }}>
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-accent-primary/60 mb-6">
               Shift a Story
             </h3>
             
@@ -240,7 +240,7 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
                 value={reframeInput}
                 onChange={(e) => setReframeInput(e.target.value)}
                 placeholder="Write a thought you’re ready to release..."
-                className="w-full bg-transparent border-b border-white/10 focus:border-violet-500/50 outline-none text-slate-200 text-lg font-light resize-none h-32 placeholder:text-slate-600 transition-all duration-500 focus:shadow-[inset_0_-10px_20px_-10px_rgba(139,92,246,0.1)]"
+                className="w-full bg-transparent border-b border-card-border focus:border-accent-primary/50 outline-none text-primary text-lg font-light resize-none h-32 placeholder:text-muted transition-all duration-500 focus:shadow-[inset_0_-10px_20px_-10px_var(--accent-glow)]"
               />
             </div>
 
@@ -250,71 +250,70 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
               className={`
                 mt-6 w-full py-4 rounded-xl text-sm font-medium tracking-wide transition-all duration-500 relative overflow-hidden group
                 ${reframeInput.trim() 
-                  ? 'text-white shadow-[0_4px_20px_rgba(212,165,116,0.2)]' 
-                  : 'bg-white/5 text-slate-500 cursor-not-allowed'}
+                  ? 'btn-primary-ritual' 
+                  : 'bg-secondary text-muted cursor-not-allowed'}
               `}
-              style={reframeInput.trim() ? { background: 'linear-gradient(135deg, #d4a574, #b8865b)' } : {}}
             >
               {reframeInput.trim() && (
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
               )}
               <span className="relative z-10">Reframe Now</span>
             </button>
-            <p className="mt-3 text-center text-[10px] text-slate-500 font-light tracking-wide uppercase">
+            <p className="mt-3 text-center text-xs text-muted font-light tracking-wide uppercase">
                Rewrite the narrative.
             </p>
           </div>
 
           {/* 8. Your Support - Connected */}
-          <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500 animate-fade-in" style={{ animationDelay: '400ms' }}>
-             <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-300/60 mb-6">
+          <div className="p-8 rounded-[2rem] card-base animate-fade-in" style={{ animationDelay: '400ms' }}>
+             <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-accent-primary/60 mb-6">
               Your Support
             </h3>
             
             <div className="flex-1 flex flex-col items-center justify-center text-center h-48">
               {upcomingAppointment ? (
-                <div className="w-full bg-white/5 p-6 rounded-2xl flex items-center gap-4">
-                   <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-400">
+                <div className="w-full bg-secondary p-6 rounded-2xl flex items-center gap-4">
+                   <div className="w-12 h-12 rounded-full bg-accent-primary/10 flex items-center justify-center text-accent-primary">
                      📅
                    </div>
                    <div className="text-left">
-                     <p className="font-serif text-slate-200">Session with Guide</p>
-                     <p className="text-xs text-slate-500 mt-1">Today, 4:00 PM</p>
+                     <p className="font-serif text-primary">Session with Guide</p>
+                     <p className="text-xs text-muted mt-1">Today, 4:00 PM</p>
                    </div>
                 </div>
               ) : (
                 <>
                   <div className="relative w-16 h-16 mb-6 flex items-center justify-center">
-                    <div className="absolute inset-0 bg-indigo-500/10 rounded-full animate-[ping_4s_ease-in-out_infinite]" />
-                    <div className="relative w-12 h-12 bg-indigo-500/10 rounded-full flex items-center justify-center text-indigo-300/80 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
+                    <div className="absolute inset-0 bg-accent-primary/10 rounded-full animate-[ping_4s_ease-in-out_infinite]" />
+                    <div className="relative w-12 h-12 bg-accent-primary/10 rounded-full flex items-center justify-center text-accent-primary/80 shadow-[0_0_15px_var(--accent-glow)]">
                       🤍
                     </div>
                   </div>
-                  <p className="font-light text-slate-300">Support becomes powerful when intentional.</p>
+                  <p className="font-light text-secondary">Support becomes powerful when intentional.</p>
                 </>
               )}
             </div>
             
             <button 
               onClick={() => onNavigate('guides')}
-              className="w-full py-3 rounded-xl border border-white/10 hover:border-indigo-500/30 hover:bg-indigo-500/5 transition-all duration-500 text-xs font-medium text-slate-400 hover:text-indigo-200 uppercase tracking-wider hover:shadow-[0_0_15px_rgba(99,102,241,0.1)]"
+              className="w-full py-3 rounded-xl border border-card-border hover:border-accent-primary/30 hover:bg-accent-primary/5 transition-all duration-500 text-xs font-medium text-secondary hover:text-primary uppercase tracking-wider hover:shadow-[0_0_15px_var(--accent-glow)]"
             >
               Explore Guides
             </button>
           </div>
 
           {/* 9. Curated for You - Premium Calm Tech */}
-          <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500 md:col-span-2 animate-fade-in" style={{ animationDelay: '500ms' }}>
+          <div className="p-8 rounded-[2rem] card-base md:col-span-2 animate-fade-in" style={{ animationDelay: '500ms' }}>
             <div className="flex items-center justify-between mb-8">
               <div className="flex flex-col gap-2">
-                <h3 className="text-lg font-serif font-light text-slate-200 tracking-wide">
+                <h3 className="text-lg font-serif font-light text-primary tracking-wide">
                   Curated Ritual Tools
                 </h3>
-                <div className="h-px w-12 bg-white/10" />
+                <div className="h-px w-12 bg-card-border" />
               </div>
               <button 
                 onClick={() => onNavigate('marketplace')}
-                className="text-[10px] uppercase tracking-widest text-slate-500 hover:text-amber-400 transition-colors"
+                className="text-xs uppercase tracking-widest text-muted hover:text-accent-primary transition-colors"
               >
                 View All
               </button>
@@ -325,23 +324,23 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
               {curatedProducts.slice(0, 2).map((product, idx) => (
                 <div 
                   key={product.id}
-                  className="min-w-[280px] md:min-w-0 snap-center group flex items-center gap-6 p-4 rounded-2xl hover:bg-white/5 transition-all duration-500 cursor-pointer border border-transparent hover:border-white/5 backdrop-blur-sm animate-fade-in"
+                  className="min-w-[280px] md:min-w-0 snap-center group flex items-center gap-6 p-4 rounded-2xl hover:bg-secondary/50 transition-all duration-500 cursor-pointer border border-transparent hover:border-card-border backdrop-blur-sm animate-fade-in"
                   style={{ animationDelay: `${600 + idx * 100}ms` }}
                   onClick={() => onNavigate('marketplace')}
                 >
-                  <div className="w-24 h-24 rounded-xl bg-white/5 overflow-hidden relative shadow-lg group-hover:scale-105 transition-transform duration-700 group-hover:shadow-2xl">
-                     <div className="absolute inset-0 flex items-center justify-center text-slate-600 group-hover:text-slate-400 transition-colors duration-500">
+                  <div className="w-24 h-24 rounded-xl bg-secondary overflow-hidden relative shadow-lg group-hover:scale-105 transition-transform duration-700 group-hover:shadow-2xl">
+                     <div className="absolute inset-0 flex items-center justify-center text-muted group-hover:text-secondary transition-colors duration-500">
                        🛍️
                      </div>
                   </div>
                   <div>
-                    <h4 className="font-serif text-lg text-slate-200 group-hover:text-amber-400 transition-colors duration-300">
+                    <h4 className="font-serif text-lg text-primary group-hover:text-accent-primary transition-colors duration-300">
                       {product.title}
                     </h4>
-                    <p className="text-xs text-slate-500 mt-2 line-clamp-2 font-light leading-relaxed">
+                    <p className="text-xs text-muted mt-2 line-clamp-2 font-light leading-relaxed">
                       {product.shortDescription}
                     </p>
-                    <p className="text-sm font-light text-slate-400/80 mt-3 group-hover:text-white transition-colors">
+                    <p className="text-sm font-light text-secondary mt-3 group-hover:text-primary transition-colors">
                       ${(product.priceCents / 100).toFixed(2)}
                     </p>
                   </div>

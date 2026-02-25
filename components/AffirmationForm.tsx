@@ -65,13 +65,13 @@ const AffirmationForm: React.FC<Props> = ({ open, onClose, editing, onSaved }) =
       aria-labelledby="affirmationFormTitle"
       className="fixed inset-0 z-50 flex items-center justify-center"
     >
-      <div className="absolute inset-0 bg-slate-900/60 dark:bg-black/80 backdrop-blur-md" onClick={onClose} />
-      <div ref={dialogRef} className="relative w-[95%] max-w-xl glass-card p-6 rounded-3xl shadow-2xl">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div ref={dialogRef} className="relative w-[95%] max-w-xl card-base p-6 rounded-3xl shadow-2xl">
         <div className="flex justify-between items-center mb-4">
-          <h2 id="affirmationFormTitle" className="text-lg font-serif text-slate-800 dark:text-amber-100">Add Affirmation</h2>
+          <h2 id="affirmationFormTitle" className="text-lg font-serif text-primary">Add Affirmation</h2>
           <button aria-label="Close" className="text-muted hover:text-red-500" onClick={onClose}>✕</button>
         </div>
-        {error && <div role="alert" className="mb-3 text-[12px] text-red-600 dark:text-red-400">{error}</div>}
+        {error && <div role="alert" className="mb-3 text-[12px] text-red-500">{error}</div>}
         <label className="text-[10px] uppercase tracking-[0.3em] text-muted font-bold">Affirmation</label>
         <textarea
           ref={inputRef}
@@ -81,7 +81,7 @@ const AffirmationForm: React.FC<Props> = ({ open, onClose, editing, onSaved }) =
           minLength={10}
           maxLength={500}
           placeholder="I am..."
-          className="w-full bg-white/50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-[1.5rem] p-4 text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-amber-500/50 min-h-[120px]"
+          className="w-full bg-secondary border border-card-border rounded-[1.5rem] p-4 text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/50 min-h-[120px]"
         />
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -90,7 +90,7 @@ const AffirmationForm: React.FC<Props> = ({ open, onClose, editing, onSaved }) =
               aria-label="Category"
               value={category}
               onChange={e => setCategory(e.target.value as AffirmationCategory)}
-              className="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px]"
+              className="w-full bg-secondary border border-card-border rounded-xl px-3 py-2 text-[12px] text-primary"
             >
               {categories.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
@@ -101,7 +101,7 @@ const AffirmationForm: React.FC<Props> = ({ open, onClose, editing, onSaved }) =
               aria-label="Reminder frequency"
               value={frequency}
               onChange={e => setFrequency(e.target.value as ReminderFrequency)}
-              className="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[12px]"
+              className="w-full bg-secondary border border-card-border rounded-xl px-3 py-2 text-[12px] text-primary"
             >
               {frequencies.map(f => <option key={f} value={f}>{f}</option>)}
             </select>
@@ -115,7 +115,7 @@ const AffirmationForm: React.FC<Props> = ({ open, onClose, editing, onSaved }) =
                 <button
                   key={d}
                   onClick={() => toggleDay(d)}
-                  className={`px-3 py-1 rounded-xl text-[12px] ${customDays.includes(d) ? 'bg-amber-500 text-black' : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-gray-400'}`}
+                  className={`px-3 py-1 rounded-xl text-[12px] ${customDays.includes(d) ? 'bg-accent-primary text-btn-primary' : 'bg-secondary text-secondary'}`}
                   aria-pressed={customDays.includes(d)}
                 >
                   {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d]}
@@ -125,10 +125,10 @@ const AffirmationForm: React.FC<Props> = ({ open, onClose, editing, onSaved }) =
           </div>
         )}
         <div className="mt-6 flex justify-end gap-3">
-          <button onClick={onClose} className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-gray-300">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 rounded-xl bg-secondary text-secondary hover:text-primary transition-colors">Cancel</button>
           <button
             onClick={handleSave}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 text-white font-bold disabled:opacity-50"
+            className="px-4 py-2 rounded-xl btn-primary-ritual disabled:opacity-50"
             disabled={text.trim().length < 10 || text.trim().length > 500}
             aria-disabled={text.trim().length < 10 || text.trim().length > 500}
           >

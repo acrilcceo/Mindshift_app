@@ -179,10 +179,10 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <header className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-serif text-heading-primary">
+        <h2 className="text-2xl sm:text-3xl font-serif text-primary">
           MindShift Marketplace
         </h2>
-        <p className="text-sm text-body-main">
+        <p className="text-sm text-secondary">
           Tools to support your inner work. Calm, curated, and intentionally minimal.
         </p>
       </header>
@@ -192,10 +192,10 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
           <button
             type="button"
             onClick={showComingSoon}
-            className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap ${
+            className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
               activeCategory === 'all'
-                ? 'bg-[#E8F1EF] text-heading-secondary'
-                : 'bg-[#EEF2F6] text-helper'
+                ? 'bg-accent-primary/10 text-accent-primary ring-1 ring-accent-primary/20'
+                : 'bg-secondary text-muted hover:text-primary border border-transparent hover:border-card-border'
             }`}
           >
             All
@@ -205,10 +205,10 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
               key={cat.id}
               type="button"
               onClick={showComingSoon}
-              className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap ${
+              className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
                 activeCategory === cat.id
-                  ? 'bg-[#E8F1EF] text-heading-secondary'
-                  : 'bg-[#EEF2F6] text-helper'
+                  ? 'bg-accent-primary/10 text-accent-primary ring-1 ring-accent-primary/20'
+                  : 'bg-secondary text-muted hover:text-primary border border-transparent hover:border-card-border'
               }`}
             >
               {cat.label}
@@ -216,7 +216,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
           ))}
         </div>
         <div className="space-y-2">
-          <p className="text-xs text-helper">
+          <p className="text-xs text-muted">
             Select a category to explore objects many people weave into their rituals.
           </p>
         </div>
@@ -229,17 +229,17 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
           return (
             <article
               key={product.id}
-              className="card-elevated flex flex-col overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-300"
+              className="card-base flex flex-col overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-300"
               onClick={showComingSoon}
             >
-              <div className="relative w-full aspect-[4/3] bg-[#EEF2F6]">
+              <div className="relative w-full aspect-[4/3] bg-secondary">
                 <img
                   src={product.imageUrl}
                   alt={product.title}
                   className="w-full h-full object-cover"
                 />
                 {product.isFeatured && (
-                  <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-medium bg-white/80 text-heading-secondary">
+                  <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-medium bg-card/90 text-primary shadow-sm backdrop-blur-sm">
                     Curated Pick
                   </span>
                 )}
@@ -249,9 +249,9 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
                     e.stopPropagation();
                     showComingSoon();
                   }}
-                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-xs hover:bg-white transition-colors"
+                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-card/90 backdrop-blur-sm flex items-center justify-center text-xs hover:bg-card transition-colors shadow-sm"
                 >
-                  <span className={isWishlisted ? 'text-heading-secondary' : 'text-helper'}>
+                  <span className={isWishlisted ? 'text-accent-secondary' : 'text-muted'}>
                     {isWishlisted ? '♥' : '♡'}
                   </span>
                 </button>
@@ -259,34 +259,34 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
               <div className="flex-1 flex flex-col p-5 space-y-3">
                 <div className="space-y-1">
                   {category && (
-                    <div className="text-[10px] uppercase tracking-[0.16em] text-helper">
+                    <div className="text-[10px] uppercase tracking-[0.16em] text-muted">
                       {category.label}
                     </div>
                   )}
-                  <h3 className="text-sm font-semibold text-heading-secondary">
+                  <h3 className="text-sm font-semibold text-primary">
                     {product.title}
                   </h3>
-                  <p className="text-xs text-body-main">
+                  <p className="text-xs text-secondary">
                     {product.shortDescription}
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-[11px] text-helper">
+                  <div className="text-[11px] text-muted">
                     Often used for{' '}
-                    <span className="text-body-main">
+                    <span className="text-secondary">
                       {product.oftenUsedFor}
                     </span>
                   </div>
-                  <div className="text-[11px] text-muted-micro">
+                  <div className="text-[10px] text-muted">
                     Offered by {product.sellerName}
                   </div>
                 </div>
                 <div className="flex items-center justify-between pt-2">
                   <div className="space-y-1">
-                    <div className="text-sm font-semibold text-heading-secondary">
+                    <div className="text-sm font-semibold text-primary">
                       {formatPrice(product.priceCents, product.currency)}
                     </div>
-                    <div className="text-[11px] text-helper">
+                    <div className="text-[11px] text-muted">
                       {product.ratingAverage.toFixed(1)} · {product.ratingCount} reviews
                     </div>
                   </div>
@@ -296,7 +296,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
                       e.stopPropagation();
                       showComingSoon();
                     }}
-                    className="px-4 py-2 rounded-full text-xs font-semibold bg-[#E8F1EF] text-heading-secondary hover:bg-[#D8E1DF] transition-colors"
+                    className="px-4 py-2 rounded-full text-xs font-semibold btn-secondary-ritual"
                   >
                     Add to Cart
                   </button>
@@ -310,11 +310,11 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
       {comingSoonVisible && (
         <div className="coming-overlay" onClick={() => setComingSoonVisible(false)}>
           <div className="coming-card" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-heading-secondary font-semibold">Stay Connected</h3>
-            <p className="text-body-main text-sm mt-1 mb-4">Coming Soon</p>
+            <h3 className="text-primary font-semibold">Stay Connected</h3>
+            <p className="text-secondary text-sm mt-1 mb-4">Coming Soon</p>
             <button 
               onClick={() => setComingSoonVisible(false)}
-              className="px-4 py-2 rounded-full text-xs font-medium bg-[#E8F1EF] text-heading-secondary hover:bg-[#D8E1DF] transition-colors"
+              className="px-4 py-2 rounded-full text-xs font-medium bg-secondary text-primary hover:bg-accent-primary/10 hover:text-accent-primary transition-colors"
             >
               Close
             </button>
