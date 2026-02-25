@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { auth } from '../firebase/firebaseConfig';
+import { signInAnonymously, signOut } from 'firebase/auth';
 
 type SimpleUser = {
   name: string;
@@ -29,8 +31,18 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       const stored = typeof window !== 'undefined' ? window.localStorage.getItem(STORAGE_KEY) : null;
       if (stored && stored.trim()) {
         setCurrentUser({ name: stored });
+        // Attempt to sign in anonymously to Firebase for data access
+        if (auth) {
+          signInAnonymously(auth).catch((err) => {
+            console.error('Firebase anonymous auth failed:', err);
+          });
+        }
       } else {
         setCurrentUser(null);
+        // Ensure signed out of Firebase if no local user
+        if (auth) {
+          signOut(auth).catch(() => {});
+        }
       }
     } catch {
       setCurrentUser(null);
@@ -45,8 +57,14 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     try {
       if (trimmed && typeof window !== 'undefined') {
         window.localStorage.setItem(STORAGE_KEY, trimmed);
+        if (auth) {
+          signInAnonymously(auth).catch(console.error);
+        }
       } else if (typeof window !== 'undefined') {
         window.localStorage.removeItem(STORAGE_KEY);
+        if (auth) {
+          signOut(auth).catch(console.error);
+        }
       }
     } catch {}
   };
@@ -62,6 +80,9 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
           const [name] = raw.split('=');
           if (!name) continue;
           document.cookie = `${name.trim()}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        }
+        if (auth) {
+          signOut(auth).catch(console.error);
         }
       }
     } catch {}

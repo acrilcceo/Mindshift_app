@@ -11,6 +11,7 @@ import Journaling from '../../components/Journaling';
 import Visualization from '../../components/Visualization';
 import ProfileSettings from '../components/ProfileSettings';
 import Marketplace from '../../components/Marketplace';
+import GuidesPage from './Guides';
 
 type View =
   | 'dashboard'
@@ -22,7 +23,8 @@ type View =
   | 'journal'
   | 'visualize'
   | 'profile'
-  | 'marketplace';
+  | 'marketplace'
+  | 'guides';
 
 const FocusIcon: React.FC = () => (
   <svg viewBox="0 0 24 24">
@@ -50,6 +52,13 @@ const MarketplaceIcon: React.FC = () => (
     <path d="M7 5h10l2 4H5z" />
     <path d="M6 9v8h12V9" />
     <path d="M10 13h4" />
+  </svg>
+);
+
+const GuideIcon: React.FC = () => (
+  <svg viewBox="0 0 24 24">
+    <circle cx="12" cy="7" r="4" />
+    <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
   </svg>
 );
 
@@ -173,6 +182,7 @@ const DashboardPage: React.FC = () => {
             <NavItem icon={<FocusIcon />} label="Focus Dashboard" active={activeView === 'dashboard'} onClick={() => navigate('dashboard')} />
             <NavItem icon={<SoundshiftIcon />} label="SoundShift Studio" active={activeView === 'soundshift'} onClick={() => navigate('soundshift')} />
             <NavItem icon={<MarketplaceIcon />} label="Marketplace" active={activeView === 'marketplace'} onClick={() => navigate('marketplace')} />
+            <NavItem icon={<GuideIcon />} label="Guides" active={activeView === 'guides'} onClick={() => navigate('guides')} />
             <NavItem icon={<ReframerIcon />} label="Neural Reframer" active={activeView === 'beliefs'} onClick={() => navigate('beliefs')} />
             <NavItem icon={<Ritual369Icon />} label="3-6-9 Ritual" active={activeView === '369'} onClick={() => navigate('369')} />
             <NavItem icon={<Ritual555Icon />} label="5-5-5 Ritual" active={activeView === '555'} onClick={() => navigate('555')} />
@@ -217,6 +227,7 @@ const DashboardPage: React.FC = () => {
           <NavItem icon={<FocusIcon />} label="Focus" active={activeView === 'dashboard'} onClick={() => navigate('dashboard')} />
           <NavItem icon={<SoundshiftIcon />} label="SoundShift" active={activeView === 'soundshift'} onClick={() => navigate('soundshift')} />
           <NavItem icon={<MarketplaceIcon />} label="Marketplace" active={activeView === 'marketplace'} onClick={() => navigate('marketplace')} />
+          <NavItem icon={<GuideIcon />} label="Guides" active={activeView === 'guides'} onClick={() => navigate('guides')} />
           <NavItem icon={<ReframerIcon />} label="Reframer" active={activeView === 'beliefs'} onClick={() => navigate('beliefs')} />
           <NavItem icon={<Ritual369Icon />} label="3-6-9" active={activeView === '369'} onClick={() => navigate('369')} />
           <NavItem icon={<Ritual555Icon />} label="5-5-5" active={activeView === '555'} onClick={() => navigate('555')} />
@@ -257,6 +268,7 @@ const DashboardPage: React.FC = () => {
           {activeView === '555' && <Module555 state={state} onUpdate={handleUpdate} />}
           {activeView === 'visualize' && <Visualization state={state} onUpdate={handleUpdate} />}
           {activeView === 'marketplace' && <Marketplace state={state} onUpdate={handleUpdate} />}
+          {activeView === 'guides' && <GuidesPage state={state} onUpdate={handleUpdate} />}
           {activeView === 'release' && <Hooponopono state={state} onUpdate={handleUpdate} />}
           {activeView === 'journal' && <Journaling state={state} onUpdate={handleUpdate} />}
           {activeView === 'profile' && <ProfileSettings />}
