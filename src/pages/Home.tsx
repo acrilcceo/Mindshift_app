@@ -1,14 +1,11 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { AppState, MarketplaceProduct } from '../../types';
+import React, { useEffect, useState } from 'react';
+import { AppState } from '../../types';
 import { useAuth } from '../context/AuthContext';
 import { affirmationPool } from '../../services/affirmationLibrary';
-import { getAppointments, Guide, Appointment } from '../services/guideService';
+import { Guide, Appointment } from '../services/guideService';
 import { playFrequency, playAmbient, stop, preloadAmbients } from '../../services/soundEngine';
 import { curatedProducts } from '../../components/Marketplace';
 
-// We need to import the View type from DashboardPage, but it's not exported there yet.
-// We will fix that in the next step. For now, we'll define a compatible type or use any.
-// Actually, it's better to define the interface for the props we expect.
 type View = 'dashboard' | 'home' | 'soundshift' | 'beliefs' | '369' | '555' | 'release' | 'journal' | 'visualize' | 'profile' | 'marketplace' | 'guides';
 
 interface HomeProps {
@@ -17,28 +14,22 @@ interface HomeProps {
   onNavigate: (view: View) => void;
 }
 
-const Home: React.FC<HomeProps> = ({ state, onUpdate, onNavigate }) => {
+const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
   const { currentUser } = useAuth();
   const [greeting, setGreeting] = useState('');
   const [randomAffirmation, setRandomAffirmation] = useState('');
-  const [upcomingAppointment, setUpcomingAppointment] = useState<Appointment | null>(null);
-  const [upcomingGuide, setUpcomingGuide] = useState<Guide | null>(null); // We might need to fetch guide details
+  const [upcomingAppointment] = useState<Appointment | null>(null);
   const [reframeInput, setReframeInput] = useState('');
   const [isPlaying, setIsPlaying] = useState<string | null>(null);
 
-  // 1. Welcome Section
+  // 1. Welcome Section & Init
   useEffect(() => {
     const hour = new Date().getHours();
     if (hour < 12) setGreeting('Good Morning');
     else if (hour < 18) setGreeting('Good Afternoon');
     else setGreeting('Good Evening');
     
-    // Preload sounds
     preloadAmbients().catch(console.error);
-  }, []);
-
-  // 2. Daily Invocation
-  useEffect(() => {
     refreshAffirmation();
   }, []);
 
@@ -47,29 +38,6 @@ const Home: React.FC<HomeProps> = ({ state, onUpdate, onNavigate }) => {
     setRandomAffirmation(affirmationPool[randomIndex]);
   };
 
-  // 3. Upcoming Session
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        if (currentUser) {
-           // We would fetch real appointments here. 
-           // Since getAppointments requires a userId, and we have it from auth.
-           // However, guideService might need an update to filter by date/upcoming.
-           // For now, let's use the mock data approach or check if we can query.
-           // user-specific appointments are not easily fetchable without an exported function in guideService
-           // that filters by user. 
-           // Let's assume for now we don't have an appointment or mock one if needed.
-           // We'll skip complex fetching for this iteration and focus on UI structure.
-           // If we had a "getUpcomingAppointment(userId)" service method, we'd use it.
-        }
-      } catch (error) {
-        console.error("Failed to fetch appointments", error);
-      }
-    };
-    fetchAppointments();
-  }, [currentUser]);
-
-  // 3. Quick Sound Access
   const handlePlaySound = (id: string, type: 'frequency' | 'ambient') => {
     if (isPlaying === id) {
       stop();
@@ -85,240 +53,288 @@ const Home: React.FC<HomeProps> = ({ state, onUpdate, onNavigate }) => {
     }
   };
 
-  // 4. Reframer Shortcut
   const handleReframe = () => {
     if (reframeInput.trim()) {
-      // We can pass the input to the Reframer via state or a temporary storage
-      // Since onNavigate just switches view, we might need to update app state to pass data
-      // or use a query param if we were using real routing.
-      // For now, let's just navigate.
-      // To actually pass the text, we might need to update a "draftBelief" in AppState?
-      // Or just assume the user will type it again. 
-      // The prompt says "Navigate to full Reframer page with text prefilled".
-      // We'll use a URL param approach if possible, but we are in a single page app structure mostly.
-      // Let's use a temporary state update if possible, or just navigate for now.
       onNavigate('beliefs');
     }
   };
 
-  // Stats
-  // We'll calculate simple stats from state
+  // Stats calculation
   const totalSessions = state.ftbaEntries.length + (state.breathingSessions?.length || 0);
   const streak = state.streak || 0;
   const listeningMinutes = Math.round((state.soundPreferences?.todayListeningMs || 0) / 60000);
-  // Real implementation would calculate streak from activity dates.
+
+  // Helper for name formatting
+  const formattedName = currentUser?.name 
+    ? currentUser.name.charAt(0).toUpperCase() + currentUser.name.slice(1).toLowerCase()
+    : 'Friend';
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-8 space-y-8 pb-24">
+    <div className="min-h-screen w-full bg-[#0b1220] text-slate-200"
+         style={{
+           background: `
+             radial-gradient(circle at 20% 10%, rgba(120,90,255,0.15), transparent 40%),
+             radial-gradient(circle at 80% 20%, rgba(255,180,120,0.08), transparent 40%),
+             linear-gradient(to bottom, #0b1220, #111827)
+           `
+         }}>
       
-      {/* 1. Welcome Section */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <h1 className="text-4xl font-serif font-bold text-slate-900 dark:text-amber-50">
-            {greeting}, {currentUser?.name || 'Friend'}
-          </h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-2 text-lg">
-            Your inner state, aligned.
-          </p>
-        </div>
+      <div className="max-w-6xl mx-auto px-6 py-8 space-y-12 pb-32 animate-fade-in">
         
-        <div className="flex gap-6 text-sm">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-slate-800 dark:text-amber-500">
-              {listeningMinutes}m
-            </div>
-            <div className="text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[10px]">
-              Listening
-            </div>
-          </div>
-          <div className="w-px bg-slate-200 dark:bg-white/10"></div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-slate-800 dark:text-amber-500">
-              {totalSessions}
-            </div>
-            <div className="text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[10px]">
-              Sessions
+        {/* 1. Header Section */}
+        <header className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="relative">
+            <h1 className="text-3xl md:text-4xl font-serif font-light text-slate-100 tracking-wide">
+              {greeting}, {formattedName}
+            </h1>
+            <div className="mt-2 flex flex-col items-start gap-1">
+              <p className="text-slate-400 font-light text-base tracking-wide">
+                Your inner state, aligned.
+              </p>
+              <div className="h-px w-24 bg-gradient-to-r from-amber-500/50 to-transparent animate-pulse" />
             </div>
           </div>
-          <div className="w-px bg-slate-200 dark:bg-white/10"></div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-slate-800 dark:text-amber-500">
-              {streak}
+          
+          {/* Stats - Soft Presentation */}
+          <div className="flex gap-8 text-sm">
+            <div className="flex flex-col items-center md:items-end">
+              <span className="text-slate-500 text-xs font-medium uppercase tracking-wider mb-1">Listening Today</span>
+              <span className="text-slate-200 font-serif text-lg">{listeningMinutes} <span className="text-slate-600 text-xs">min</span></span>
             </div>
-            <div className="text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[10px]">
-              Day Streak
+            <div className="flex flex-col items-center md:items-end">
+              <span className="text-slate-500 text-xs font-medium uppercase tracking-wider mb-1">Sessions</span>
+              <span className="text-slate-200 font-serif text-lg">{totalSessions}</span>
+            </div>
+            <div className="flex flex-col items-center md:items-end">
+              <span className="text-slate-500 text-xs font-medium uppercase tracking-wider mb-1">Streak</span>
+              <span className="text-slate-200 font-serif text-lg">{streak} <span className="text-slate-600 text-xs">day</span></span>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        
-        {/* 2. Daily Invocation */}
-        <div className="glass-card p-6 rounded-3xl border border-slate-200 dark:border-white/5 bg-white/50 dark:bg-white/5 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button 
-              onClick={refreshAffirmation}
-              className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors"
-              title="Refresh"
-            >
-              🔄
-            </button>
-          </div>
-          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4">
-            Daily Invocation
-          </h3>
-          <p className="text-xl md:text-2xl font-serif text-slate-800 dark:text-slate-200 leading-relaxed">
-            "{randomAffirmation}"
-          </p>
-          <div className="mt-6">
-             <button 
-               onClick={() => onNavigate('dashboard')} // Assuming 'dashboard' is the old dashboard which had affirmations, or maybe 'beliefs'? 
-               // Actually the old dashboard was the main affirmation place. 
-               // If we are replacing 'dashboard' view, we might not have a "Full Invocations" page.
-               // Let's point to 'beliefs' for now or keep it dead.
-               className="text-amber-600 dark:text-amber-500 text-sm font-medium hover:underline"
-             >
-               Go to Full Invocations →
-             </button>
-          </div>
-        </div>
-
-        {/* 3. Quick Sound Access */}
-        <div className="glass-card p-6 rounded-3xl border border-slate-200 dark:border-white/5 bg-white/50 dark:bg-white/5">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4">
-            Quick Shift
-          </h3>
-          <div className="grid grid-cols-3 gap-3">
-            {[
-              { id: '528', label: '528 Hz', type: 'frequency' },
-              { id: 'rain', label: 'Rain', type: 'ambient' },
-              { id: '432', label: '432 Hz', type: 'frequency' }
-            ].map((sound) => (
-              <button
-                key={sound.id}
-                onClick={() => handlePlaySound(sound.id, sound.type as 'frequency' | 'ambient')}
-                className={`
-                  aspect-square rounded-2xl flex flex-col items-center justify-center gap-2 transition-all
-                  ${isPlaying === sound.id 
-                    ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/20 scale-95' 
-                    : 'bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300'}
-                `}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          {/* 2. Daily Invocation - Emotional & Airy */}
+          <div className="group relative p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/5">
+            <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <button 
+                onClick={refreshAffirmation}
+                className="p-2 text-slate-400 hover:text-white transition-colors"
+                title="Refresh Invocation"
               >
-                <span className="text-2xl">{isPlaying === sound.id ? '⏸' : '▶'}</span>
-                <span className="text-[10px] font-bold">{sound.label}</span>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
               </button>
-            ))}
-          </div>
-          <div className="mt-6 text-center">
-            <button 
-              onClick={() => onNavigate('soundshift')}
-              className="text-amber-600 dark:text-amber-500 text-sm font-medium hover:underline"
-            >
-              Open Sound Studio →
-            </button>
-          </div>
-        </div>
+            </div>
+            
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-300/60 mb-6">
+              Daily Invocation
+            </h3>
+            
+            <div className="relative">
+              <span className="absolute -top-4 -left-2 text-4xl text-white/5 font-serif">"</span>
+              <p className="text-xl md:text-2xl font-serif italic font-light text-slate-200 leading-relaxed text-center px-4">
+                {randomAffirmation}
+              </p>
+              <span className="absolute -bottom-4 -right-2 text-4xl text-white/5 font-serif">"</span>
+            </div>
 
-        {/* 4. Reframer Shortcut */}
-        <div className="glass-card p-6 rounded-3xl border border-slate-200 dark:border-white/5 bg-white/50 dark:bg-white/5 flex flex-col justify-between">
-          <div>
-            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4">
+            <div className="mt-8 flex flex-col items-center gap-4">
+              <div className="h-px w-12 bg-white/10" />
+              <p className="text-xs text-slate-500 font-light tracking-wide italic">
+                Let this guide your day.
+              </p>
+              <button 
+                onClick={() => onNavigate('dashboard')} // Fallback to dashboard as it holds the main affirmations view logic currently
+                className="mt-2 text-xs text-slate-400 hover:text-amber-400 transition-colors border-b border-transparent hover:border-amber-400/50 pb-0.5"
+              >
+                Go to Full Invocations
+              </button>
+            </div>
+          </div>
+
+          {/* 3. Quick Shift - Ritualistic Sound */}
+          <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500">
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-300/60 mb-8 text-center">
+              Quick Shift
+            </h3>
+            
+            <div className="flex flex-col gap-6">
+              {[
+                { id: '528', label: '528 Hz', sub: 'Emotional Balance', type: 'frequency' },
+                { id: 'rain', label: 'Rain', sub: 'Soft Focus', type: 'ambient' },
+                { id: '432', label: '432 Hz', sub: 'Grounding', type: 'frequency' }
+              ].map((sound) => (
+                <div key={sound.id} className="flex items-center justify-between group cursor-pointer" onClick={() => handlePlaySound(sound.id, sound.type as 'frequency' | 'ambient')}>
+                  <div className="flex items-center gap-4">
+                    <button
+                      className={`
+                        w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500
+                        ${isPlaying === sound.id 
+                          ? 'bg-amber-500/20 text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.2)] scale-105' 
+                          : 'bg-white/5 text-slate-400 group-hover:bg-white/10 group-hover:text-slate-200'}
+                      `}
+                    >
+                      {isPlaying === sound.id ? (
+                        <div className="flex gap-0.5 items-end h-3">
+                          <div className="w-0.5 bg-current animate-[pulse_1s_ease-in-out_infinite] h-full" />
+                          <div className="w-0.5 bg-current animate-[pulse_1.5s_ease-in-out_infinite] h-2/3" />
+                          <div className="w-0.5 bg-current animate-[pulse_0.8s_ease-in-out_infinite] h-full" />
+                        </div>
+                      ) : (
+                        <svg className="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                      )}
+                    </button>
+                    <div className="flex flex-col">
+                      <span className={`text-sm font-medium transition-colors ${isPlaying === sound.id ? 'text-amber-400' : 'text-slate-300 group-hover:text-white'}`}>
+                        {sound.label}
+                      </span>
+                      <span className="text-[10px] text-slate-500 font-light tracking-wide uppercase">
+                        {sound.sub}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {isPlaying === sound.id && (
+                    <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 text-center">
+              <button 
+                onClick={() => onNavigate('soundshift')}
+                className="text-xs text-slate-400 hover:text-amber-400 transition-colors border-b border-transparent hover:border-amber-400/50 pb-0.5"
+              >
+                Open Sound Studio
+              </button>
+            </div>
+          </div>
+
+          {/* 4. Shift a Story - Inviting & Soft */}
+          <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500 flex flex-col">
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-300/60 mb-6">
               Shift a Story
             </h3>
-            <textarea
-              value={reframeInput}
-              onChange={(e) => setReframeInput(e.target.value)}
-              placeholder="I'm feeling blocked because..."
-              className="w-full bg-transparent border-b border-slate-200 dark:border-white/10 focus:border-amber-500 outline-none text-slate-800 dark:text-slate-200 resize-none h-20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
-            />
-          </div>
-          <button 
-            onClick={handleReframe}
-            disabled={!reframeInput.trim()}
-            className="mt-4 w-full py-3 rounded-xl bg-slate-900 dark:bg-white/10 text-white hover:bg-amber-500 dark:hover:bg-white/20 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Reframe Now
-          </button>
-        </div>
-
-        {/* 5. Upcoming Session (Guides) */}
-        <div className="glass-card p-6 rounded-3xl border border-slate-200 dark:border-white/5 bg-white/50 dark:bg-white/5">
-           <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4">
-            Your Support
-          </h3>
-          {upcomingAppointment ? (
-            <div className="bg-slate-100 dark:bg-white/5 p-4 rounded-2xl flex items-center gap-4">
-               {/* Appointment details would go here */}
-               <div className="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-500">
-                 📅
-               </div>
-               <div>
-                 <p className="font-bold text-slate-800 dark:text-slate-200">Session with Guide</p>
-                 <p className="text-xs text-slate-500">Today, 4:00 PM</p>
-               </div>
+            
+            <div className="flex-1 flex flex-col">
+              <textarea
+                value={reframeInput}
+                onChange={(e) => setReframeInput(e.target.value)}
+                placeholder="Write a thought you’re ready to release..."
+                className="w-full bg-transparent border-b border-white/10 focus:border-amber-500/50 outline-none text-slate-200 text-lg font-light resize-none h-32 placeholder:text-slate-600 transition-colors"
+              />
+              <p className="mt-4 text-xs text-slate-500 font-light italic">
+                Transformation begins with awareness.
+              </p>
             </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center h-40 text-center space-y-3">
-              <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-2xl">
-                🧘‍♀️
-              </div>
-              <div>
-                <p className="font-medium text-slate-800 dark:text-slate-200">No upcoming sessions</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Connect with a guide to deepen your practice.</p>
-              </div>
-            </div>
-          )}
-          <button 
-            onClick={() => onNavigate('guides')}
-            className="mt-4 w-full py-3 rounded-xl border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors text-sm font-medium text-slate-600 dark:text-slate-300"
-          >
-            Explore Guides
-          </button>
-        </div>
 
-        {/* 6. Marketplace Preview */}
-        <div className="glass-card p-6 rounded-3xl border border-slate-200 dark:border-white/5 bg-white/50 dark:bg-white/5 md:col-span-2 lg:col-span-2">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-              Curated for You
-            </h3>
             <button 
-              onClick={() => onNavigate('marketplace')}
-              className="text-xs text-amber-600 dark:text-amber-500 hover:underline"
+              onClick={handleReframe}
+              disabled={!reframeInput.trim()}
+              className={`
+                mt-6 w-full py-4 rounded-xl text-sm font-medium tracking-wide transition-all duration-500
+                ${reframeInput.trim() 
+                  ? 'bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 shadow-[0_0_20px_rgba(245,158,11,0.1)]' 
+                  : 'bg-white/5 text-slate-500 cursor-not-allowed'}
+              `}
             >
-              View All
+              Reframe Now
             </button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {curatedProducts.slice(0, 2).map(product => (
-              <div 
-                key={product.id}
-                className="group flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors cursor-pointer"
-                onClick={() => onNavigate('marketplace')}
-              >
-                <div className="w-20 h-20 rounded-xl bg-slate-200 dark:bg-white/10 overflow-hidden relative">
-                   {/* Fallback image if real one fails or is just a placeholder path */}
-                   <div className="absolute inset-0 flex items-center justify-center text-slate-400">
-                     🛍️
+
+          {/* 5. Your Support - Warmth */}
+          <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500">
+             <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-300/60 mb-6">
+              Your Support
+            </h3>
+            
+            <div className="flex-1 flex flex-col items-center justify-center text-center h-48">
+              {upcomingAppointment ? (
+                <div className="w-full bg-white/5 p-6 rounded-2xl flex items-center gap-4">
+                   <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-400">
+                     📅
+                   </div>
+                   <div className="text-left">
+                     <p className="font-serif text-slate-200">Session with Guide</p>
+                     <p className="text-xs text-slate-500 mt-1">Today, 4:00 PM</p>
                    </div>
                 </div>
-                <div>
-                  <h4 className="font-serif font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
-                    {product.title}
-                  </h4>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
-                    {product.shortDescription}
+              ) : (
+                <>
+                  <div className="relative w-16 h-16 mb-6 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-indigo-500/10 rounded-full animate-[ping_3s_ease-in-out_infinite]" />
+                    <div className="relative w-12 h-12 bg-indigo-500/10 rounded-full flex items-center justify-center text-indigo-300/80">
+                      🤍
+                    </div>
+                  </div>
+                  <p className="font-light text-slate-300">No sessions scheduled yet.</p>
+                  <p className="text-xs text-slate-500 mt-2 font-light max-w-[200px]">
+                    Support is always available when you’re ready.
                   </p>
-                  <p className="text-sm font-bold text-slate-900 dark:text-slate-100 mt-2">
-                    ${(product.priceCents / 100).toFixed(2)}
-                  </p>
-                </div>
-              </div>
-            ))}
+                </>
+              )}
+            </div>
+            
+            <button 
+              onClick={() => onNavigate('guides')}
+              className="w-full py-3 rounded-xl border border-white/10 hover:bg-white/5 transition-all duration-300 text-xs font-medium text-slate-400 hover:text-slate-200 uppercase tracking-wider"
+            >
+              Explore Guides
+            </button>
           </div>
-        </div>
 
+          {/* 6. Curated for You - Intentional */}
+          <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500 md:col-span-2">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-300/60 mb-2">
+                  Curated for You
+                </h3>
+                <p className="text-sm font-serif text-slate-400 italic">
+                  Tools to deepen your ritual.
+                </p>
+              </div>
+              <button 
+                onClick={() => onNavigate('marketplace')}
+                className="text-xs text-slate-500 hover:text-amber-400 transition-colors"
+              >
+                View All
+              </button>
+            </div>
+
+            {/* Marketplace Grid - Horizontal scroll on mobile, Grid on desktop */}
+            <div className="flex overflow-x-auto md:grid md:grid-cols-2 gap-6 pb-4 md:pb-0 snap-x -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
+              {curatedProducts.slice(0, 2).map(product => (
+                <div 
+                  key={product.id}
+                  className="min-w-[280px] md:min-w-0 snap-center group flex items-center gap-6 p-4 rounded-2xl hover:bg-white/5 transition-all duration-500 cursor-pointer border border-transparent hover:border-white/5"
+                  onClick={() => onNavigate('marketplace')}
+                >
+                  <div className="w-24 h-24 rounded-xl bg-white/5 overflow-hidden relative shadow-lg group-hover:scale-105 transition-transform duration-500">
+                     <div className="absolute inset-0 flex items-center justify-center text-slate-600">
+                       🛍️
+                     </div>
+                  </div>
+                  <div>
+                    <h4 className="font-serif text-lg text-slate-200 group-hover:text-amber-400 transition-colors">
+                      {product.title}
+                    </h4>
+                    <p className="text-xs text-slate-500 mt-2 line-clamp-2 font-light leading-relaxed">
+                      {product.shortDescription}
+                    </p>
+                    <p className="text-sm font-light text-slate-400 mt-3 group-hover:text-white transition-colors">
+                      ${(product.priceCents / 100).toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   );
