@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AppState } from '../../types';
 import { useAuth } from '../context/AuthContext';
 import { affirmationPool } from '../../services/affirmationLibrary';
-import { Guide, Appointment } from '../services/guideService';
+import { Appointment } from '../services/guideService';
 import { playFrequency, playAmbient, stop, preloadAmbients } from '../../services/soundEngine';
 import { curatedProducts } from '../../components/Marketplace';
 
@@ -69,53 +69,65 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
     ? currentUser.name.charAt(0).toUpperCase() + currentUser.name.slice(1).toLowerCase()
     : 'Friend';
 
+  // Dynamic Contextual Text
+  const getContextualText = () => {
+    if (streak > 3) return "You're building momentum.";
+    if (totalSessions === 0) return "Your next step awaits.";
+    if (listeningMinutes > 0) return "You've already invested in your state.";
+    return "Your inner state, aligned.";
+  };
+
   return (
-    <div className="min-h-screen w-full bg-[#0b1220] text-slate-200"
-         style={{
-           background: `
-             radial-gradient(circle at 20% 10%, rgba(120,90,255,0.15), transparent 40%),
-             radial-gradient(circle at 80% 20%, rgba(255,180,120,0.08), transparent 40%),
-             linear-gradient(to bottom, #0b1220, #111827)
-           `
-         }}>
+    <div className="min-h-screen w-full bg-[#0c1220] text-slate-200 overflow-hidden relative">
+      {/* 2. Background - Subtle Neural Glow */}
+      <div 
+        className="absolute inset-0 z-0 animate-subtle-shift"
+        style={{
+          background: `
+            radial-gradient(circle at 20% 15%, rgba(120, 80, 255, 0.12), transparent 40%),
+            radial-gradient(circle at 80% 30%, rgba(255, 160, 90, 0.08), transparent 45%),
+            linear-gradient(to bottom, #0c1220, #111827)
+          `,
+          backgroundSize: '150% 150%'
+        }}
+      />
       
-      <div className="max-w-6xl mx-auto px-6 py-8 space-y-12 pb-32 animate-fade-in">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 py-8 space-y-12 pb-32 animate-fade-in">
         
         {/* 1. Header Section */}
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-          <div className="relative">
-            <h1 className="text-3xl md:text-4xl font-serif font-light text-slate-100 tracking-wide">
-              {greeting}, {formattedName}
+          <div className="relative group">
+            <h1 className="text-3xl md:text-4xl font-serif font-medium text-slate-100 tracking-wide transition-all duration-300 animate-fade-in">
+              {greeting}, <span className="group-hover:text-white group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] transition-all duration-500">{formattedName}</span>
             </h1>
             <div className="mt-2 flex flex-col items-start gap-1">
-              <p className="text-slate-400 font-light text-base tracking-wide">
-                Your inner state, aligned.
+              <p className="text-slate-400/90 font-light text-sm tracking-wide animate-fade-in" style={{ animationDelay: '200ms' }}>
+                {getContextualText()}
               </p>
-              <div className="h-px w-24 bg-gradient-to-r from-amber-500/50 to-transparent animate-pulse" />
             </div>
           </div>
           
-          {/* Stats - Soft Presentation */}
-          <div className="flex gap-8 text-sm">
-            <div className="flex flex-col items-center md:items-end">
-              <span className="text-slate-500 text-xs font-medium uppercase tracking-wider mb-1">Listening Today</span>
-              <span className="text-slate-200 font-serif text-lg">{listeningMinutes} <span className="text-slate-600 text-xs">min</span></span>
+          {/* 4. Stats - Floating Glass Pills */}
+          <div className="flex gap-4 text-sm flex-wrap">
+            <div className="flex flex-col items-center justify-center px-4 py-2 rounded-full bg-white/5 border border-white/5 backdrop-blur-sm hover:scale-102 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] transition-all duration-300">
+              <span className="text-slate-500 text-[10px] uppercase tracking-wider mb-0.5">Listening</span>
+              <span className="text-slate-200 font-medium">{listeningMinutes} <span className="text-slate-600 text-[10px]">min</span></span>
             </div>
-            <div className="flex flex-col items-center md:items-end">
-              <span className="text-slate-500 text-xs font-medium uppercase tracking-wider mb-1">Sessions</span>
-              <span className="text-slate-200 font-serif text-lg">{totalSessions}</span>
+            <div className="flex flex-col items-center justify-center px-4 py-2 rounded-full bg-white/5 border border-white/5 backdrop-blur-sm hover:scale-102 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] transition-all duration-300">
+              <span className="text-slate-500 text-[10px] uppercase tracking-wider mb-0.5">Sessions</span>
+              <span className="text-slate-200 font-medium">{totalSessions}</span>
             </div>
-            <div className="flex flex-col items-center md:items-end">
-              <span className="text-slate-500 text-xs font-medium uppercase tracking-wider mb-1">Streak</span>
-              <span className="text-slate-200 font-serif text-lg">{streak} <span className="text-slate-600 text-xs">day</span></span>
+            <div className="flex flex-col items-center justify-center px-4 py-2 rounded-full bg-white/5 border border-white/5 backdrop-blur-sm hover:scale-102 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] transition-all duration-300">
+              <span className="text-slate-500 text-[10px] uppercase tracking-wider mb-0.5">Streak</span>
+              <span className="text-slate-200 font-medium">{streak} <span className="text-slate-600 text-[10px]">day</span></span>
             </div>
           </div>
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           
-          {/* 2. Daily Invocation - Emotional & Airy */}
-          <div className="group relative p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/5">
+          {/* 5. Daily Invocation - Centerpiece Energy Block */}
+          <div className="group relative p-10 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/5 animate-fade-in" style={{ animationDelay: '100ms' }}>
             <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               <button 
                 onClick={refreshAffirmation}
@@ -128,62 +140,70 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
               </button>
             </div>
             
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-300/60 mb-6">
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-300/60 mb-8">
               Daily Invocation
             </h3>
             
             <div className="relative">
-              <span className="absolute -top-4 -left-2 text-4xl text-white/5 font-serif">"</span>
-              <p className="text-xl md:text-2xl font-serif italic font-light text-slate-200 leading-relaxed text-center px-4">
+              <p className="text-xl md:text-2xl font-serif italic font-light text-slate-200 leading-relaxed text-center px-4 animate-fade-in">
                 {randomAffirmation}
               </p>
-              <span className="absolute -bottom-4 -right-2 text-4xl text-white/5 font-serif">"</span>
             </div>
 
-            <div className="mt-8 flex flex-col items-center gap-4">
-              <div className="h-px w-12 bg-white/10" />
-              <p className="text-xs text-slate-500 font-light tracking-wide italic">
-                Let this guide your day.
-              </p>
+            <div className="mt-10 flex flex-col items-center gap-6">
+              {/* Breathing Energy Bar */}
+              <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-indigo-400/30 to-transparent relative overflow-hidden">
+                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-400/50 to-transparent animate-[shimmer_3s_infinite]" />
+              </div>
+              
               <button 
-                onClick={() => onNavigate('dashboard')} // Fallback to dashboard as it holds the main affirmations view logic currently
-                className="mt-2 text-xs text-slate-400 hover:text-amber-400 transition-colors border-b border-transparent hover:border-amber-400/50 pb-0.5"
+                onClick={() => onNavigate('dashboard')} 
+                className="text-[10px] uppercase tracking-widest text-slate-500 hover:text-indigo-300 transition-colors pt-2"
               >
                 Go to Full Invocations
               </button>
             </div>
           </div>
 
-          {/* 3. Quick Shift - Ritualistic Sound */}
-          <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500">
+          {/* 6. Quick Shift - Modern Ritual Buttons */}
+          <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500 animate-fade-in" style={{ animationDelay: '200ms' }}>
             <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-300/60 mb-8 text-center">
               Quick Shift
             </h3>
             
             <div className="flex flex-col gap-6">
               {[
-                { id: '528', label: '528 Hz', sub: 'Emotional Balance', type: 'frequency' },
+                { id: '528', label: '528 Hz', sub: 'Emotional Coherence', type: 'frequency' },
                 { id: 'rain', label: 'Rain', sub: 'Soft Focus', type: 'ambient' },
-                { id: '432', label: '432 Hz', sub: 'Grounding', type: 'frequency' }
+                { id: '432', label: '432 Hz', sub: 'Grounding Frequency', type: 'frequency' }
               ].map((sound) => (
                 <div key={sound.id} className="flex items-center justify-between group cursor-pointer" onClick={() => handlePlaySound(sound.id, sound.type as 'frequency' | 'ambient')}>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-5">
                     <button
                       className={`
-                        w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500
+                        w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 relative
                         ${isPlaying === sound.id 
-                          ? 'bg-amber-500/20 text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.2)] scale-105' 
+                          ? 'bg-amber-500/20 text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.2)] scale-105' 
                           : 'bg-white/5 text-slate-400 group-hover:bg-white/10 group-hover:text-slate-200'}
                       `}
                     >
+                      {/* Pulse ring when idle */}
+                      {isPlaying !== sound.id && (
+                        <div className="absolute inset-0 rounded-full border border-white/5 animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite] opacity-0 group-hover:opacity-100" />
+                      )}
+                      
                       {isPlaying === sound.id ? (
-                        <div className="flex gap-0.5 items-end h-3">
+                         <div className="absolute inset-0 rounded-full border border-amber-500/30 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]" />
+                      ) : null}
+
+                      {isPlaying === sound.id ? (
+                        <div className="flex gap-0.5 items-end h-3 z-10">
                           <div className="w-0.5 bg-current animate-[pulse_1s_ease-in-out_infinite] h-full" />
                           <div className="w-0.5 bg-current animate-[pulse_1.5s_ease-in-out_infinite] h-2/3" />
                           <div className="w-0.5 bg-current animate-[pulse_0.8s_ease-in-out_infinite] h-full" />
                         </div>
                       ) : (
-                        <svg className="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        <svg className="w-4 h-4 ml-0.5 z-10" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                       )}
                     </button>
                     <div className="flex flex-col">
@@ -195,10 +215,6 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
                       </span>
                     </div>
                   </div>
-                  
-                  {isPlaying === sound.id && (
-                    <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                  )}
                 </div>
               ))}
             </div>
@@ -206,15 +222,15 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
             <div className="mt-8 text-center">
               <button 
                 onClick={() => onNavigate('soundshift')}
-                className="text-xs text-slate-400 hover:text-amber-400 transition-colors border-b border-transparent hover:border-amber-400/50 pb-0.5"
+                className="text-[10px] uppercase tracking-widest text-slate-500 hover:text-amber-400 transition-colors"
               >
                 Open Sound Studio
               </button>
             </div>
           </div>
 
-          {/* 4. Shift a Story - Inviting & Soft */}
-          <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500 flex flex-col">
+          {/* 7. Shift a Story - Transformational */}
+          <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500 flex flex-col animate-fade-in" style={{ animationDelay: '300ms' }}>
             <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-300/60 mb-6">
               Shift a Story
             </h3>
@@ -224,29 +240,33 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
                 value={reframeInput}
                 onChange={(e) => setReframeInput(e.target.value)}
                 placeholder="Write a thought you’re ready to release..."
-                className="w-full bg-transparent border-b border-white/10 focus:border-amber-500/50 outline-none text-slate-200 text-lg font-light resize-none h-32 placeholder:text-slate-600 transition-colors"
+                className="w-full bg-transparent border-b border-white/10 focus:border-violet-500/50 outline-none text-slate-200 text-lg font-light resize-none h-32 placeholder:text-slate-600 transition-all duration-500 focus:shadow-[inset_0_-10px_20px_-10px_rgba(139,92,246,0.1)]"
               />
-              <p className="mt-4 text-xs text-slate-500 font-light italic">
-                Transformation begins with awareness.
-              </p>
             </div>
 
             <button 
               onClick={handleReframe}
               disabled={!reframeInput.trim()}
               className={`
-                mt-6 w-full py-4 rounded-xl text-sm font-medium tracking-wide transition-all duration-500
+                mt-6 w-full py-4 rounded-xl text-sm font-medium tracking-wide transition-all duration-500 relative overflow-hidden group
                 ${reframeInput.trim() 
-                  ? 'bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 shadow-[0_0_20px_rgba(245,158,11,0.1)]' 
+                  ? 'text-white shadow-[0_4px_20px_rgba(212,165,116,0.2)]' 
                   : 'bg-white/5 text-slate-500 cursor-not-allowed'}
               `}
+              style={reframeInput.trim() ? { background: 'linear-gradient(135deg, #d4a574, #b8865b)' } : {}}
             >
-              Reframe Now
+              {reframeInput.trim() && (
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+              )}
+              <span className="relative z-10">Reframe Now</span>
             </button>
+            <p className="mt-3 text-center text-[10px] text-slate-500 font-light tracking-wide uppercase">
+               Rewrite the narrative.
+            </p>
           </div>
 
-          {/* 5. Your Support - Warmth */}
-          <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500">
+          {/* 8. Your Support - Connected */}
+          <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500 animate-fade-in" style={{ animationDelay: '400ms' }}>
              <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-300/60 mb-6">
               Your Support
             </h3>
@@ -265,41 +285,36 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
               ) : (
                 <>
                   <div className="relative w-16 h-16 mb-6 flex items-center justify-center">
-                    <div className="absolute inset-0 bg-indigo-500/10 rounded-full animate-[ping_3s_ease-in-out_infinite]" />
-                    <div className="relative w-12 h-12 bg-indigo-500/10 rounded-full flex items-center justify-center text-indigo-300/80">
+                    <div className="absolute inset-0 bg-indigo-500/10 rounded-full animate-[ping_4s_ease-in-out_infinite]" />
+                    <div className="relative w-12 h-12 bg-indigo-500/10 rounded-full flex items-center justify-center text-indigo-300/80 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
                       🤍
                     </div>
                   </div>
-                  <p className="font-light text-slate-300">No sessions scheduled yet.</p>
-                  <p className="text-xs text-slate-500 mt-2 font-light max-w-[200px]">
-                    Support is always available when you’re ready.
-                  </p>
+                  <p className="font-light text-slate-300">Support becomes powerful when intentional.</p>
                 </>
               )}
             </div>
             
             <button 
               onClick={() => onNavigate('guides')}
-              className="w-full py-3 rounded-xl border border-white/10 hover:bg-white/5 transition-all duration-300 text-xs font-medium text-slate-400 hover:text-slate-200 uppercase tracking-wider"
+              className="w-full py-3 rounded-xl border border-white/10 hover:border-indigo-500/30 hover:bg-indigo-500/5 transition-all duration-500 text-xs font-medium text-slate-400 hover:text-indigo-200 uppercase tracking-wider hover:shadow-[0_0_15px_rgba(99,102,241,0.1)]"
             >
               Explore Guides
             </button>
           </div>
 
-          {/* 6. Curated for You - Intentional */}
-          <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500 md:col-span-2">
+          {/* 9. Curated for You - Premium Calm Tech */}
+          <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-500 md:col-span-2 animate-fade-in" style={{ animationDelay: '500ms' }}>
             <div className="flex items-center justify-between mb-8">
-              <div>
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-300/60 mb-2">
-                  Curated for You
+              <div className="flex flex-col gap-2">
+                <h3 className="text-lg font-serif font-light text-slate-200 tracking-wide">
+                  Curated Ritual Tools
                 </h3>
-                <p className="text-sm font-serif text-slate-400 italic">
-                  Tools to deepen your ritual.
-                </p>
+                <div className="h-px w-12 bg-white/10" />
               </div>
               <button 
                 onClick={() => onNavigate('marketplace')}
-                className="text-xs text-slate-500 hover:text-amber-400 transition-colors"
+                className="text-[10px] uppercase tracking-widest text-slate-500 hover:text-amber-400 transition-colors"
               >
                 View All
               </button>
@@ -307,25 +322,26 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
 
             {/* Marketplace Grid - Horizontal scroll on mobile, Grid on desktop */}
             <div className="flex overflow-x-auto md:grid md:grid-cols-2 gap-6 pb-4 md:pb-0 snap-x -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
-              {curatedProducts.slice(0, 2).map(product => (
+              {curatedProducts.slice(0, 2).map((product, idx) => (
                 <div 
                   key={product.id}
-                  className="min-w-[280px] md:min-w-0 snap-center group flex items-center gap-6 p-4 rounded-2xl hover:bg-white/5 transition-all duration-500 cursor-pointer border border-transparent hover:border-white/5"
+                  className="min-w-[280px] md:min-w-0 snap-center group flex items-center gap-6 p-4 rounded-2xl hover:bg-white/5 transition-all duration-500 cursor-pointer border border-transparent hover:border-white/5 backdrop-blur-sm animate-fade-in"
+                  style={{ animationDelay: `${600 + idx * 100}ms` }}
                   onClick={() => onNavigate('marketplace')}
                 >
-                  <div className="w-24 h-24 rounded-xl bg-white/5 overflow-hidden relative shadow-lg group-hover:scale-105 transition-transform duration-500">
-                     <div className="absolute inset-0 flex items-center justify-center text-slate-600">
+                  <div className="w-24 h-24 rounded-xl bg-white/5 overflow-hidden relative shadow-lg group-hover:scale-105 transition-transform duration-700 group-hover:shadow-2xl">
+                     <div className="absolute inset-0 flex items-center justify-center text-slate-600 group-hover:text-slate-400 transition-colors duration-500">
                        🛍️
                      </div>
                   </div>
                   <div>
-                    <h4 className="font-serif text-lg text-slate-200 group-hover:text-amber-400 transition-colors">
+                    <h4 className="font-serif text-lg text-slate-200 group-hover:text-amber-400 transition-colors duration-300">
                       {product.title}
                     </h4>
                     <p className="text-xs text-slate-500 mt-2 line-clamp-2 font-light leading-relaxed">
                       {product.shortDescription}
                     </p>
-                    <p className="text-sm font-light text-slate-400 mt-3 group-hover:text-white transition-colors">
+                    <p className="text-sm font-light text-slate-400/80 mt-3 group-hover:text-white transition-colors">
                       ${(product.priceCents / 100).toFixed(2)}
                     </p>
                   </div>
