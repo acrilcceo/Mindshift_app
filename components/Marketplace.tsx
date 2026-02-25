@@ -155,8 +155,13 @@ const formatPrice = (priceCents: number, currency: string) => {
 
 const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
   const [activeCategory, setActiveCategory] = useState<MarketplaceCategoryId | 'all'>('all');
+  const [comingSoonVisible, setComingSoonVisible] = useState(false);
 
   const wishlist = state.wishlistProductIds || [];
+
+  const showComingSoon = () => {
+    setComingSoonVisible(true);
+  };
 
   const filteredProducts = useMemo(() => {
     if (activeCategory === 'all') return curatedProducts;
@@ -186,7 +191,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
         <div className="flex gap-2 overflow-x-auto pb-1">
           <button
             type="button"
-            onClick={() => setActiveCategory('all')}
+            onClick={showComingSoon}
             className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap ${
               activeCategory === 'all'
                 ? 'bg-[#E8F1EF] text-heading-secondary'
@@ -199,7 +204,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
             <button
               key={cat.id}
               type="button"
-              onClick={() => setActiveCategory(cat.id)}
+              onClick={showComingSoon}
               className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap ${
                 activeCategory === cat.id
                   ? 'bg-[#E8F1EF] text-heading-secondary'
@@ -224,7 +229,8 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
           return (
             <article
               key={product.id}
-              className="card-elevated flex flex-col overflow-hidden"
+              className="card-elevated flex flex-col overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-300"
+              onClick={showComingSoon}
             >
               <div className="relative w-full aspect-[4/3] bg-[#EEF2F6]">
                 <img
@@ -239,8 +245,11 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
                 )}
                 <button
                   type="button"
-                  onClick={() => toggleWishlist(product.id)}
-                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-xs"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    showComingSoon();
+                  }}
+                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-xs hover:bg-white transition-colors"
                 >
                   <span className={isWishlisted ? 'text-heading-secondary' : 'text-helper'}>
                     {isWishlisted ? '♥' : '♡'}
@@ -283,7 +292,11 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
                   </div>
                   <button
                     type="button"
-                    className="px-4 py-2 rounded-full text-xs font-semibold bg-[#E8F1EF] text-heading-secondary"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      showComingSoon();
+                    }}
+                    className="px-4 py-2 rounded-full text-xs font-semibold bg-[#E8F1EF] text-heading-secondary hover:bg-[#D8E1DF] transition-colors"
                   >
                     Add to Cart
                   </button>
@@ -293,6 +306,21 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
           );
         })}
       </section>
+
+      {comingSoonVisible && (
+        <div className="coming-overlay" onClick={() => setComingSoonVisible(false)}>
+          <div className="coming-card" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-heading-secondary font-semibold">Stay Connected</h3>
+            <p className="text-body-main text-sm mt-1 mb-4">Coming Soon</p>
+            <button 
+              onClick={() => setComingSoonVisible(false)}
+              className="px-4 py-2 rounded-full text-xs font-medium bg-[#E8F1EF] text-heading-secondary hover:bg-[#D8E1DF] transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
