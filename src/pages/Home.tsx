@@ -313,7 +313,7 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
               </div>
               <button 
                 onClick={() => onNavigate('marketplace')}
-                className="text-xs uppercase tracking-widest text-muted hover:text-accent-primary transition-colors"
+                className="text-sm uppercase tracking-widest text-muted hover:text-accent-primary transition-colors"
               >
                 View All
               </button>
@@ -337,7 +337,7 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
                     <h4 className="font-serif text-lg text-primary group-hover:text-accent-primary transition-colors duration-300">
                       {product.title}
                     </h4>
-                    <p className="text-xs text-muted mt-2 line-clamp-2 font-light leading-relaxed">
+                    <p className="text-sm text-muted mt-2 line-clamp-2 font-light leading-relaxed">
                       {product.shortDescription}
                     </p>
                     <p className="text-sm font-light text-secondary mt-3 group-hover:text-primary transition-colors">
