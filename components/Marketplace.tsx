@@ -192,9 +192,9 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
           <button
             type="button"
             onClick={showComingSoon}
-            className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
+            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
               activeCategory === 'all'
-                ? 'bg-accent-primary/10 text-accent-primary ring-1 ring-accent-primary/20'
+                ? 'bg-accent-subtle text-accent-primary ring-1 ring-accent-border-subtle'
                 : 'bg-secondary text-muted hover:text-primary border border-transparent hover:border-card-border'
             }`}
           >
@@ -205,9 +205,9 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
               key={cat.id}
               type="button"
               onClick={showComingSoon}
-              className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                 activeCategory === cat.id
-                  ? 'bg-accent-primary/10 text-accent-primary ring-1 ring-accent-primary/20'
+                  ? 'bg-accent-subtle text-accent-primary ring-1 ring-accent-border-subtle'
                   : 'bg-secondary text-muted hover:text-primary border border-transparent hover:border-card-border'
               }`}
             >
@@ -216,7 +216,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
           ))}
         </div>
         <div className="space-y-2">
-          <p className="text-xs text-muted">
+          <p className="text-sm text-muted">
             Select a category to explore objects many people weave into their rituals.
           </p>
         </div>
@@ -239,7 +239,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
                   className="w-full h-full object-cover"
                 />
                 {product.isFeatured && (
-                  <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-medium bg-card/90 text-primary shadow-sm backdrop-blur-sm">
+                  <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-sm font-medium bg-card-glass text-primary shadow-sm backdrop-blur-sm">
                     Curated Pick
                   </span>
                 )}
@@ -249,7 +249,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
                     e.stopPropagation();
                     showComingSoon();
                   }}
-                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-card/90 backdrop-blur-sm flex items-center justify-center text-xs hover:bg-card transition-colors shadow-sm"
+                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-card-glass backdrop-blur-sm flex items-center justify-center text-sm hover:bg-card transition-colors shadow-sm"
                 >
                   <span className={isWishlisted ? 'text-accent-secondary' : 'text-muted'}>
                     {isWishlisted ? '♥' : '♡'}
@@ -259,25 +259,25 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
               <div className="flex-1 flex flex-col p-5 space-y-3">
                 <div className="space-y-1">
                   {category && (
-                    <div className="text-[10px] uppercase tracking-[0.16em] text-muted">
+                    <div className="text-sm uppercase tracking-[0.16em] text-muted">
                       {category.label}
                     </div>
                   )}
                   <h3 className="text-sm font-semibold text-primary">
                     {product.title}
                   </h3>
-                  <p className="text-xs text-secondary">
+                  <p className="text-sm text-secondary">
                     {product.shortDescription}
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-[11px] text-muted">
+                  <div className="text-sm text-muted">
                     Often used for{' '}
                     <span className="text-secondary">
                       {product.oftenUsedFor}
                     </span>
                   </div>
-                  <div className="text-[10px] text-muted">
+                  <div className="text-sm text-muted">
                     Offered by {product.sellerName}
                   </div>
                 </div>
@@ -286,7 +286,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
                     <div className="text-sm font-semibold text-primary">
                       {formatPrice(product.priceCents, product.currency)}
                     </div>
-                    <div className="text-[11px] text-muted">
+                    <div className="text-sm text-muted">
                       {product.ratingAverage.toFixed(1)} · {product.ratingCount} reviews
                     </div>
                   </div>
@@ -296,7 +296,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
                       e.stopPropagation();
                       showComingSoon();
                     }}
-                    className="px-4 py-2 rounded-full text-xs font-semibold btn-secondary-ritual"
+                    className="px-4 py-2 rounded-full text-sm font-semibold btn-secondary-ritual"
                   >
                     Add to Cart
                   </button>
@@ -314,7 +314,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ state, onUpdate }) => {
             <p className="text-secondary text-sm mt-1 mb-4">Coming Soon</p>
             <button 
               onClick={() => setComingSoonVisible(false)}
-              className="px-4 py-2 rounded-full text-xs font-medium bg-secondary text-primary hover:bg-accent-primary/10 hover:text-accent-primary transition-colors"
+              className="px-4 py-2 rounded-full text-sm font-medium bg-secondary text-primary hover:bg-accent-subtle hover:text-accent-primary transition-colors"
             >
               Close
             </button>

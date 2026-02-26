@@ -177,42 +177,42 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
           </div>
         </div>
 
-        <div className="glass-card p-6 rounded-[2rem] border-slate-200 dark:border-white/5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="glass-card p-6 rounded-[2rem] border border-card-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h3 className="label brand flex items-center gap-2">
               <span>SoundShift Studio</span>
             </h3>
-            <p className="text-[11px] text-muted mt-1">
+            <p className="text-sm text-muted mt-1">
               Regulate your state through sound. Last session and listening time appear here.
             </p>
           </div>
           <div className="flex flex-col items-end gap-1 text-right">
-            <div className="text-xs text-secondary">Audio contribution coming soon</div>
+            <div className="text-sm text-secondary">Audio contribution coming soon</div>
           </div>
         </div>
 
         {/* Mood History Chart */}
-        <div className="glass-card p-6 rounded-[2rem] border-slate-200 dark:border-white/5">
+        <div className="glass-card p-6 rounded-[2rem] border border-card-border">
           <div className="flex justify-between items-center mb-4 px-2">
             <h3 className="label text-secondary">30-Day Frequency Trend</h3>
             <span className="label brand">Emotional Arc</span>
           </div>
-          <div className="relative h-24 w-full">
+          <div className="relative h-24 w-full text-accent-primary">
             <svg viewBox="0 0 500 100" preserveAspectRatio="none" className="w-full h-full overflow-visible">
               <defs>
                 <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="rgb(59, 130, 246)" stopOpacity="0.3" />
-                  <stop offset="100%" stopColor="rgb(59, 130, 246)" stopOpacity="0" />
+                  <stop offset="0%" stopColor="currentColor" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
                 </linearGradient>
               </defs>
               <path d={moodChartSvg.areaD} fill="url(#chartGradient)" />
-              <path d={moodChartSvg.pathD} fill="none" stroke="rgb(59, 130, 246)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d={moodChartSvg.pathD} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               {moodChartSvg.points.map((p, i) => chartData[i].hasData && (
-                <circle key={i} cx={p.x} cy={p.y} r="2.5" fill="rgb(59, 130, 246)" className="animate-pulse" />
+                <circle key={i} cx={p.x} cy={p.y} r="2.5" fill="currentColor" className="animate-pulse" />
               ))}
             </svg>
           </div>
-          <div className="flex justify-between mt-2 px-1 text-[8px] text-muted font-mono">
+          <div className="flex justify-between mt-2 px-1 text-sm text-muted font-mono">
             <span>30D AGO</span>
             <span>PRESENT</span>
           </div>
@@ -221,16 +221,16 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
 
       {/* Affirmation Carousel */}
       <div className="glass-card soft-glow-purple rounded-[2.5rem] relative overflow-hidden shadow-2xl transition-all invocation-card">
-        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-purple-500 via-amber-400 to-purple-500 opacity-80"></div>
+        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-accent-primary via-accent-secondary to-accent-primary opacity-80"></div>
         <div className="flex justify-between items-center mb-6">
           <div className="space-y-1">
             <h3 className="label brand">Daily Invocations</h3>
-            <p className="text-[10px] text-muted italic">Core Frequency Alignment</p>
+            <p className="text-sm text-muted italic">Core Frequency Alignment</p>
           </div>
           <button 
             onClick={handleRefreshAffirmations} 
             disabled={loading}
-            className="label text-secondary hover:text-purple-500 dark:hover:text-white transition-colors"
+            className="label text-secondary hover:text-accent-primary transition-colors"
           >
             {loading ? 'Aligning...' : 'Refresh'}
           </button>
@@ -238,7 +238,7 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
         <div className="mb-2">
           <button
             aria-label="Add New Affirmation"
-            className="px-4 py-2 rounded-xl bg-accent ensure-contrast text-[12px] font-bold shadow-md shadow-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/25 transition-all active:scale-95"
+            className="px-4 py-2 rounded-xl bg-card border border-card-border text-primary text-sm font-bold shadow-md shadow-accent-secondary/10 hover:shadow-lg hover:shadow-accent-secondary/25 transition-all active:scale-95"
             onClick={() => window.dispatchEvent(new CustomEvent('openAddAffirmation'))}
           >
             Add New Affirmation
@@ -269,28 +269,28 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
               <div className="affirmation-controls">
                 <button 
                   onClick={handlePrev}
-                  className="p-2 text-secondary hover:text-purple-500 transition-colors"
+                  className="p-2 text-secondary hover:text-accent-primary transition-colors"
                 >
-                  <span className="text-[10px] label">Prev</span>
+                  <span className="text-sm label">Prev</span>
                 </button>
                 <button 
                   onClick={handleNext}
-                  className="p-2 text-secondary hover:text-purple-500 transition-colors"
+                  className="p-2 text-secondary hover:text-accent-primary transition-colors"
                 >
-                  <span className="text-[10px] label">Next</span>
+                  <span className="text-sm label">Next</span>
                 </button>
               </div>
             </>
           ) : (
             <div className="animate-pulse flex flex-col items-center space-y-4">
-               <div className="h-6 bg-white/60 dark:bg-white/10 rounded-full w-64"></div>
-               <div className="h-4 bg-white/40 dark:bg-white/5 rounded-full w-48"></div>
+               <div className="h-6 bg-secondary/60 rounded-full w-64"></div>
+               <div className="h-4 bg-secondary/40 rounded-full w-48"></div>
             </div>
           )}
         </div>
       </div>
 
-      <div className="glass-card p-8 rounded-[2rem] shadow-lg border-white/5 dark:border-white/5 frequency-card">
+      <div className="glass-card p-8 rounded-[2rem] shadow-lg border border-card-border frequency-card">
         <h3 className="label accent mb-8 text-center">Frequency Input</h3>
         <div className="frequency-tabs-viewport">
           <div ref={moodTabsRef} className="frequency-tabs-wrapper frequency-container">
@@ -307,10 +307,10 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onUpdate }) => {
                   type="button"
                   onClick={() => handleMoodSelect(m)}
                   className={`frequency-circle shadow-xl ${
-                    currentMood === m
-                      ? 'ring-2 ring-amber-500 bg-amber-500/10 dark:bg-amber-400/10'
-                      : 'bg-white/60 dark:bg-white/10'
-                  }`}
+                  currentMood === m
+                    ? 'ring-2 ring-accent-primary bg-accent-subtle'
+                    : 'bg-card text-muted hover:text-primary hover:bg-accent-subtle/50'
+                }`}
                   aria-label={m}
                 >
                   <span className="label text-secondary text-2xl">{m[0]}</span>

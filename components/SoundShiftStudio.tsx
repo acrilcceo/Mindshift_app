@@ -197,40 +197,40 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
   };
 
   return (
-    <div className="soundshift-atmosphere space-y-10 animate-in fade-in duration-700">
+    <div className="space-y-10 animate-in fade-in duration-700">
       <div className="flex justify-between items-end px-2">
         <div>
-          <h2 className="text-3xl sm:text-4xl font-serif font-semibold soundshift-heading">
+          <h2 className="text-3xl sm:text-4xl font-serif font-semibold text-primary">
             SoundShift Studio
           </h2>
-          <p className="body-sm mt-1 soundshift-body">
+          <p className="text-sm mt-1 text-secondary">
             Regulate your state through sound and subtle frequency.
           </p>
         </div>
         <div className="text-right">
-          <div className="text-xs soundshift-muted">Today</div>
-          <div className="text-3xl font-semibold soundshift-listening-value">
+          <div className="text-sm text-muted">Today</div>
+          <div className="text-3xl font-semibold text-primary">
             {listeningMinutes} min
           </div>
-          <div className="text-[11px] mt-1 soundshift-listening-label">Listening</div>
+          <div className="text-sm mt-1 text-muted">Listening</div>
         </div>
       </div>
 
-      <div className="glass-card p-6 rounded-[2rem] flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between soundshift-card-primary">
+      <div className="glass-card p-6 rounded-[2rem] flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="text-[11px] font-semibold tracking-wide soundshift-subheading">
+          <div className="text-sm font-semibold tracking-wide text-secondary uppercase tracking-widest">
             Last sound
           </div>
-          <div className="text-base sm:text-lg mt-1 font-semibold soundshift-card-title">
+          <div className="text-base sm:text-lg mt-1 font-semibold text-primary">
             {lastMix ? lastMix.name : 'No mix played yet'}
           </div>
-          <div className="text-[11px] mt-1 soundshift-body">
+          <div className="text-sm mt-1 text-secondary">
             Tap a tile below to build a calming or focusing soundscape.
           </div>
         </div>
         <button
           type="button"
-          className="soundshift-quick-resume px-5 py-3 rounded-full text-xs font-semibold"
+          className="btn-primary-ritual px-5 py-3 rounded-full text-sm font-semibold text-btn-primary"
           disabled={!canQuickResume}
           onClick={handleQuickResume}
         >
@@ -238,11 +238,11 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
         </button>
       </div>
 
-      <div className="glass-card p-6 rounded-[2rem] soundshift-card-secondary">
+      <div className="glass-card p-6 rounded-[2rem]">
         <div className="flex justify-between items-center mb-4">
           <div>
-            <div className="text-sm font-semibold soundshift-subheading">How are you feeling?</div>
-            <p className="text-[11px] mt-1 soundshift-body">Select an emotional state to see suggested sound patterns.</p>
+            <div className="text-sm font-semibold text-secondary uppercase tracking-widest">How are you feeling?</div>
+            <p className="text-sm mt-1 text-secondary">Select an emotional state to see suggested sound patterns.</p>
           </div>
         </div>
         <div className="flex flex-wrap gap-3 mt-2">
@@ -251,7 +251,11 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
               key={es.id}
               type="button"
               onClick={() => handleSelectEmotionalState(es.id)}
-              className={`soundshift-chip ${selectedEmotion === es.id ? 'soundshift-chip-active' : ''}`}
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
+                selectedEmotion === es.id 
+                  ? 'bg-accent-primary text-btn-primary border-accent-primary shadow-lg shadow-accent-primary/20' 
+                  : 'bg-secondary text-secondary border-card-border hover:text-primary hover:border-accent-primary/50'
+              }`}
             >
               {es.label}
             </button>
@@ -261,8 +265,8 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
 
       <div className="space-y-4">
         <div className="flex justify-between items-center px-1 mt-2">
-          <h3 className="text-sm font-semibold soundshift-subheading">Sound Palette</h3>
-          <span className="text-[11px] soundshift-muted">Frequencies • Binaural • Nature • Tones</span>
+          <h3 className="text-sm font-semibold text-secondary uppercase tracking-widest">Sound Palette</h3>
+          <span className="text-sm text-muted">Frequencies • Binaural • Nature • Tones</span>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <SoundTile
@@ -324,11 +328,11 @@ const SoundTile: React.FC<SoundTileProps> = ({ label, tag, onClick, active }) =>
       }`}
     >
       <div className="relative z-10">
-        <div className="text-xs mb-1 soundshift-tile-subtitle">{tag}</div>
+        <div className="text-sm mb-1 soundshift-tile-subtitle">{tag}</div>
         <div className="text-lg font-semibold soundshift-tile-title">{label}</div>
       </div>
       <div className="relative z-10 flex items-end justify-between mt-3">
-        <div className="flex items-center gap-1 text-[10px] text-muted">
+        <div className="flex items-center gap-1 text-sm text-muted">
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-secondary" />
           <span>∞ loop</span>
         </div>

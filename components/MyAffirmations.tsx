@@ -107,44 +107,44 @@ const MyAffirmations: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-end gap-2 w-full md:w-auto max-w-full box-border">
           <button
             onClick={() => { setEditing(null); setOpenForm(true); }}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-2xl btn-primary-ritual text-[12px] font-semibold transition-all duration-200 ease-out transform hover:-translate-y-0.5 active:scale-95"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-2xl btn-primary-ritual text-sm font-semibold transition-all duration-200 ease-out transform hover:-translate-y-0.5 active:scale-95"
             aria-label="Add New Affirmation"
           >
             Add New Affirmation
           </button>
           <button
             onClick={handleExport}
-            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-secondary text-secondary hover:text-primary transition-colors text-[12px]"
+            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-secondary text-secondary hover:text-primary transition-colors text-sm"
             aria-label="Export affirmations"
           >
             Export
           </button>
-          <label className="hidden md:inline-flex items-center px-4 py-2 rounded-xl bg-secondary text-secondary hover:text-primary transition-colors text-[12px] cursor-pointer" aria-label="Import affirmations">
+          <label className="hidden md:inline-flex items-center px-4 py-2 rounded-xl bg-secondary text-secondary hover:text-primary transition-colors text-sm cursor-pointer" aria-label="Import affirmations">
             Import
             <input type="file" accept="application/json" className="hidden" onChange={e => e.target.files && handleImport(e.target.files[0])} />
           </label>
         </div>
       </div>
 
-      {importError && <div role="alert" className="mb-3 text-[12px] text-red-500">{importError}</div>}
+      {importError && <div role="alert" className="mb-3 text-sm text-error">{importError}</div>}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 mb-4">
         <div className="flex flex-col gap-1">
-          <span className="text-[10px] uppercase tracking-widest text-muted font-bold">Search</span>
+          <span className="text-sm uppercase tracking-widest text-muted font-bold">Search</span>
           <input
             type="text"
             aria-label="Search affirmations"
             placeholder="Search..."
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="w-full h-10 bg-card border border-card-border rounded-xl px-4 text-[12px] text-primary placeholder-muted focus:outline-none focus:border-accent-primary"
+            className="w-full h-10 bg-card border border-card-border rounded-xl px-4 text-sm text-primary placeholder-muted focus:outline-none focus:border-accent-primary"
           />
         </div>
         <select
           aria-label="Filter by category"
           value={category}
           onChange={e => { setCategory(e.target.value as any); setPage(1); }}
-          className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-[12px] text-primary focus:outline-none focus:border-accent-primary"
+          className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-sm text-primary focus:outline-none focus:border-accent-primary"
         >
           <option value="All">All Categories</option>
           {(['Gratitude','Self-Love','Success','Health','Relationships','Custom'] as AffirmationCategory[]).map(c => <option key={c} value={c}>{c}</option>)}
@@ -153,7 +153,7 @@ const MyAffirmations: React.FC = () => {
           aria-label="Filter by reminder"
           value={reminder}
           onChange={e => { setReminder(e.target.value as any); setPage(1); }}
-          className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-[12px] text-primary focus:outline-none focus:border-accent-primary"
+          className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-sm text-primary focus:outline-none focus:border-accent-primary"
         >
           <option value="All">All Reminders</option>
           <option value="Has">Has Reminder</option>
@@ -163,7 +163,7 @@ const MyAffirmations: React.FC = () => {
           aria-label="Sort affirmations"
           value={sort}
           onChange={e => setSort(e.target.value as SortKey)}
-          className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-[12px] text-primary focus:outline-none focus:border-accent-primary"
+          className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-sm text-primary focus:outline-none focus:border-accent-primary"
         >
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>
@@ -175,14 +175,14 @@ const MyAffirmations: React.FC = () => {
           aria-label="Start date"
           value={startDate}
           onChange={e => { setStartDate(e.target.value); setPage(1); }}
-          className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-[12px] text-primary focus:outline-none focus:border-accent-primary"
+          className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-sm text-primary focus:outline-none focus:border-accent-primary"
         />
         <input
           type="date"
           aria-label="End date"
           value={endDate}
           onChange={e => { setEndDate(e.target.value); setPage(1); }}
-          className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-[12px] text-primary focus:outline-none focus:border-accent-primary"
+          className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-sm text-primary focus:outline-none focus:border-accent-primary"
         />
       </div>
 
@@ -191,28 +191,28 @@ const MyAffirmations: React.FC = () => {
           <div key={a.id} className="glass-card p-6 rounded-3xl border-l-4 border-accent-secondary">
             <div className="label text-secondary mb-2">{a.category}</div>
             <div className="text-primary leading-relaxed">{a.text}</div>
-            <div className="mt-4 flex items-center justify-between text-[10px] text-muted">
+            <div className="mt-4 flex items-center justify-between text-sm text-muted">
               <span>Created {new Date(a.createdAt).toLocaleDateString()}</span>
               <span>Used {a.useCount}</span>
             </div>
             <div className="mt-4 flex gap-2">
-              <button className="px-3 py-1 rounded-xl bg-secondary text-secondary hover:text-primary transition-colors text-[12px]" onClick={() => { setEditing(a); setOpenForm(true); }} aria-label="Edit affirmation">Edit</button>
-              <button className="px-3 py-1 rounded-xl bg-secondary text-secondary hover:text-primary transition-colors text-[12px]" onClick={() => handleDuplicate(a.id)} aria-label="Duplicate affirmation">Duplicate</button>
-              <button className="px-3 py-1 rounded-xl bg-error text-error hover:bg-red-500 hover:text-white transition-colors text-[12px]" onClick={() => setConfirmId(a.id)} aria-label="Delete affirmation">Delete</button>
+              <button className="px-3 py-1 rounded-xl bg-secondary text-secondary hover:text-primary transition-colors text-sm" onClick={() => { setEditing(a); setOpenForm(true); }} aria-label="Edit affirmation">Edit</button>
+              <button className="px-3 py-1 rounded-xl bg-secondary text-secondary hover:text-primary transition-colors text-sm" onClick={() => handleDuplicate(a.id)} aria-label="Duplicate affirmation">Duplicate</button>
+              <button className="px-3 py-1 rounded-xl bg-error/10 text-error hover:bg-error hover:text-btn-primary-text transition-colors text-sm" onClick={() => setConfirmId(a.id)} aria-label="Delete affirmation">Delete</button>
             </div>
             {confirmId === a.id && (
               <div className="mt-3 flex gap-2 items-center" role="alertdialog" aria-label="Confirm delete">
-                <span className="text-[12px] text-primary">Delete?</span>
-                <button className="px-3 py-1 rounded-xl bg-red-500 text-white text-[12px]" onClick={() => handleRemove(a.id)}>Confirm</button>
-                <button className="px-3 py-1 rounded-xl bg-secondary text-secondary text-[12px]" onClick={() => setConfirmId(null)}>Cancel</button>
+                <span className="text-sm text-primary">Delete?</span>
+                <button className="px-3 py-1 rounded-xl bg-error text-btn-primary-text text-sm" onClick={() => handleRemove(a.id)}>Confirm</button>
+                <button className="px-3 py-1 rounded-xl bg-secondary text-secondary text-sm" onClick={() => setConfirmId(null)}>Cancel</button>
               </div>
             )}
             {a.versions.length > 1 && (
               <details className="mt-3">
-                <summary className="cursor-pointer text-[12px] text-secondary">Version History</summary>
+                <summary className="cursor-pointer text-sm text-secondary">Version History</summary>
                 <ul className="mt-2 space-y-2">
                   {a.versions.map((v, i) => (
-                    <li key={i} className="text-[12px] text-secondary">
+                    <li key={i} className="text-sm text-secondary">
                       <span className="font-mono">{new Date(v.timestamp).toLocaleString()}</span> — {v.text}
                     </li>
                   ))}
@@ -224,11 +224,11 @@ const MyAffirmations: React.FC = () => {
       </div>
 
       <div className="mt-6 flex items-center justify-between">
-        <div className="text-[10px] text-muted">Showing {pageItems.length} of {processed.length}</div>
+        <div className="text-sm text-muted">Showing {pageItems.length} of {processed.length}</div>
         <div className="flex gap-2" role="navigation" aria-label="Pagination">
-          <button className="px-3 py-1 rounded-xl bg-secondary text-[12px] text-secondary hover:text-primary" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} aria-disabled={page === 1}>Prev</button>
-          <span className="px-3 py-1 rounded-xl bg-secondary text-[12px] text-primary">{page} / {totalPages}</span>
-          <button className="px-3 py-1 rounded-xl bg-secondary text-[12px] text-secondary hover:text-primary" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} aria-disabled={page === totalPages}>Next</button>
+          <button className="px-3 py-1 rounded-xl bg-secondary text-sm text-secondary hover:text-primary" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} aria-disabled={page === 1}>Prev</button>
+          <span className="px-3 py-1 rounded-xl bg-secondary text-sm text-primary">{page} / {totalPages}</span>
+          <button className="px-3 py-1 rounded-xl bg-secondary text-sm text-secondary hover:text-primary" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} aria-disabled={page === totalPages}>Next</button>
         </div>
       </div>
 

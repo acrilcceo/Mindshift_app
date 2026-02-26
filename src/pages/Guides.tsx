@@ -71,12 +71,12 @@ const GuidesPage: React.FC<GuidesPageProps> = ({ state }) => {
       {/* Header */}
       <header className="space-y-4">
         <div>
-          <h2 className="text-4xl font-serif font-bold text-slate-900 dark:text-amber-50">MindShift Guides</h2>
-          <p className="text-slate-500 dark:text-slate-400 mt-2 text-lg">
+          <h2 className="text-4xl font-serif font-bold text-primary">MindShift Guides</h2>
+          <p className="text-secondary mt-2 text-lg">
             Connect with professionals who support your inner evolution.
           </p>
           {isDemoMode && (
-             <div className="mt-4 p-3 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 rounded-xl text-sm flex items-center gap-3">
+             <div className="mt-4 p-3 bg-accent-primary/10 text-accent-primary rounded-xl text-sm flex items-center gap-3">
                <span>⚠️ Running in Demo Mode (Mock Data). Database is empty.</span>
                <button 
                  onClick={async () => {
@@ -86,7 +86,7 @@ const GuidesPage: React.FC<GuidesPageProps> = ({ state }) => {
                    setGuides(data);
                    setLoading(false);
                  }}
-                 className="px-3 py-1 bg-amber-200 dark:bg-amber-800 rounded-lg text-xs font-bold hover:opacity-80 transition-opacity"
+                 className="px-3 py-1 bg-accent-primary/20 rounded-lg text-sm font-bold hover:opacity-80 transition-opacity"
                >
                  Initialize Database
                </button>
@@ -95,15 +95,15 @@ const GuidesPage: React.FC<GuidesPageProps> = ({ state }) => {
         </div>
 
         {/* Search & Filter */}
-        <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-white/50 dark:bg-white/5 p-4 rounded-2xl border border-slate-200 dark:border-white/5 backdrop-blur-sm">
+        <div className="flex flex-col md:flex-row gap-4 justify-between items-center glass-card p-4 rounded-2xl border border-card-border">
           <div className="relative w-full md:w-1/3">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted">🔍</span>
             <input 
               type="text" 
               placeholder="Search by name or specialty..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-xl bg-white dark:bg-black/20 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-shadow"
+              className="w-full pl-10 pr-4 py-2 rounded-xl bg-card border border-card-border focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-shadow text-primary placeholder:text-muted"
             />
           </div>
           
@@ -112,10 +112,10 @@ const GuidesPage: React.FC<GuidesPageProps> = ({ state }) => {
               <button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${
                   activeFilter === filter
-                    ? 'bg-slate-900 dark:bg-amber-500 text-white dark:text-black shadow-lg shadow-amber-500/20'
-                    : 'bg-white dark:bg-white/5 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10'
+                    ? 'btn-primary-ritual text-btn-primary shadow-lg shadow-accent-primary/20'
+                    : 'bg-card text-secondary border border-card-border hover:bg-secondary/10'
                 }`}
               >
                 {filter}
@@ -129,7 +129,7 @@ const GuidesPage: React.FC<GuidesPageProps> = ({ state }) => {
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-96 rounded-[2rem] bg-slate-100 dark:bg-white/5 animate-pulse"></div>
+            <div key={i} className="h-96 rounded-[2rem] bg-secondary animate-pulse"></div>
           ))}
         </div>
       ) : (
@@ -148,7 +148,7 @@ const GuidesPage: React.FC<GuidesPageProps> = ({ state }) => {
       {/* Empty State */}
       {!loading && filteredGuides.length === 0 && (
         <div className="text-center py-20">
-          <p className="text-slate-400 text-lg">No guides found matching your criteria.</p>
+          <p className="text-muted text-lg">No guides found matching your criteria.</p>
           {searchTerm === '' && activeFilter === 'All' ? (
             <button 
               onClick={async () => {
@@ -158,7 +158,7 @@ const GuidesPage: React.FC<GuidesPageProps> = ({ state }) => {
                 setGuides(data);
                 setLoading(false);
               }}
-              className="mt-4 px-4 py-2 bg-slate-200 dark:bg-white/10 rounded-lg text-sm hover:bg-slate-300 dark:hover:bg-white/20 transition-colors"
+              className="mt-4 px-4 py-2 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors text-primary"
             >
               Initialize Database
             </button>
@@ -168,7 +168,7 @@ const GuidesPage: React.FC<GuidesPageProps> = ({ state }) => {
                 setSearchTerm('');
                 setActiveFilter('All');
               }}
-              className="mt-4 text-amber-500 hover:underline"
+              className="mt-4 text-accent-primary hover:underline"
             >
               Clear filters
             </button>

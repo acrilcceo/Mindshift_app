@@ -110,16 +110,16 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
           {/* 4. Stats - Floating Glass Pills */}
           <div className="flex gap-4 text-sm flex-wrap">
             <div className="flex flex-col items-center justify-center px-4 py-2 rounded-full card-base hover:scale-102 transition-all duration-300">
-              <span className="text-muted text-xs uppercase tracking-wider mb-0.5">Listening</span>
-              <span className="text-primary font-medium">{listeningMinutes} <span className="text-muted text-xs">min</span></span>
+              <span className="text-muted text-sm uppercase tracking-wider mb-0.5">Listening</span>
+              <span className="text-primary font-medium">{listeningMinutes} <span className="text-muted text-sm">min</span></span>
             </div>
             <div className="flex flex-col items-center justify-center px-4 py-2 rounded-full card-base hover:scale-102 transition-all duration-300">
-              <span className="text-muted text-xs uppercase tracking-wider mb-0.5">Sessions</span>
+              <span className="text-muted text-sm uppercase tracking-wider mb-0.5">Sessions</span>
               <span className="text-primary font-medium">{totalSessions}</span>
             </div>
             <div className="flex flex-col items-center justify-center px-4 py-2 rounded-full card-base hover:scale-102 transition-all duration-300">
-              <span className="text-muted text-xs uppercase tracking-wider mb-0.5">Streak</span>
-              <span className="text-primary font-medium">{streak} <span className="text-muted text-xs">day</span></span>
+              <span className="text-muted text-sm uppercase tracking-wider mb-0.5">Streak</span>
+              <span className="text-primary font-medium">{streak} <span className="text-muted text-sm">day</span></span>
             </div>
           </div>
         </header>
@@ -127,7 +127,7 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           
           {/* 5. Daily Invocation - Centerpiece Energy Block */}
-          <div className="group relative p-10 rounded-[2rem] card-base transition-all duration-500 hover:shadow-2xl hover:shadow-accent-primary/5 animate-fade-in" style={{ animationDelay: '100ms' }}>
+          <div className="group relative p-10 rounded-[2rem] card-base transition-all duration-500 hover:shadow-2xl hover:shadow-accent-glow animate-fade-in" style={{ animationDelay: '100ms' }}>
             <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               <button 
                 onClick={refreshAffirmation}
@@ -140,7 +140,7 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
               </button>
             </div>
             
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-accent-primary/60 mb-8">
+            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-accent-primary/60 mb-8">
               Daily Invocation
             </h3>
             
@@ -158,7 +158,7 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
               
               <button 
                 onClick={() => onNavigate('dashboard')} 
-                className="text-xs uppercase tracking-widest text-muted hover:text-accent-primary transition-colors pt-2"
+                className="text-sm uppercase tracking-widest text-muted hover:text-accent-primary transition-colors pt-2"
               >
                 Go to Full Invocations
               </button>
@@ -167,7 +167,7 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
 
           {/* 6. Quick Shift - Modern Ritual Buttons */}
           <div className="p-8 rounded-[2rem] card-base transition-all duration-500 animate-fade-in" style={{ animationDelay: '200ms' }}>
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-accent-primary/60 mb-8 text-center">
+            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-accent-primary/60 mb-8 text-center">
               Quick Shift
             </h3>
             
@@ -183,8 +183,8 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
                       className={`
                         w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 relative
                         ${isPlaying === sound.id 
-                          ? 'bg-accent-primary/20 text-accent-primary shadow-[0_0_20px_var(--accent-glow)] scale-105' 
-                          : 'bg-secondary text-muted group-hover:bg-accent-primary/10 group-hover:text-primary'}
+                          ? 'bg-accent-border-subtle text-accent-primary shadow-[0_0_20px_var(--accent-glow)] scale-105' 
+                          : 'bg-secondary text-muted group-hover:bg-accent-subtle group-hover:text-primary'}
                       `}
                     >
                       {/* Pulse ring when idle */}
@@ -210,7 +210,7 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
                       <span className={`text-sm font-medium transition-colors ${isPlaying === sound.id ? 'text-accent-primary' : 'text-secondary group-hover:text-primary'}`}>
                         {sound.label}
                       </span>
-                      <span className="text-xs text-muted font-light tracking-wide uppercase">
+                      <span className="text-sm text-muted font-light tracking-wide uppercase">
                         {sound.sub}
                       </span>
                     </div>
@@ -222,7 +222,7 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
             <div className="mt-8 text-center">
               <button 
                 onClick={() => onNavigate('soundshift')}
-                className="text-xs uppercase tracking-widest text-muted hover:text-accent-primary transition-colors"
+                className="text-sm uppercase tracking-widest text-muted hover:text-accent-primary transition-colors"
               >
                 Open Sound Studio
               </button>
@@ -231,7 +231,7 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
 
           {/* 7. Shift a Story - Transformational */}
           <div className="p-8 rounded-[2rem] card-base flex flex-col animate-fade-in" style={{ animationDelay: '300ms' }}>
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-accent-primary/60 mb-6">
+            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-accent-primary/60 mb-6">
               Shift a Story
             </h3>
             
@@ -240,7 +240,7 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
                 value={reframeInput}
                 onChange={(e) => setReframeInput(e.target.value)}
                 placeholder="Write a thought you’re ready to release..."
-                className="w-full bg-transparent border-b border-card-border focus:border-accent-primary/50 outline-none text-primary text-lg font-light resize-none h-32 placeholder:text-muted transition-all duration-500 focus:shadow-[inset_0_-10px_20px_-10px_var(--accent-glow)]"
+                className="w-full bg-transparent border-b border-card-border focus:border-accent-border-subtle outline-none text-primary text-lg font-light resize-none h-32 placeholder:text-muted transition-all duration-500 focus:shadow-[inset_0_-10px_20px_-10px_var(--accent-glow)]"
               />
             </div>
 
@@ -255,37 +255,37 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
               `}
             >
               {reframeInput.trim() && (
-                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-accent-subtle translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
               )}
               <span className="relative z-10">Reframe Now</span>
             </button>
-            <p className="mt-3 text-center text-xs text-muted font-light tracking-wide uppercase">
+            <p className="mt-3 text-center text-sm text-muted font-light tracking-wide uppercase">
                Rewrite the narrative.
             </p>
           </div>
 
           {/* 8. Your Support - Connected */}
           <div className="p-8 rounded-[2rem] card-base animate-fade-in" style={{ animationDelay: '400ms' }}>
-             <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-accent-primary/60 mb-6">
+             <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-accent-primary/60 mb-6">
               Your Support
             </h3>
             
             <div className="flex-1 flex flex-col items-center justify-center text-center h-48">
               {upcomingAppointment ? (
                 <div className="w-full bg-secondary p-6 rounded-2xl flex items-center gap-4">
-                   <div className="w-12 h-12 rounded-full bg-accent-primary/10 flex items-center justify-center text-accent-primary">
+                   <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center text-accent-primary">
                      📅
                    </div>
                    <div className="text-left">
                      <p className="font-serif text-primary">Session with Guide</p>
-                     <p className="text-xs text-muted mt-1">Today, 4:00 PM</p>
+                     <p className="text-sm text-muted mt-1">Today, 4:00 PM</p>
                    </div>
                 </div>
               ) : (
                 <>
                   <div className="relative w-16 h-16 mb-6 flex items-center justify-center">
-                    <div className="absolute inset-0 bg-accent-primary/10 rounded-full animate-[ping_4s_ease-in-out_infinite]" />
-                    <div className="relative w-12 h-12 bg-accent-primary/10 rounded-full flex items-center justify-center text-accent-primary/80 shadow-[0_0_15px_var(--accent-glow)]">
+                    <div className="absolute inset-0 bg-accent-subtle rounded-full animate-[ping_4s_ease-in-out_infinite]" />
+                    <div className="relative w-12 h-12 bg-accent-subtle rounded-full flex items-center justify-center text-accent-primary/80 shadow-[0_0_15px_var(--accent-glow)]">
                       🤍
                     </div>
                   </div>
@@ -296,7 +296,7 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
             
             <button 
               onClick={() => onNavigate('guides')}
-              className="w-full py-3 rounded-xl border border-card-border hover:border-accent-primary/30 hover:bg-accent-primary/5 transition-all duration-500 text-xs font-medium text-secondary hover:text-primary uppercase tracking-wider hover:shadow-[0_0_15px_var(--accent-glow)]"
+              className="w-full mt-6 py-4 border border-card-border rounded-xl text-sm uppercase tracking-widest text-muted hover:text-accent-primary hover:border-accent-primary/30 transition-all duration-300"
             >
               Explore Guides
             </button>

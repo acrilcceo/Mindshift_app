@@ -53,17 +53,17 @@ const Visualization: React.FC<VisualizationProps> = ({ state, onUpdate }) => {
           <button
             key={tab}
             onClick={() => {
-              setActiveMode(tab);
-              setShowErrors(false);
-            }}
-            className={`flex-1 py-3 rounded-xl text-[10px] uppercase tracking-widest font-semibold transition-all ${
-              activeMode === tab
-                ? 'bg-card text-primary shadow-md'
-                : 'text-muted hover:text-primary'
-            }`}
-          >
-            {tab === 'whisper' ? 'Whisper Technique' : 'Thought Release'}
-          </button>
+            setActiveMode(tab);
+            setShowErrors(false);
+          }}
+          className={`flex-1 py-3 rounded-xl text-sm uppercase tracking-widest font-semibold transition-all ${
+            activeMode === tab
+              ? 'bg-card text-primary shadow-md'
+              : 'text-muted hover:text-primary'
+          }`}
+        >
+          {tab === 'whisper' ? 'Whisper Technique' : 'Thought Release'}
+        </button>
         ))}
       </div>
 
@@ -71,7 +71,7 @@ const Visualization: React.FC<VisualizationProps> = ({ state, onUpdate }) => {
         <div className="space-y-8 animate-in slide-in-from-right-4">
           <div className="text-center px-4">
             <h3 className="text-xl font-serif text-primary">The Whisper Method</h3>
-            <p className="text-[10px] mt-1 tracking-widest uppercase italic text-muted">
+            <p className="text-sm mt-1 tracking-widest uppercase italic text-muted">
               Manifest communication through subconscious connection.
             </p>
           </div>
@@ -79,7 +79,7 @@ const Visualization: React.FC<VisualizationProps> = ({ state, onUpdate }) => {
           <div className="glass-card p-8 rounded-[2rem] space-y-6">
             <div className="space-y-4">
               <div className="space-y-2">
-                <label className="flex justify-between text-[10px] uppercase tracking-widest font-bold">
+                <label className="flex justify-between text-sm uppercase tracking-widest font-bold">
                   <span className="text-secondary">Target Person *</span>
                   {showErrors && !whisperForm.target.trim() && (
                     <span className="text-error lowercase font-normal">Required</span>
@@ -98,7 +98,7 @@ const Visualization: React.FC<VisualizationProps> = ({ state, onUpdate }) => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="flex justify-between text-[10px] uppercase tracking-widest font-bold">
+                <label className="flex justify-between text-sm uppercase tracking-widest font-bold">
                   <span className="text-secondary">Your Message *</span>
                   {showErrors && !whisperForm.text.trim() && (
                     <span className="text-error lowercase font-normal">Required</span>
@@ -126,10 +126,10 @@ const Visualization: React.FC<VisualizationProps> = ({ state, onUpdate }) => {
           </div>
 
           <div className="space-y-4">
-            <h4 className="text-[10px] uppercase tracking-widest text-muted font-bold px-4">
+            <h4 className="text-sm uppercase tracking-widest text-muted font-bold px-4">
               Guided Visualization
             </h4>
-            <div className="glass-card p-6 rounded-3xl text-xs italic text-secondary">
+            <div className="glass-card p-6 rounded-3xl text-sm italic text-secondary">
               1. Close your eyes and take 3 deep breaths.<br/><br/>
               2. Imagine {whisperForm.target || 'the target'} sleeping peacefully in a room filled with golden light.<br/><br/>
               3. Walk up to them and gently whisper your message into their ear. See them smile in their sleep.<br/><br/>
@@ -143,7 +143,7 @@ const Visualization: React.FC<VisualizationProps> = ({ state, onUpdate }) => {
         <div className="space-y-10 animate-in slide-in-from-left-4 flex flex-col items-center">
           <div className="text-center px-4">
             <h3 className="text-xl font-serif text-primary">Neural Purgation</h3>
-            <p className="text-[10px] mt-1 tracking-widest uppercase italic text-muted">
+            <p className="text-sm mt-1 tracking-widest uppercase italic text-muted">
               Write your shadow, then watch it turn to ash.
             </p>
           </div>
@@ -157,7 +157,7 @@ const Visualization: React.FC<VisualizationProps> = ({ state, onUpdate }) => {
                  <div className="relative text-sm font-medium text-muted/50 italic animate-pulse line-through decoration-error/50 blur-[2px] transition-all duration-[3000ms] opacity-0">
                     {burningThought}
                  </div>
-                 <div className="absolute bottom-0 text-[10px] uppercase tracking-[0.3em] text-error animate-pulse">Releasing Neural Pathways...</div>
+                 <div className="absolute bottom-0 text-sm uppercase tracking-[0.3em] text-error animate-pulse">Releasing Neural Pathways...</div>
               </div>
             ) : (
               <div className="w-full space-y-6">
@@ -179,7 +179,7 @@ const Visualization: React.FC<VisualizationProps> = ({ state, onUpdate }) => {
           </div>
 
           <div className="max-w-xs text-center">
-            <p className="text-[10px] text-muted leading-relaxed">
+            <p className="text-sm text-muted leading-relaxed">
               Symbolic release helps detach the emotional charge from limiting beliefs. Once burned, do not dwell on the thought. It no longer belongs to you.
             </p>
           </div>

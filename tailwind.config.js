@@ -20,15 +20,21 @@ export default {
         error: 'var(--text-error)',
         'btn-primary': 'var(--btn-primary-text)',
       },
+      borderColor: {
+        error: 'var(--text-error)',
+      },
       colors: {
         card: {
           DEFAULT: 'var(--card-bg)',
           border: 'var(--card-border)',
+          glass: 'var(--card-glass)',
         },
         accent: {
           primary: 'var(--accent-primary)',
           secondary: 'var(--accent-secondary)',
           glow: 'var(--accent-glow)',
+          subtle: 'var(--bg-accent-subtle)',
+          'border-subtle': 'var(--border-accent-subtle)',
         },
       },
       animation: {

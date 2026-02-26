@@ -44,13 +44,13 @@ const Tracker369: React.FC<Tracker369Props> = ({ state, onUpdate }) => {
       </div>
 
       <div className="glass-card p-6 rounded-[2rem]">
-        <div className="flex justify-between text-[10px] uppercase tracking-[0.3em] text-muted mb-3 font-bold">
+        <div className="flex justify-between text-sm uppercase tracking-[0.3em] text-muted mb-3 font-bold">
           <span>Daily Resonance</span>
           <span>{Math.round(progress)}% Focused</span>
         </div>
         <div className="h-3 bg-secondary rounded-full overflow-hidden">
           <div 
-            className="h-full bg-gradient-to-r from-accent-primary to-accent-glow transition-all duration-1000 shadow-[0_0_10px_var(--accent-glow)]"
+            className="h-full bg-gradient-to-r from-accent-primary to-accent-secondary transition-all duration-1000 shadow-[0_0_10px_var(--accent-glow)]"
             style={{ width: `${progress}%` }}
           ></div>
         </div>
@@ -61,9 +61,9 @@ const Tracker369: React.FC<Tracker369Props> = ({ state, onUpdate }) => {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`flex-1 py-3.5 rounded-xl text-[10px] uppercase tracking-[0.2em] font-bold transition-all ${
+            className={`flex-1 py-3.5 rounded-xl text-sm uppercase tracking-[0.2em] font-bold transition-all ${
               activeTab === tab 
-                ? 'bg-card text-primary shadow-md shadow-accent-glow/20' 
+                ? 'bg-card text-primary shadow-md shadow-accent-glow' 
                 : 'text-muted hover:text-primary'
             }`}
           >
@@ -73,7 +73,7 @@ const Tracker369: React.FC<Tracker369Props> = ({ state, onUpdate }) => {
       </div>
 
       <div className="glass-card p-8 rounded-[2rem] space-y-6">
-        <div className="flex justify-between items-center text-[10px] uppercase tracking-[0.2em] text-muted font-bold">
+        <div className="flex justify-between items-center text-sm uppercase tracking-[0.2em] text-muted font-bold">
           <span className="text-accent-primary">{activeTab} Transmission</span>
           <span className="bg-secondary px-3 py-1 rounded-full text-primary">{currentEntry[activeTab].length} / {activeTab === 'morning' ? 3 : activeTab === 'afternoon' ? 6 : 9}</span>
         </div>
@@ -83,7 +83,7 @@ const Tracker369: React.FC<Tracker369Props> = ({ state, onUpdate }) => {
             onChange={(e) => setInput(e.target.value)}
             disabled={currentEntry[activeTab].length >= (activeTab === 'morning' ? 3 : activeTab === 'afternoon' ? 6 : 9)}
             placeholder={`Whisper your ${activeTab} reality...`}
-            className="flex-1 bg-card border border-card-border rounded-2xl px-5 py-4 text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-all"
+            className="flex-1 bg-card border border-card-border rounded-2xl px-5 py-4 text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent-border-subtle transition-all"
             onKeyDown={(e) => e.key === 'Enter' && addAffirmation()}
           />
           <button 
@@ -96,12 +96,12 @@ const Tracker369: React.FC<Tracker369Props> = ({ state, onUpdate }) => {
 
         <div className="space-y-3 mt-8 max-h-[350px] overflow-y-auto no-scrollbar">
           {currentEntry[activeTab].map((text, i) => (
-            <div key={i} className="bg-card/50 p-5 rounded-2xl border border-card-border text-sm text-secondary animate-in fade-in slide-in-from-left-2 transition-all hover:border-accent-primary/30">
+            <div key={i} className="bg-[color-mix(in_srgb,var(--card-bg),transparent_50%)] p-5 rounded-2xl border border-card-border text-sm text-secondary animate-in fade-in slide-in-from-left-2 transition-all hover:border-accent-border-subtle">
               {text}
             </div>
           ))}
           {currentEntry[activeTab].length === 0 && (
-            <div className="text-center text-muted py-10 text-xs italic tracking-wide">Enter the first spark of your {activeTab} frequency.</div>
+            <div className="text-center text-muted py-10 text-sm italic tracking-wide">Enter the first spark of your {activeTab} frequency.</div>
           )}
         </div>
       </div>

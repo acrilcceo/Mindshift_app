@@ -40,12 +40,12 @@ const BeliefReframer: React.FC<BeliefReframerProps> = ({ state, onUpdate }) => {
       </div>
 
       <div className="glass-card p-8 rounded-[2rem] space-y-6">
-        <label className="text-[10px] uppercase tracking-[0.3em] text-muted font-bold">The Limiting Narrative</label>
+        <label className="text-sm uppercase tracking-[0.3em] text-muted font-bold">The Limiting Narrative</label>>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="I will never have enough... I am not ready..."
-          className="w-full bg-card border border-card-border rounded-[1.5rem] p-6 text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/50 min-h-[120px] transition-all placeholder-muted"
+          className="w-full bg-card border border-card-border rounded-[1.5rem] p-6 text-primary focus:outline-none focus:ring-2 focus:ring-accent-border-subtle min-h-[120px] transition-all placeholder-muted"
         />
         <button
           onClick={handleReframe}
@@ -57,14 +57,14 @@ const BeliefReframer: React.FC<BeliefReframerProps> = ({ state, onUpdate }) => {
       </div>
 
       <div className="space-y-6">
-        <h3 className="text-[10px] uppercase tracking-[0.3em] text-muted font-bold px-4">Evolution Archive</h3>
+        <h3 className="text-sm uppercase tracking-[0.3em] text-muted font-bold px-4">Evolution Archive</h3>
         {state.beliefs.map((b) => (
           <div key={b.id} className="glass-card p-7 rounded-[2rem] border-l-4 border-accent-primary transition-all hover:bg-secondary">
-            <div className="text-xs text-muted line-through mb-2 italic">"{b.original}"</div>
+            <div className="text-sm text-muted line-through mb-2 italic">"{b.original}"</div>
             <div className="text-xl font-medium text-primary leading-relaxed">"{b.reframed}"</div>
             <div className="flex items-center gap-2 mt-4">
                <div className="h-px bg-card-border flex-1"></div>
-               <div className="text-[9px] text-muted uppercase tracking-widest font-bold whitespace-nowrap">Reframed {new Date(b.timestamp).toLocaleDateString()}</div>
+               <div className="text-sm text-muted uppercase tracking-widest font-bold whitespace-nowrap">Reframed {new Date(b.timestamp).toLocaleDateString()}</div>
             </div>
           </div>
         ))}

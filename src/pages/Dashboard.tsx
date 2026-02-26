@@ -178,12 +178,12 @@ const DashboardPage: React.FC = () => {
 
       <div className={`lg:hidden fixed inset-0 z-50 transition-all duration-500 ${isMenuOpen ? 'visible' : 'invisible'}`}>
         <div 
-          className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-500 ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`}
+          className={`absolute inset-0 bg-secondary/80 backdrop-blur-sm transition-opacity duration-500 ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`}
           onClick={() => setIsMenuOpen(false)}
         ></div>
         <nav className={`absolute top-0 right-0 bottom-0 w-4/5 max-w-xs bg-secondary shadow-2xl transition-transform duration-500 ease-out flex flex-col p-8 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="flex justify-between items-center mb-12">
-            <div className="text-xs uppercase tracking-widest text-muted font-bold">Main Navigation</div>
+            <div className="text-sm uppercase tracking-widest text-muted font-bold">Main Navigation</div>
             <button onClick={() => setIsMenuOpen(false)} className="text-muted hover:text-accent-primary">✕</button>
           </div>
 
@@ -209,15 +209,15 @@ const DashboardPage: React.FC = () => {
             >
               <div className="flex items-center gap-3">
                 <span className="text-xl">{state.theme === 'dark' ? '☀️' : '🌙'}</span>
-                <span className="text-xs font-bold uppercase tracking-widest text-secondary">
+                <span className="text-sm font-bold uppercase tracking-widest text-secondary">
                   {state.theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
                 </span>
               </div>
               <div className={`w-8 h-4 rounded-full relative transition-colors ${state.theme === 'dark' ? 'bg-accent-primary' : 'bg-muted/30'}`}>
-                <div className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all ${state.theme === 'dark' ? 'right-0.5' : 'left-0.5'}`}></div>
+                <div className={`absolute top-0.5 w-3 h-3 rounded-full bg-card shadow-sm transition-all ${state.theme === 'dark' ? 'right-0.5' : 'left-0.5'}`}></div>
               </div>
             </button>
-            <p className="text-[9px] text-center text-muted uppercase tracking-widest leading-loose">
+            <p className="text-sm text-center text-muted uppercase tracking-widest leading-loose">
               Manifesting Excellence<br/>v1.2 Premium Edition
             </p>
           </div>
@@ -227,10 +227,10 @@ const DashboardPage: React.FC = () => {
       <nav className="hidden lg:flex fixed top-0 left-0 bottom-0 w-72 bg-secondary border-r border-card-border z-50 p-8 flex-col">
         <div className="mb-12">
           <div className="flex items-center gap-3">
-             <div className="w-10 h-10 rounded-2xl bg-accent-primary flex items-center justify-center text-btn-primary-text font-bold text-xl shadow-lg shadow-accent-primary/20">M</div>
+             <div className="w-10 h-10 rounded-2xl bg-accent-primary flex items-center justify-center text-btn-primary font-bold text-xl shadow-lg shadow-accent-primary/20">M</div>
              <h1 className="text-2xl font-serif text-primary font-bold tracking-tight">MindShift</h1>
           </div>
-          <p className="text-xs text-secondary uppercase tracking-widest mt-2 font-bold px-1">Neural Empowerment</p>
+          <p className="text-sm text-secondary uppercase tracking-widest mt-2 font-bold px-1">Neural Empowerment</p>
         </div>
         
         <div className="space-y-4 flex-1">
@@ -250,20 +250,20 @@ const DashboardPage: React.FC = () => {
         <div className="mt-auto space-y-6">
            <div className="p-5 card-base rounded-3xl shadow-md">
               <div className="flex justify-between items-center mb-3">
-                <span className="text-xs uppercase tracking-widest text-muted font-bold">Theme Calibration</span>
-                <span className="text-xs">{state.theme === 'dark' ? '✨' : '🎨'}</span>
+                <span className="text-sm uppercase tracking-widest text-muted font-bold">Theme Calibration</span>
+                <span className="text-sm">{state.theme === 'dark' ? '✨' : '🎨'}</span>
               </div>
               <button 
                 onClick={toggleTheme}
                 className="w-full h-10 rounded-xl btn-primary-ritual flex items-center justify-center gap-2 group transition-all hover:shadow-lg active:scale-95"
               >
                 <span className="text-lg transition-transform group-hover:rotate-12">{state.theme === 'dark' ? '☀️' : '🌙'}</span>
-                <span className="text-xs font-bold uppercase tracking-widest">
+                <span className="text-sm font-bold uppercase tracking-widest">
                   Switch Mode
                 </span>
               </button>
            </div>
-           <p className="text-xs text-center text-muted uppercase tracking-[0.2em] font-medium italic">
+           <p className="text-sm text-center text-muted uppercase tracking-[0.2em] font-medium italic">
              "Thoughts become things."
            </p>
         </div>
@@ -271,7 +271,73 @@ const DashboardPage: React.FC = () => {
 
       <main className="min-h-screen pt-20 lg:pt-8 pb-12 px-6">
         <div className="max-w-6xl mx-auto">
-          {activeView === 'home' && <Home state={state} onUpdate={handleUpdate} onNavigate={(v) => navigate(v as View)} />}
+          {activeView === 'home' && (
+            <div className="space-y-8">
+              {/* Hero Section */}
+              <div className="glass-card p-8 rounded-3xl border border-card-border text-center relative overflow-hidden">
+                <div className="relative z-10">
+                  <h3 className="text-xl font-serif text-primary mb-3">Begin Your Journey</h3>
+                  <p className="text-muted mb-6 max-w-md mx-auto">
+                    Choose a ritual to start shifting your reality. Your current vibration is ready for expansion.
+                  </p>
+                  <button 
+                    onClick={() => navigate('soundshift')}
+                    className="btn-primary-ritual px-8 py-3 rounded-full shadow-lg shadow-accent-secondary/10 hover:shadow-accent-secondary/25 transition-all"
+                  >
+                    Start Daily Ritual
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Daily Wisdom */}
+                <div className="glass-card p-6 rounded-3xl border border-card-border bg-gradient-to-br from-accent-secondary/10 to-transparent">
+                  <div className="flex items-start gap-4">
+                    <span className="text-4xl">🦉</span>
+                    <div>
+                      <h3 className="font-serif text-primary mb-2">Daily Wisdom</h3>
+                      <p className="text-sm text-muted italic">
+                        "The universe is not outside of you. Look inside yourself; everything that you want, you already are."
+                      </p>
+                      <div className="mt-3 text-sm font-bold text-accent-secondary uppercase tracking-widest">
+                        Rumi
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Recommended Guides */}
+                <div className="glass-card p-6 rounded-3xl border border-card-border">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-serif text-primary">Spiritual Guides</h3>
+                    <button onClick={() => navigate('guides')} className="text-sm text-accent-primary hover:text-primary transition-colors">
+                      View All
+                    </button>
+                  </div>
+                  <div className="space-y-4">
+                    {[
+                      { name: 'Sarah Moon', role: 'Meditation Expert', image: '🧘‍♀️' },
+                      { name: 'David Sun', role: 'Manifestation Coach', image: '🌅' }
+                    ].map((guide, i) => (
+                      <div key={i} className="flex items-center gap-3 p-3 rounded-xl hover:bg-secondary/50 transition-colors cursor-pointer group">
+                        <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-lg border border-card-border">
+                          {guide.image}
+                        </div>
+                        <div>
+                          <div className="text-sm font-medium text-primary group-hover:text-accent-primary transition-colors">
+                            {guide.name}
+                          </div>
+                          <div className="text-sm text-muted">
+                            {guide.role}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           {activeView === 'dashboard' && <Dashboard state={state} onUpdate={handleUpdate} />}
           {activeView === 'soundshift' && <SoundShiftStudio state={state} onUpdate={handleUpdate} />}
           {activeView === 'beliefs' && <BeliefReframer state={state} onUpdate={handleUpdate} />}
@@ -286,7 +352,7 @@ const DashboardPage: React.FC = () => {
         </div>
       </main>
 
-      <footer className="w-full py-8 text-center text-muted text-[10px] uppercase tracking-widest border-t border-card-border leading-relaxed">
+      <footer className="w-full py-8 text-center text-muted text-sm uppercase tracking-widest border-t border-card-border leading-relaxed">
          &copy; 2026 MindShift Manifest &bull; Elevate your Reality <br />
          Made to heal your inner self - Sambit Ghosh
       </footer>

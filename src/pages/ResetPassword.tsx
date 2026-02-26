@@ -52,7 +52,7 @@ const ResetPassword: React.FC = () => {
               value={userId}
               onChange={e => setUserId(e.target.value)}
               placeholder="6–20 alphanumeric"
-              className="w-full bg-secondary border border-card-border rounded-xl px-4 py-3 text-xs text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-all duration-300"
+              className="w-full bg-secondary border border-card-border rounded-xl px-4 py-3 text-sm text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-all duration-300"
               aria-invalid={!idValid && userId.length > 0}
             />
           </div>
@@ -62,28 +62,28 @@ const ResetPassword: React.FC = () => {
               value={email}
               onChange={e => setEmail(e.target.value)}
               placeholder="example@domain.com"
-              className="w-full bg-secondary border border-card-border rounded-xl px-4 py-3 text-xs text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-all duration-300"
+              className="w-full bg-secondary border border-card-border rounded-xl px-4 py-3 text-sm text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-all duration-300"
               aria-invalid={!emailValid && email.length > 0}
             />
-            <div className="text-[11px] text-muted mt-1">If provided, email takes precedence over User ID.</div>
+            <div className="text-sm text-muted mt-1">If provided, email takes precedence over User ID.</div>
           </div>
         </div>
 
-        {message && <div role="status" className="text-xs text-accent-secondary">{message}</div>}
-        {error && <div role="alert" className="text-xs text-error">{error}</div>}
+        {message && <div role="status" className="text-sm text-accent-secondary">{message}</div>}
+        {error && <div role="alert" className="text-sm text-error">{error}</div>}
 
         <div className="flex gap-3">
           <button
             onClick={submit}
             disabled={!canSubmit}
-            className="w-full h-12 min-w-[44px] min-h-[44px] rounded-2xl btn-primary-ritual text-xs font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full h-12 min-w-[44px] min-h-[44px] rounded-2xl btn-primary-ritual text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Send password reset email"
           >
             {processing ? 'Sending…' : 'Send Reset Link'}
           </button>
           <Link
             to="/login"
-            className="px-4 h-12 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-2xl bg-secondary border border-card-border text-secondary hover:text-primary hover:border-accent-primary/30 text-xs font-bold hover:shadow-[0_0_15px_var(--accent-glow)] active:scale-95 transition-all duration-300"
+            className="px-4 h-12 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-2xl bg-secondary border border-card-border text-secondary hover:text-primary hover:border-accent-primary/30 text-sm font-bold hover:shadow-[0_0_15px_var(--accent-glow)] active:scale-95 transition-all duration-300"
             aria-label="Back to Login"
           >
             Back

@@ -17,9 +17,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ guideId, userId, userName, onRe
 
   if (userId === 'guest') {
     return (
-      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-center">
-        <p className="text-slate-600 dark:text-slate-400">
-          Please <span className="font-bold text-slate-900 dark:text-white">sign in</span> to leave a review.
+      <div className="p-6 rounded-2xl bg-secondary border border-card-border text-center">
+        <p className="text-muted">
+          Please <span className="font-bold text-primary">sign in</span> to leave a review.
         </p>
       </div>
     );
@@ -59,20 +59,20 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ guideId, userId, userName, onRe
   };
 
   return (
-    <div className="glass-card p-6 rounded-2xl border border-slate-200 dark:border-white/5 bg-white/50 dark:bg-black/20">
-      <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Write a Review</h4>
+    <div className="glass-card p-6 rounded-2xl border border-card-border bg-card">
+      <h4 className="text-lg font-bold text-primary mb-4">Write a Review</h4>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm">
+          <div className="p-3 rounded-lg bg-error/10 text-error text-sm">
             {error}
           </div>
         )}
 
         <div className="flex flex-col gap-2">
-          <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-            Rating
-          </label>
+          <label className="text-sm font-bold uppercase tracking-wider text-muted">
+        Rating
+      </label>
           <div className="flex gap-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
@@ -83,7 +83,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ guideId, userId, userName, onRe
                 onMouseLeave={() => setHoverRating(0)}
                 onClick={() => setRating(star)}
               >
-                <span className={star <= (hoverRating || rating) ? 'text-amber-500' : 'text-slate-300 dark:text-slate-600'}>
+                <span className={star <= (hoverRating || rating) ? 'text-accent-secondary' : 'text-muted/30'}>
                   ★
                 </span>
               </button>
@@ -92,7 +92,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ guideId, userId, userName, onRe
         </div>
 
         <div className="flex flex-col gap-2">
-          <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          <label className="text-sm font-bold uppercase tracking-wider text-muted">
             Review
           </label>
           <textarea
@@ -100,14 +100,14 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ guideId, userId, userName, onRe
             onChange={(e) => setReviewText(e.target.value)}
             placeholder="Share your experience..."
             rows={4}
-            className="w-full px-4 py-3 rounded-xl bg-white dark:bg-black/20 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-shadow resize-none"
+            className="w-full px-4 py-3 rounded-xl bg-card border border-card-border text-primary focus:outline-none focus:ring-2 focus:ring-accent/50 transition-shadow resize-none placeholder:text-muted"
           />
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-6 py-2 rounded-xl bg-slate-900 dark:bg-amber-500 text-white dark:text-black font-bold hover:shadow-lg hover:shadow-amber-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="btn-primary-ritual px-6 py-2 rounded-xl"
         >
           {isSubmitting ? 'Submitting...' : 'Post Review'}
         </button>

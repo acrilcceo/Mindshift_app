@@ -63,59 +63,66 @@ const AffirmationForm: React.FC<Props> = ({ open, onClose, editing, onSaved }) =
       role="dialog"
       aria-modal="true"
       aria-labelledby="affirmationFormTitle"
-      className="fixed inset-0 z-50 flex items-center justify-center"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
     >
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div ref={dialogRef} className="relative w-[95%] max-w-xl card-base p-6 rounded-3xl shadow-2xl">
-        <div className="flex justify-between items-center mb-4">
-          <h2 id="affirmationFormTitle" className="text-lg font-serif text-primary">Add Affirmation</h2>
-          <button aria-label="Close" className="text-muted hover:text-red-500" onClick={onClose}>✕</button>
+      <div className="absolute inset-0 bg-primary/80 backdrop-blur-sm" onClick={onClose} />
+      <div ref={dialogRef} className="relative w-full max-w-xl glass-card p-6 rounded-3xl shadow-2xl border border-card-border transform transition-all">
+        <div className="flex justify-between items-center mb-6">
+          <h2 id="affirmationFormTitle" className="text-xl font-serif font-bold text-primary">Add Affirmation</h2>
+          <button aria-label="Close" className="text-muted hover:text-error transition-colors" onClick={onClose}>✕</button>
         </div>
-        {error && <div role="alert" className="mb-3 text-[12px] text-red-500">{error}</div>}
-        <label className="text-[10px] uppercase tracking-[0.3em] text-muted font-bold">Affirmation</label>
-        <textarea
-          ref={inputRef}
-          aria-label="Affirmation text"
-          value={text}
-          onChange={e => setText(e.target.value)}
-          minLength={10}
-          maxLength={500}
-          placeholder="I am..."
-          className="w-full bg-secondary border border-card-border rounded-[1.5rem] p-4 text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/50 min-h-[120px]"
-        />
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        {error && <div role="alert" className="mb-4 p-3 rounded-xl bg-error/10 text-error text-sm font-medium">{error}</div>}
+        
+        <div className="space-y-4">
           <div>
-            <label className="text-[10px] uppercase tracking-[0.3em] text-muted font-bold">Category</label>
-            <select
-              aria-label="Category"
-              value={category}
-              onChange={e => setCategory(e.target.value as AffirmationCategory)}
-              className="w-full bg-secondary border border-card-border rounded-xl px-3 py-2 text-[12px] text-primary"
-            >
-              {categories.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
+            <label className="text-sm uppercase tracking-[0.3em] text-muted font-bold block mb-2">Affirmation</label>
+            <textarea
+              ref={inputRef}
+              aria-label="Affirmation text"
+              value={text}
+              onChange={e => setText(e.target.value)}
+              minLength={10}
+              maxLength={500}
+              placeholder="I am..."
+              className="w-full bg-secondary/50 border border-card-border rounded-2xl p-4 text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/50 min-h-[120px] transition-shadow"
+            />
           </div>
-          <div>
-            <label className="text-[10px] uppercase tracking-[0.3em] text-muted font-bold">Reminder</label>
-            <select
-              aria-label="Reminder frequency"
-              value={frequency}
-              onChange={e => setFrequency(e.target.value as ReminderFrequency)}
-              className="w-full bg-secondary border border-card-border rounded-xl px-3 py-2 text-[12px] text-primary"
-            >
-              {frequencies.map(f => <option key={f} value={f}>{f}</option>)}
-            </select>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm uppercase tracking-[0.3em] text-muted font-bold block mb-2">Category</label>
+              <select
+                aria-label="Category"
+                value={category}
+                onChange={e => setCategory(e.target.value as AffirmationCategory)}
+                className="w-full bg-secondary/50 border border-card-border rounded-xl px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-shadow appearance-none"
+              >
+                {categories.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="text-sm uppercase tracking-[0.3em] text-muted font-bold block mb-2">Reminder</label>
+              <select
+                aria-label="Reminder frequency"
+                value={frequency}
+                onChange={e => setFrequency(e.target.value as ReminderFrequency)}
+                className="w-full bg-secondary/50 border border-card-border rounded-xl px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-shadow appearance-none"
+              >
+                {frequencies.map(f => <option key={f} value={f}>{f}</option>)}
+              </select>
+            </div>
           </div>
         </div>
+
         {frequency === 'Custom' && (
-          <div className="mt-3">
-            <div className="text-[10px] uppercase tracking-widest text-muted font-bold">Custom Days</div>
-            <div className="flex flex-wrap gap-2 mt-2" role="group" aria-label="Select custom days">
+          <div className="mt-4">
+            <div className="text-sm uppercase tracking-widest text-muted font-bold mb-2">Custom Days</div>
+            <div className="flex flex-wrap gap-2" role="group" aria-label="Select custom days">
               {[0,1,2,3,4,5,6].map(d => (
                 <button
                   key={d}
                   onClick={() => toggleDay(d)}
-                  className={`px-3 py-1 rounded-xl text-[12px] ${customDays.includes(d) ? 'bg-accent-primary text-btn-primary' : 'bg-secondary text-secondary'}`}
+                  className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all ${customDays.includes(d) ? 'bg-accent-primary text-btn-primary shadow-lg shadow-accent-primary/20' : 'bg-secondary text-secondary hover:bg-secondary/80'}`}
                   aria-pressed={customDays.includes(d)}
                 >
                   {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d]}
@@ -124,15 +131,15 @@ const AffirmationForm: React.FC<Props> = ({ open, onClose, editing, onSaved }) =
             </div>
           </div>
         )}
-        <div className="mt-6 flex justify-end gap-3">
-          <button onClick={onClose} className="px-4 py-2 rounded-xl bg-secondary text-secondary hover:text-primary transition-colors">Cancel</button>
+        <div className="mt-8 flex justify-end gap-3">
+          <button onClick={onClose} className="px-6 py-2.5 rounded-xl border border-card-border text-secondary hover:bg-secondary/10 transition-colors font-medium text-sm">Cancel</button>
           <button
             onClick={handleSave}
-            className="px-4 py-2 rounded-xl btn-primary-ritual disabled:opacity-50"
+            className="px-6 py-2.5 rounded-xl btn-primary-ritual text-btn-primary font-medium shadow-lg hover:shadow-accent-primary/20 text-sm disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 transition-all"
             disabled={text.trim().length < 10 || text.trim().length > 500}
             aria-disabled={text.trim().length < 10 || text.trim().length > 500}
           >
-            Save
+            Save Affirmation
           </button>
         </div>
       </div>

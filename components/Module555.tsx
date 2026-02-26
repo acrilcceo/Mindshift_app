@@ -67,15 +67,15 @@ const Module555: React.FC<Module555Props> = ({ state, onUpdate }) => {
         </div>
         <div className="glass-card p-8 space-y-6 rounded-2xl">
           <div className="space-y-2">
-            <label className="text-xs uppercase tracking-widest text-muted font-bold">
-              Your Core Intention
-            </label>
+            <label className="text-sm uppercase tracking-widest text-muted font-bold">
+          Your Core Intention
+        </label>
             <textarea
               value={newAffirmation}
-              onChange={(e) => setNewAffirmation(e.target.value)}
-              placeholder="I am now a magnet for high-value opportunities..."
-              className="w-full bg-card border border-card-border rounded-2xl p-4 text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/50 placeholder-muted transition-all min-h-[96px]"
-            />
+            onChange={(e) => setNewAffirmation(e.target.value)}
+            placeholder="I am now a magnet for high-value opportunities..."
+            className="w-full bg-card border border-card-border rounded-2xl p-4 text-primary focus:outline-none focus:ring-2 focus:ring-accent-border-subtle placeholder-muted transition-all min-h-[96px]"
+          />
           </div>
           <button
             onClick={startModule}
@@ -83,7 +83,7 @@ const Module555: React.FC<Module555Props> = ({ state, onUpdate }) => {
           >
             Commence 5-Day Ritual
           </button>
-          <div className="text-[10px] text-muted text-center leading-relaxed italic">
+          <div className="text-sm text-muted text-center leading-relaxed italic">
             "55 repetitions for 5 consecutive days anchors the belief in the subconscious."
           </div>
         </div>
@@ -104,10 +104,10 @@ const Module555: React.FC<Module555Props> = ({ state, onUpdate }) => {
         <button
           onClick={handleRepetition}
           disabled={currentModule.isCompleted}
-          className="w-40 h-40 rounded-full glass-card flex flex-col items-center justify-center ring-4 ring-accent-primary/20 active:scale-95 transition-transform bg-card hover:bg-card/80"
+          className="w-40 h-40 rounded-full glass-card flex flex-col items-center justify-center ring-4 ring-accent-border-subtle active:scale-95 transition-transform bg-card hover:bg-card/80"
         >
           <span className="text-5xl font-bold text-primary">{dailyProgress}</span>
-          <span className="text-[10px] uppercase tracking-widest text-muted mt-2">Repetitions</span>
+          <span className="text-sm uppercase tracking-widest text-muted mt-2">Repetitions</span>
         </button>
       </div>
 
@@ -116,9 +116,9 @@ const Module555: React.FC<Module555Props> = ({ state, onUpdate }) => {
           {[1, 2, 3, 4, 5].map(d => (
             <div key={d} className="flex flex-col items-center">
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
                   currentModule.currentDay >= d
-                    ? 'bg-accent-primary text-white shadow-lg shadow-accent-glow'
+                    ? 'bg-accent-primary text-btn-primary shadow-lg shadow-accent-primary/20'
                     : 'bg-secondary text-muted'
                 }`}
               >
@@ -139,7 +139,7 @@ const Module555: React.FC<Module555Props> = ({ state, onUpdate }) => {
             Ritual Complete ✨ The seed is sown.
           </div>
         ) : (
-          <div className="text-center text-xs italic text-muted">
+          <div className="text-center text-sm italic text-muted">
             Tap the counter as you whisper your intention.
           </div>
         )}
@@ -147,7 +147,7 @@ const Module555: React.FC<Module555Props> = ({ state, onUpdate }) => {
 
       <button 
         onClick={() => onUpdate({ module555: null })}
-        className="text-[10px] uppercase tracking-widest text-muted hover:text-error block mx-auto transition-colors font-bold"
+        className="text-sm uppercase tracking-widest text-muted hover:text-error block mx-auto transition-colors font-bold"
       >
         Reset Module
       </button>
