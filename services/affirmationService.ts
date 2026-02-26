@@ -1,4 +1,4 @@
-import { UserAffirmation, AffirmationCategory, ReminderFrequency } from '../types';
+import { UserAffirmation, AffirmationCategory, ReminderFrequency } from '../src/types';
 
 const KEY = 'mindshift_user_affirmations_v1';
 const MAX = 1000;

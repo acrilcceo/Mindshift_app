@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { UserAffirmation, AffirmationCategory } from '../types';
+import { UserAffirmation, AffirmationCategory } from '../src/types';
 import { getAll, remove, duplicate, exportJSON, importJSON } from '../services/affirmationService';
 import AffirmationForm from './AffirmationForm';
 

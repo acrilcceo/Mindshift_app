@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { generateEmotionalReleasePrompt } from '../services/affirmationEngine';
-import { AppState, BreathingSession } from '../types';
+import { AppState, BreathingSession } from '../src/types';
 
 interface HooponoponoProps {
   state: AppState;

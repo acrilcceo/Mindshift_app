@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AppState, Theme } from '../../types';
+import { AppState, Theme } from '../types';
 import { loadState, saveState } from '../../services/storageService';
 import Dashboard from '../../components/Dashboard';
 import SoundShiftStudio from '../../components/SoundShiftStudio';

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { AppState, EmotionalState, SoundMix } from '../types';
+import { AppState, EmotionalState, SoundMix } from '../src/types';
 import { createDefault432RainMix } from '../services/soundLibrary';
 import { startMixSession, endCurrentSession, soundEngine, getCurrentSession } from '../services/soundEngine';
 import { applyPresetById } from '../services/soundMixEngine';

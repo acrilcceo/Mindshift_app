@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { AppState, Module555 as Module555Type } from '../types';
+import { AppState, Module555 as Module555Type } from '../src/types';
 
 interface Module555Props {
   state: AppState;

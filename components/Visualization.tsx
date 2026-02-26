@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { AppState, WhisperGoal } from '../types';
+import { AppState, WhisperGoal } from '../src/types';
 
 interface VisualizationProps {
   state: AppState;

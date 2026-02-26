@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { AppState, FTBAEntry, DailyGoal } from '../types';
+import { AppState, FTBAEntry, DailyGoal } from '../src/types';
 
 interface JournalingProps {
   state: AppState;

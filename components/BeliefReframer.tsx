@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { reframeBelief } from '../services/affirmationEngine';
-import { BeliefRecord, AppState } from '../types';
+import { BeliefRecord, AppState } from '../src/types';
 
 interface BeliefReframerProps {
   state: AppState;

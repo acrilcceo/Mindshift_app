@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { AppState } from '../../types';
+import { AppState } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { Guide, getGuides, seedGuides } from '../services/guideService';
 import GuideCard from '../components/guides/GuideCard';

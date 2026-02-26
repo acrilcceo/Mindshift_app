@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AppState } from '../../types';
+import { AppState } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { affirmationPool } from '../../services/affirmationLibrary';
 import { Appointment } from '../services/guideService';
