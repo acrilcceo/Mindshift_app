@@ -40,7 +40,7 @@ const BeliefReframer: React.FC<BeliefReframerProps> = ({ state, onUpdate }) => {
       </div>
 
       <div className="glass-card p-8 rounded-[2rem] space-y-6">
-        <label className="text-sm uppercase tracking-[0.3em] text-muted font-bold">The Limiting Narrative</label>>
+        <label className="text-sm uppercase tracking-[0.3em] text-muted font-bold">The Limiting Narrative</label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
