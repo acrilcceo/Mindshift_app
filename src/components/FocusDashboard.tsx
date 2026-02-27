@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { generateAffirmations } from '../services/affirmationEngine';
 import { affirmationPool } from '../services/affirmationLibrary';
-import { Mood, AppState } from '../src/types';
+import { Mood, AppState } from '../types';
 import MyAffirmations from './MyAffirmations';
 
 interface DashboardProps {

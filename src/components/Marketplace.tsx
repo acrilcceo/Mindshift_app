@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { AppState, MarketplaceCategoryId, MarketplaceProduct } from '../src/types';
+import { AppState, MarketplaceCategoryId, MarketplaceProduct } from '../types';
 
 interface MarketplaceProps {
   state: AppState;

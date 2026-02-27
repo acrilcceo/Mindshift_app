@@ -1,5 +1,5 @@
 
-import { AppState } from '../src/types';
+import { AppState } from '../types';
 
 const STORAGE_KEY = 'mindshift_manifest_data_v3';
 
