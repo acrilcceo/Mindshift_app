@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { ToastProvider } from './context/ToastContext';
 import ProtectedRoute from './routes/ProtectedRoute';
+import Landing from './pages/Landing';
 import Login from './pages/Login';
+import Signup from './pages/Signup';
 import ResetPassword from './pages/ResetPassword';
+import { ToastContainer } from './components/ui';
 import { AppState, Theme } from './types';
 import { loadState, saveState } from './services/storageService';
 
@@ -76,13 +80,15 @@ const AppContent: React.FC = () => {
 
   return (
     <Routes>
+      {/* Public routes */}
+      <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
       <Route path="/reset" element={<ResetPassword />} />
       
+      {/* Protected routes */}
       <Route element={<ProtectedRoute />}>
         <Route element={<DashboardLayout state={state} onToggleTheme={toggleTheme} />}>
-          <Route path="/" element={<Navigate to="/home" replace />} />
-          
           <Route path="/home" element={
             <NavigationWrapper>
               {(onNavigate) => <Home state={state} onUpdate={handleUpdate} onNavigate={onNavigate as any} />}
@@ -106,7 +112,7 @@ const AppContent: React.FC = () => {
         </Route>
       </Route>
       
-      <Route path="*" element={<Navigate to="/home" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };
@@ -114,9 +120,12 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
+      <ToastProvider>
+        <BrowserRouter>
+          <AppContent />
+          <ToastContainer />
+        </BrowserRouter>
+      </ToastProvider>
     </AuthProvider>
   );
 };
