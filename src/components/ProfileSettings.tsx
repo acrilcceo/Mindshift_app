@@ -1,14 +1,17 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../context/ToastContext';
 
 const ProfileSettings: React.FC = () => {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
+  const { success } = useToast();
 
   const handleLogout = async () => {
-    logout();
-    navigate('/login', { replace: true, state: { message: 'You have been logged out.' } });
+    await logout();
+    success('You have been logged out.');
+    navigate('/', { replace: true });
   };
 
   return (
@@ -17,17 +20,28 @@ const ProfileSettings: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <div className="text-sm uppercase tracking-widest text-muted font-bold">Profile</div>
-            <div className="text-sm text-secondary font-semibold">Current Name</div>
+            <div className="text-sm text-secondary font-semibold">Account Details</div>
           </div>
         </div>
-        <div className="mt-4">
-          <div className="text-sm text-muted">You are using MindShift as</div>
-          <div className="text-sm font-bold text-primary">
-            {currentUser?.name || 'Guest'}
+        
+        {/* User Avatar/Initial */}
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 rounded-full bg-accent-primary/20 flex items-center justify-center text-accent-primary text-2xl font-bold">
+            {currentUser?.name?.charAt(0).toUpperCase() || 'G'}
+          </div>
+          <div>
+            <div className="text-lg font-bold text-primary">
+              {currentUser?.name || 'Guest'}
+            </div>
+            {currentUser?.email && (
+              <div className="text-sm text-muted">
+                {currentUser.email}
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="pt-2">
+        <div className="pt-2 space-y-3">
           <button
             type="button"
             onClick={handleLogout}

@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Button, Input, Loader } from '../components/ui';
 import { useToast } from '../context/ToastContext';
-import { loginWithEmail } from '../api/auth';
+import { registerWithEmail } from '../api/auth';
 import { API_BASE_URL, API_ENDPOINTS } from '../api/config';
 
 const GoogleIcon: React.FC = () => (
@@ -27,17 +27,24 @@ const GoogleIcon: React.FC = () => (
   </svg>
 );
 
-const Login: React.FC = () => {
+const Signup: React.FC = () => {
   const { currentUser, loading: authLoading, login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { error: showError, success: showSuccess } = useToast();
 
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{
+    name?: string;
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
+  }>({});
 
   // Redirect if already logged in
   useEffect(() => {
@@ -47,16 +54,14 @@ const Login: React.FC = () => {
     }
   }, [currentUser, authLoading, navigate, location]);
 
-  // Show message from redirect (e.g., after password reset)
-  useEffect(() => {
-    const message = (location.state as any)?.message;
-    if (message) {
-      showSuccess(message);
-    }
-  }, []);
-
   const validateForm = (): boolean => {
-    const newErrors: { email?: string; password?: string } = {};
+    const newErrors: typeof errors = {};
+
+    if (!name.trim()) {
+      newErrors.name = 'Name is required';
+    } else if (name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters';
+    }
 
     if (!email.trim()) {
       newErrors.email = 'Email is required';
@@ -68,28 +73,35 @@ const Login: React.FC = () => {
       newErrors.password = 'Password is required';
     } else if (password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
+    } else if (!/(?=.*[a-z])(?=.*[A-Z])/.test(password)) {
+      newErrors.password = 'Include both uppercase and lowercase letters';
+    }
+
+    if (!confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (password !== confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleEmailLogin = async (e: React.FormEvent) => {
+  const handleEmailSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!validateForm()) return;
 
     setLoading(true);
     try {
-      const response = await loginWithEmail({ email, password });
+      const response = await registerWithEmail({ email, password, name: name.trim() });
       
       if (response.success && response.data) {
         login(response.data.user, response.data.token);
-        showSuccess('Welcome back!');
-        const from = (location.state as any)?.from?.pathname || '/home';
-        navigate(from, { replace: true });
+        showSuccess('Account created successfully! Welcome to MindShift.');
+        navigate('/home', { replace: true });
       } else {
-        showError(response.message || 'Login failed. Please try again.');
+        showError(response.message || 'Registration failed. Please try again.');
       }
     } catch (err: any) {
       showError(err.message || 'An unexpected error occurred');
@@ -98,12 +110,12 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleSignup = () => {
     try {
       const googleAuthUrl = `${API_BASE_URL}${API_ENDPOINTS.AUTH.GOOGLE}`;
       window.location.href = googleAuthUrl;
     } catch (err: any) {
-      showError(err?.message || 'Google login could not be started.');
+      showError(err?.message || 'Google signup could not be started.');
     }
   };
 
@@ -116,14 +128,14 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-primary transition-colors duration-500 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-primary transition-colors duration-500 px-4 py-8">
       {/* Background */}
       <div 
         className="fixed inset-0 z-0"
         style={{
           background: `
-            radial-gradient(circle at 20% 15%, var(--bg-gradient-start), transparent 40%),
-            radial-gradient(circle at 80% 85%, var(--bg-gradient-end), transparent 45%),
+            radial-gradient(circle at 80% 15%, var(--bg-gradient-start), transparent 40%),
+            radial-gradient(circle at 20% 85%, var(--bg-gradient-end), transparent 45%),
             var(--bg-primary)
           `
         }}
@@ -149,16 +161,16 @@ const Login: React.FC = () => {
                 M
               </div>
             </Link>
-            <h1 className="text-2xl font-serif text-primary font-bold">Welcome Back</h1>
-            <p className="text-sm text-muted">Sign in to continue your journey</p>
+            <h1 className="text-2xl font-serif text-primary font-bold">Create Your Account</h1>
+            <p className="text-sm text-muted">Begin your transformation journey</p>
           </div>
 
-          {/* Google Login */}
+          {/* Google Signup */}
           <Button
             type="button"
             variant="secondary"
             fullWidth
-            onClick={handleGoogleLogin}
+            onClick={handleGoogleSignup}
             disabled={loading}
             leftIcon={<GoogleIcon />}
           >
@@ -171,12 +183,28 @@ const Login: React.FC = () => {
               <div className="w-full border-t border-card-border" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-card text-muted">or sign in with email</span>
+              <span className="px-4 bg-card text-muted">or sign up with email</span>
             </div>
           </div>
 
-          {/* Email Login Form */}
-          <form onSubmit={handleEmailLogin} className="space-y-4">
+          {/* Signup Form */}
+          <form onSubmit={handleEmailSignup} className="space-y-4">
+            <Input
+              type="text"
+              label="Full Name"
+              placeholder="How should we call you?"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              error={errors.name}
+              disabled={loading}
+              autoComplete="name"
+              leftIcon={
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              }
+            />
+
             <Input
               type="email"
               label="Email"
@@ -196,12 +224,13 @@ const Login: React.FC = () => {
             <Input
               type={showPassword ? 'text' : 'password'}
               label="Password"
-              placeholder="Enter your password"
+              placeholder="Create a strong password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               error={errors.password}
               disabled={loading}
-              autoComplete="current-password"
+              autoComplete="new-password"
+              helperText={!errors.password ? 'At least 6 characters with upper and lowercase' : undefined}
               leftIcon={
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -228,14 +257,21 @@ const Login: React.FC = () => {
               }
             />
 
-            <div className="flex justify-end">
-              <Link
-                to="/reset"
-                className="text-sm text-accent-primary hover:text-accent-primary/80 transition-colors"
-              >
-                Forgot password?
-              </Link>
-            </div>
+            <Input
+              type={showPassword ? 'text' : 'password'}
+              label="Confirm Password"
+              placeholder="Re-enter your password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              error={errors.confirmPassword}
+              disabled={loading}
+              autoComplete="new-password"
+              leftIcon={
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              }
+            />
 
             <Button
               type="submit"
@@ -244,18 +280,26 @@ const Login: React.FC = () => {
               loading={loading}
               size="lg"
             >
-              Sign In
+              Create Account
             </Button>
           </form>
 
-          {/* Sign up link */}
+          {/* Terms */}
+          <p className="text-xs text-muted text-center leading-relaxed">
+            By creating an account, you agree to our{' '}
+            <a href="#" className="text-accent-primary hover:underline">Terms of Service</a>
+            {' '}and{' '}
+            <a href="#" className="text-accent-primary hover:underline">Privacy Policy</a>
+          </p>
+
+          {/* Login link */}
           <div className="text-center text-sm text-secondary">
-            Don't have an account?{' '}
+            Already have an account?{' '}
             <Link
-              to="/signup"
+              to="/login"
               className="font-semibold text-accent-primary hover:text-accent-primary/80 transition-colors"
             >
-              Create one
+              Sign in
             </Link>
           </div>
         </div>
@@ -264,4 +308,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Signup;
