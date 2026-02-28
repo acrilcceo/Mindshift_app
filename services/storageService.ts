@@ -87,6 +87,16 @@ export const loadState = (): AppState => {
       }
     };
   }
+  if (!parsed.manifestationSettings) {
+    parsed.manifestationSettings = {
+      enabled: false,
+      timeAM: false,
+      timePM: false,
+      customAffirmation: "I am aligned with my highest purpose.",
+      soundEnabled: true,
+      ritualMode: 'quick'
+    };
+  }
   
   // Basic streak logic
   const lastVisitDate = new Date(parsed.lastVisit).toDateString();

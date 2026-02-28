@@ -25,6 +25,9 @@ import Marketplace from './components/Marketplace';
 import GuidesPage from './src/pages/Guides';
 import MindHub from './src/pages/MindHub';
 import ServiceHub from './src/pages/ServiceHub';
+import ManifestAlarm from './src/pages/ManifestAlarm';
+import ManifestationModal from './src/components/ManifestationModal';
+import { useManifestationTimer } from './src/hooks/useManifestationTimer';
 
 // Wrapper to provide navigation helper to legacy components
 const NavigationWrapper = ({ children }: { children: (onNavigate: (view: string) => void) => React.ReactNode }) => {
@@ -54,6 +57,12 @@ const NavigationWrapper = ({ children }: { children: (onNavigate: (view: string)
 const AppContent: React.FC = () => {
   const [state, setState] = useState<AppState>(loadState());
   
+  const handleUpdate = (updates: Partial<AppState>) => {
+    setState(prev => ({ ...prev, ...updates }));
+  };
+
+  const { isModalOpen, setIsModalOpen } = useManifestationTimer(state, handleUpdate);
+  
   useEffect(() => {
     saveState(state);
     if (state.theme === 'dark') {
@@ -63,10 +72,6 @@ const AppContent: React.FC = () => {
     }
   }, [state]);
 
-  const handleUpdate = (updates: Partial<AppState>) => {
-    setState(prev => ({ ...prev, ...updates }));
-  };
-
   const toggleTheme = () => {
     const nextTheme: Theme = state.theme === 'dark' ? 'light' : 'dark';
     handleUpdate({ theme: nextTheme });
@@ -75,23 +80,37 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/reset" element={<ResetPassword />} />
-      
-      <Route element={<ProtectedRoute />}>
-        <Route element={<DashboardLayout state={state} onToggleTheme={toggleTheme} />}>
-          <Route path="/" element={<Navigate to="/home" replace />} />
-          
-          <Route path="/home" element={
-            <NavigationWrapper>
-              {(onNavigate) => <Home state={state} onUpdate={handleUpdate} onNavigate={onNavigate as any} />}
-            </NavigationWrapper>
-          } />
-          
-          <Route path="/dashboard" element={<FocusDashboard state={state} onUpdate={handleUpdate} />} />
-          <Route path="/mind" element={<MindHub state={state} />} />
-          <Route path="/services" element={<ServiceHub />} />
+    <>
+      <ManifestationModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        settings={state.manifestationSettings || {
+          enabled: false,
+          timeAM: false,
+          timePM: false,
+          customAffirmation: "I am aligned with my highest purpose.",
+          soundEnabled: true,
+          ritualMode: 'quick'
+        }}
+      />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/reset" element={<ResetPassword />} />
+        
+        <Route element={<ProtectedRoute />}>
+          <Route element={<DashboardLayout state={state} onToggleTheme={toggleTheme} />}>
+            <Route path="/" element={<Navigate to="/home" replace />} />
+            
+            <Route path="/home" element={
+              <NavigationWrapper>
+                {(onNavigate) => <Home state={state} onUpdate={handleUpdate} onNavigate={onNavigate as any} />}
+              </NavigationWrapper>
+            } />
+            
+            <Route path="/dashboard" element={<FocusDashboard state={state} onUpdate={handleUpdate} />} />
+            <Route path="/mind" element={<MindHub state={state} />} />
+            <Route path="/manifest-1111" element={<ManifestAlarm state={state} onUpdate={handleUpdate} />} />
+            <Route path="/services" element={<ServiceHub />} />
           
           <Route path="/soundshift" element={<SoundShiftStudio state={state} onUpdate={handleUpdate} />} />
           <Route path="/beliefs" element={<BeliefReframer state={state} onUpdate={handleUpdate} />} />
@@ -108,6 +127,7 @@ const AppContent: React.FC = () => {
       
       <Route path="*" element={<Navigate to="/home" replace />} />
     </Routes>
+    </>
   );
 };
 

@@ -7,7 +7,8 @@ import {
   Ritual369Icon, 
   ReleaseIcon, 
   ReframerIcon, 
-  VisualizeIcon 
+  VisualizeIcon,
+  SparkleIcon
 } from '../components/Icons';
 
 interface MindHubProps {
@@ -25,6 +26,7 @@ const MindHub: React.FC<MindHubProps> = ({ state }) => {
     { id: 'release', label: 'Ho\'oponopono', icon: <ReleaseIcon />, path: '/release', color: 'bg-teal-500/10 text-teal-500' },
     { id: 'beliefs', label: 'Reframer', icon: <ReframerIcon />, path: '/beliefs', color: 'bg-rose-500/10 text-rose-500' },
     { id: 'visualize', label: 'Visualize', icon: <VisualizeIcon />, path: '/visualize', color: 'bg-indigo-500/10 text-indigo-500' },
+    { id: '1111', label: '11:11 Alarm', icon: <SparkleIcon />, path: '/manifest-1111', color: 'bg-yellow-500/10 text-yellow-500' },
   ];
 
   return (
