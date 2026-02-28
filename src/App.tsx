@@ -27,7 +27,28 @@ import MindHub from './pages/MindHub';
 import ServiceHub from './pages/ServiceHub';
 import ManifestAlarm from './pages/ManifestAlarm';
 import ManifestationModal from './components/ManifestationModal';
+import MilestoneToast from './components/MilestoneToast';
 import { useManifestationTimer } from './hooks/useManifestationTimer';
+
+// Aura colors based on mood
+const getAuraColor = (mood?: string): string => {
+  if (!mood) return 'rgba(212, 165, 116, 0.25)'; // Default Warm Gold
+
+  const normalizedMood = mood.toLowerCase();
+  
+  // Map Anxiety -> Soft blue
+  if (normalizedMood.includes('anxiety')) return 'rgba(120, 170, 255, 0.25)';
+  // Map Overthinking -> Soft lavender
+  if (normalizedMood.includes('overthinking')) return 'rgba(160, 140, 255, 0.25)';
+  // Map Sadness/Melancholy -> Muted teal
+  if (normalizedMood.includes('sadness') || normalizedMood.includes('melancholy')) return 'rgba(120, 190, 170, 0.22)';
+  // Map Stress/Panic -> Warm amber
+  if (normalizedMood.includes('stress') || normalizedMood.includes('panic')) return 'rgba(212, 165, 116, 0.25)';
+  // Map Calm/Balanced -> Soft violet
+  if (normalizedMood.includes('calm') || normalizedMood.includes('balanced')) return 'rgba(150, 130, 255, 0.20)';
+  
+  return 'rgba(212, 165, 116, 0.25)'; // Default
+};
 
 // Wrapper to provide navigation helper to legacy components
 const NavigationWrapper = ({ children }: { children: (onNavigate: (view: string) => void) => React.ReactNode }) => {
@@ -56,6 +77,7 @@ const NavigationWrapper = ({ children }: { children: (onNavigate: (view: string)
 
 const AppContent: React.FC = () => {
   const [state, setState] = useState<AppState>(loadState());
+  const [milestone, setMilestone] = useState<{streak: number, message: string} | null>(null);
   
   const handleUpdate = (updates: Partial<AppState>) => {
     setState(prev => ({ ...prev, ...updates }));
@@ -78,6 +100,19 @@ const AppContent: React.FC = () => {
       newStreak += 1;
     } else {
       newStreak = 1;
+    }
+
+    // Milestone Check
+    const milestones: Record<number, string> = {
+      3: "Momentum forming.",
+      7: "Consistency emerging.",
+      11: "Alignment deepening.",
+      21: "Identity shifting.",
+      33: "Embodied intention."
+    };
+
+    if (milestones[newStreak]) {
+      setMilestone({ streak: newStreak, message: milestones[newStreak] });
     }
 
     handleUpdate({
@@ -112,9 +147,7 @@ const AppContent: React.FC = () => {
           isModalOpen ? 'opacity-100 duration-500' : 'opacity-0 duration-1000'
         }`}
         style={{
-          background: state.theme === 'dark' 
-            ? 'radial-gradient(circle at center, rgba(200,150,90,0.25), transparent 60%)'
-            : 'radial-gradient(circle at center, rgba(212,165,116,0.15), transparent 60%)'
+          background: `radial-gradient(circle at center, ${getAuraColor(state.ftbaEntries?.[0]?.feel)}, transparent 60%)`
         }}
       />
 
@@ -131,6 +164,14 @@ const AppContent: React.FC = () => {
           ritualMode: 'quick'
         }}
       />
+
+      {milestone && (
+        <MilestoneToast 
+          streak={milestone.streak} 
+          message={milestone.message} 
+          onDismiss={() => setMilestone(null)} 
+        />
+      )}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/reset" element={<ResetPassword />} />

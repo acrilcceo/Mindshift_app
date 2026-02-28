@@ -14,13 +14,14 @@ interface HomeProps {
   onNavigate: (view: View) => void;
 }
 
-const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
+const Home: React.FC<HomeProps> = ({ state, onUpdate, onNavigate }) => {
   const { currentUser } = useAuth();
   const [greeting, setGreeting] = useState('');
   const [randomAffirmation, setRandomAffirmation] = useState('');
   const [upcomingAppointment] = useState<Appointment | null>(null);
   const [reframeInput, setReframeInput] = useState('');
   const [isPlaying, setIsPlaying] = useState<string | null>(null);
+  const [showMissedReminder, setShowMissedReminder] = useState(false);
 
   // 1. Welcome Section & Init
   useEffect(() => {
@@ -31,7 +32,49 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
     
     preloadAmbients().catch(console.error);
     refreshAffirmation();
+    checkMissed1111();
   }, []);
+
+  const checkMissed1111 = () => {
+    // Only show if user hasn't done it today
+    const today = new Date().toISOString().split('T')[0];
+    if (state.manifestationStreak?.lastDate === today) return;
+
+    // Check if session flag is set
+    if (sessionStorage.getItem('missed1111Shown')) return;
+
+    const now = new Date();
+    const hour = now.getHours();
+    const minute = now.getMinutes();
+
+    // Check if 11:11 AM has passed
+    const passedAM = (hour > 11) || (hour === 11 && minute > 11);
+    
+    // Check if 11:11 PM has passed (optional, usually focused on day)
+    // Let's stick to "has passed 11:11 AM" or just generic "11:11 has passed" if current time > 11:11
+    
+    if (passedAM) {
+      setShowMissedReminder(true);
+      sessionStorage.setItem('missed1111Shown', 'true');
+    }
+  };
+
+  const handleStartMissedRitual = () => {
+    onUpdate({
+      manifestationSettings: {
+        ...(state.manifestationSettings || {
+          enabled: true,
+          timeAM: true,
+          timePM: false,
+          customAffirmation: "I am aligned.",
+          soundEnabled: true,
+          ritualMode: 'quick'
+        }),
+        manualTriggerTimestamp: Date.now()
+      }
+    });
+    setShowMissedReminder(false);
+  };
 
   const refreshAffirmation = () => {
     const randomIndex = Math.floor(Math.random() * affirmationPool.length);
@@ -100,22 +143,26 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
             <h1 className="text-3xl md:text-4xl font-serif font-medium text-primary tracking-wide transition-all duration-300 animate-fade-in">
               {greeting}, <span className="group-hover:text-accent-primary group-hover:drop-shadow-[0_0_8px_var(--accent-glow)] transition-all duration-500">{formattedName}</span>
             </h1>
-            <div className="mt-2 flex flex-col items-start gap-1">
+            
+            {/* 11:11 Streak Display - Subtle Line */}
+            {state.manifestationStreak && state.manifestationStreak.count > 0 && (
+               <div className="mt-1 flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity duration-300">
+                 <div className="h-[1px] w-8 bg-accent-primary/50"></div>
+                 <span className="text-[10px] uppercase tracking-[0.2em] text-muted font-medium">
+                   Alignment Streak: {state.manifestationStreak.count} Days
+                 </span>
+               </div>
+            )}
+
+            <div className="mt-3 flex flex-col items-start gap-1">
               <p className="text-secondary font-light text-sm tracking-wide animate-fade-in" style={{ animationDelay: '200ms' }}>
                 {getContextualText()}
               </p>
             </div>
-            
-            {/* 11:11 Streak Display */}
-            {state.manifestationStreak && state.manifestationStreak.count > 0 && (
-              <div className="mt-3 text-xs font-medium text-muted/60 tracking-wider uppercase animate-fade-in">
-                11:11 Alignment Streak: {state.manifestationStreak.count} day{state.manifestationStreak.count !== 1 ? 's' : ''}
-              </div>
-            )}
           </div>
           
           {/* 4. Stats - Floating Glass Pills */}
-          <div className="flex gap-4 text-sm flex-wrap">
+          <div className="flex gap-4 animate-fade-in" style={{ animationDelay: '400ms' }}>
             <div className="flex flex-col items-center justify-center px-4 py-2 rounded-full card-base hover:scale-102 transition-all duration-300">
               <span className="text-muted text-sm uppercase tracking-wider mb-0.5">Listening</span>
               <span className="text-primary font-medium">{listeningMinutes} <span className="text-muted text-sm">min</span></span>

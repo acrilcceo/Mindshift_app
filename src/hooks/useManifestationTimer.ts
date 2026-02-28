@@ -13,6 +13,16 @@ export const useManifestationTimer = (state: AppState, onUpdate: (updates: Parti
     }
   }, [settings?.lastTriggered]);
 
+  // Watch for manual trigger
+  useEffect(() => {
+    if (settings?.manualTriggerTimestamp) {
+      // If manual trigger is recent (within 5 seconds), open modal
+      if (Date.now() - settings.manualTriggerTimestamp < 5000) {
+        setIsModalOpen(true);
+      }
+    }
+  }, [settings?.manualTriggerTimestamp]);
+
   useEffect(() => {
     if (!settings?.enabled) return;
 

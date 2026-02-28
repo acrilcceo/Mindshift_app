@@ -231,4 +231,5 @@ export interface ManifestationSettings {
   soundEnabled: boolean;
   ritualMode: 'quick' | 'deep';
   lastTriggered?: number;
+  manualTriggerTimestamp?: number;
 }
