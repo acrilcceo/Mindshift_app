@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AffirmationCategory, ReminderFrequency, UserAffirmation } from '../src/types';
+import { AffirmationCategory, ReminderFrequency, UserAffirmation } from '../types';
 import { create, update } from '../services/affirmationService';
 
 interface Props {

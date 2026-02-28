@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { AppState } from '../types';
 import { useAuth } from '../context/AuthContext';
-import { affirmationPool } from '../../services/affirmationLibrary';
+import { affirmationPool } from '../services/affirmationLibrary';
 import { Appointment } from '../services/guideService';
-import { playFrequency, playAmbient, stop, preloadAmbients } from '../../services/soundEngine';
-import { curatedProducts } from '../../components/Marketplace';
+import { playFrequency, playAmbient, stop, preloadAmbients } from '../services/soundEngine';
+import { curatedProducts } from '../components/Marketplace';
 
 type View = 'dashboard' | 'home' | 'soundshift' | 'beliefs' | '369' | '555' | 'release' | 'journal' | 'visualize' | 'profile' | 'marketplace' | 'guides';
 

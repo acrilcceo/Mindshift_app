@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { getAll, create, update, remove, duplicate, exportJSON, importJSON } from '../services/affirmationService';
+import { getAll, create, update, remove, duplicate, exportJSON, importJSON } from '../src/services/affirmationService';
 
 beforeEach(() => {
   localStorage.clear();

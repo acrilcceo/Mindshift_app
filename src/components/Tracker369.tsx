@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { AppState, Tracker369 as Tracker369Type } from '../src/types';
+import { AppState, Tracker369 as Tracker369Type } from '../types';
 
 interface Tracker369Props {
   state: AppState;

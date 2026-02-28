@@ -1,4 +1,4 @@
-import { SoundListeningSession, SoundMix, SoundLayerType } from '../src/types';
+import { SoundListeningSession, SoundMix, SoundLayerType } from '../types';
 import { soundAssets } from './soundLibrary';
 
 let currentSession: SoundListeningSession | null = null;

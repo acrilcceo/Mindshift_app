@@ -1,4 +1,4 @@
-import { EmotionalState, SoundAsset, SoundMix, SoundLayer } from '../src/types';
+import { EmotionalState, SoundAsset, SoundMix, SoundLayer } from '../types';
 
 export const soundAssets: SoundAsset[] = [
   {

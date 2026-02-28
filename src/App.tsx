@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { AuthProvider } from './src/context/AuthContext';
-import ProtectedRoute from './src/routes/ProtectedRoute';
-import Login from './src/pages/Login';
-import ResetPassword from './src/pages/ResetPassword';
-import { AppState, Theme } from './src/types';
-import { loadState, saveState } from './services/storageService';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './routes/ProtectedRoute';
+import Login from './pages/Login';
+import ResetPassword from './pages/ResetPassword';
+import { AppState, Theme } from './types';
+import { loadState, saveState, storageGet } from './services/store';
 
 // Layout
-import DashboardLayout from './src/pages/Dashboard';
+import DashboardLayout from './pages/Dashboard';
 
 // Pages & Components
-import Home from './src/pages/Home';
-import FocusDashboard from './components/Dashboard';
+import Home from './pages/Home';
+import FocusDashboard from './components/FocusDashboard';
 import SoundShiftStudio from './components/SoundShiftStudio';
 import BeliefReframer from './components/BeliefReframer';
 import Tracker369 from './components/Tracker369';
@@ -20,14 +20,14 @@ import Module555 from './components/Module555';
 import Hooponopono from './components/Hooponopono';
 import Journaling from './components/Journaling';
 import Visualization from './components/Visualization';
-import ProfileSettings from './src/components/ProfileSettings';
+import ProfileSettings from './components/ProfileSettings';
 import Marketplace from './components/Marketplace';
-import GuidesPage from './src/pages/Guides';
-import MindHub from './src/pages/MindHub';
-import ServiceHub from './src/pages/ServiceHub';
-import ManifestAlarm from './src/pages/ManifestAlarm';
-import ManifestationModal from './src/components/ManifestationModal';
-import { useManifestationTimer } from './src/hooks/useManifestationTimer';
+import GuidesPage from './pages/Guides';
+import MindHub from './pages/MindHub';
+import ServiceHub from './pages/ServiceHub';
+import ManifestAlarm from './pages/ManifestAlarm';
+import ManifestationModal from './components/ManifestationModal';
+import { useManifestationTimer } from './hooks/useManifestationTimer';
 
 // Wrapper to provide navigation helper to legacy components
 const NavigationWrapper = ({ children }: { children: (onNavigate: (view: string) => void) => React.ReactNode }) => {
