@@ -40,6 +40,10 @@ const initialData: AppState = {
       sleep: 0,
       focus: 0
     }
+  },
+  manifestationStreak: {
+    lastDate: null,
+    count: 0
   }
 };
 
@@ -94,6 +98,12 @@ export const loadState = (): AppState => {
       customAffirmation: "I am aligned with my highest purpose.",
       soundEnabled: true,
       ritualMode: 'quick'
+    };
+  }
+  if (!parsed.manifestationStreak) {
+    parsed.manifestationStreak = {
+      lastDate: null,
+      count: 0
     };
   }
   

@@ -4,10 +4,11 @@ import { ManifestationSettings } from '../types';
 interface ManifestationModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onComplete?: () => void;
   settings: ManifestationSettings;
 }
 
-const ManifestationModal: React.FC<ManifestationModalProps> = ({ isOpen, onClose, settings }) => {
+const ManifestationModal: React.FC<ManifestationModalProps> = ({ isOpen, onClose, onComplete, settings }) => {
   const [stage, setStage] = useState<'intro' | 'breathing' | 'outro'>('intro');
   const [breathCount, setBreathCount] = useState(0);
   const [breathPhase, setBreathPhase] = useState<'inhale' | 'hold' | 'exhale'>('inhale');
@@ -41,10 +42,12 @@ const ManifestationModal: React.FC<ManifestationModalProps> = ({ isOpen, onClose
                 const next = prev + 1;
                 if (next >= 3 && settings.ritualMode === 'quick') {
                   setStage('outro');
+                  if (onComplete) onComplete();
                   return next;
                 }
                 if (next >= 10 && settings.ritualMode === 'deep') { // Approx 1 min
                   setStage('outro');
+                  if (onComplete) onComplete();
                   return next;
                 }
                 cycle(); // Next cycle

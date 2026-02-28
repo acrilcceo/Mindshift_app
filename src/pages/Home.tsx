@@ -105,6 +105,13 @@ const Home: React.FC<HomeProps> = ({ state, onNavigate }) => {
                 {getContextualText()}
               </p>
             </div>
+            
+            {/* 11:11 Streak Display */}
+            {state.manifestationStreak && state.manifestationStreak.count > 0 && (
+              <div className="mt-3 text-xs font-medium text-muted/60 tracking-wider uppercase animate-fade-in">
+                11:11 Alignment Streak: {state.manifestationStreak.count} day{state.manifestationStreak.count !== 1 ? 's' : ''}
+              </div>
+            )}
           </div>
           
           {/* 4. Stats - Floating Glass Pills */}

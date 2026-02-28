@@ -217,6 +217,10 @@ export interface AppState {
   marketplaceCart?: MarketplaceCart;
   wishlistProductIds?: string[];
   manifestationSettings?: ManifestationSettings;
+  manifestationStreak?: {
+    lastDate: string | null;
+    count: number;
+  };
 }
 
 export interface ManifestationSettings {

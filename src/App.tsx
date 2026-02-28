@@ -63,6 +63,31 @@ const AppContent: React.FC = () => {
 
   const { isModalOpen, setIsModalOpen } = useManifestationTimer(state, handleUpdate);
   
+  const handleManifestationComplete = () => {
+    const today = new Date().toISOString().split('T')[0];
+    const lastDate = state.manifestationStreak?.lastDate;
+    let newStreak = state.manifestationStreak?.count || 0;
+
+    if (lastDate === today) return;
+
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayString = yesterday.toISOString().split('T')[0];
+
+    if (lastDate === yesterdayString) {
+      newStreak += 1;
+    } else {
+      newStreak = 1;
+    }
+
+    handleUpdate({
+      manifestationStreak: {
+        lastDate: today,
+        count: newStreak
+      }
+    });
+  };
+  
   useEffect(() => {
     saveState(state);
     if (state.theme === 'dark') {
@@ -81,9 +106,22 @@ const AppContent: React.FC = () => {
 
   return (
     <>
+      {/* 11:11 Aura Effect */}
+      <div 
+        className={`fixed inset-0 pointer-events-none z-[90] transition-opacity ease-in-out ${
+          isModalOpen ? 'opacity-100 duration-500' : 'opacity-0 duration-1000'
+        }`}
+        style={{
+          background: state.theme === 'dark' 
+            ? 'radial-gradient(circle at center, rgba(200,150,90,0.25), transparent 60%)'
+            : 'radial-gradient(circle at center, rgba(212,165,116,0.15), transparent 60%)'
+        }}
+      />
+
       <ManifestationModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
+        onComplete={handleManifestationComplete}
         settings={state.manifestationSettings || {
           enabled: false,
           timeAM: false,

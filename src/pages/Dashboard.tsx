@@ -149,11 +149,17 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ state, onToggleTheme 
         </div>
       </nav>
 
-      <main className="min-h-screen pt-20 lg:pt-8 px-6 pb-24 md:pb-12">
+      <main className="min-h-screen pt-20 lg:pt-8 px-6 pb-4 md:pb-12">
         <div className="max-w-6xl mx-auto">
           <Outlet />
         </div>
       </main>
+
+      {/* Mobile Footer Brand */}
+      <div className="md:hidden w-full text-center pb-24 pt-8">
+         <p className="text-[12px] text-gray-500 dark:text-gray-400">© 2026 MindShift Manifest • Elevate your Reality</p>
+         <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">Made to heal your inner self - Sambit Ghosh</p>
+      </div>
 
       <footer className="hidden md:block w-full py-8 text-center text-muted text-sm uppercase tracking-widest border-t border-card-border leading-relaxed ml-0 lg:ml-0">
          &copy; 2026 MindShift Manifest &bull; Elevate your Reality <br />
