@@ -149,7 +149,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ state, onToggleTheme 
         </div>
       </nav>
 
-      <main className="min-h-screen pt-20 lg:pt-8 px-6 pb-4 md:pb-12">
+      <main className="min-h-screen pt-20 lg:pt-8 px-6 pb-24 md:pb-12">
         <div className="max-w-6xl mx-auto">
           <Outlet />
         </div>

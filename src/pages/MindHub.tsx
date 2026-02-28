@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppState } from '../types';
 import { 
@@ -10,14 +10,16 @@ import {
   VisualizeIcon,
   SparkleIcon
 } from '../components/Icons';
+import { CircleFeed } from '../components/circles/CircleFeed';
+import { FriendsFeed } from '../components/friends/FriendsFeed';
 
 interface MindHubProps {
   state: AppState;
-  onUpdate: (updates: Partial<AppState>) => void;
 }
 
 const MindHub: React.FC<MindHubProps> = ({ state }) => {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<'community' | 'tools'>('community');
 
   const tools = [
     { id: 'journal', label: 'Journal', icon: <JournalIcon />, path: '/journal', color: 'bg-blue-500/10 text-blue-500' },
@@ -30,26 +32,68 @@ const MindHub: React.FC<MindHubProps> = ({ state }) => {
   ];
 
   return (
-    <div className="space-y-6 pb-20">
-      <header className="mb-6">
-        <h1 className="text-2xl font-serif text-primary font-bold">Mind Hub</h1>
-        <p className="text-muted text-sm">Your toolkit for mental expansion.</p>
+    <div className="space-y-6 pb-24">
+      <header className="mb-2 sticky top-0 z-30 bg-[#0F1115]/80 backdrop-blur-md pt-4 pb-2 -mx-4 px-4 border-b border-white/5">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-2xl font-serif text-white font-bold">Mind Hub</h1>
+            <p className="text-white/40 text-sm">Community & Tools</p>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex p-1 bg-white/5 rounded-xl">
+          <button
+            onClick={() => setActiveTab('community')}
+            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
+              activeTab === 'community' 
+                ? 'bg-white/10 text-white shadow-sm' 
+                : 'text-white/40 hover:text-white/60'
+            }`}
+          >
+            Community
+          </button>
+          <button
+            onClick={() => setActiveTab('tools')}
+            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
+              activeTab === 'tools' 
+                ? 'bg-white/10 text-white shadow-sm' 
+                : 'text-white/40 hover:text-white/60'
+            }`}
+          >
+            Toolkit
+          </button>
+        </div>
       </header>
 
-      <div className="grid grid-cols-2 gap-4">
-        {tools.map((tool) => (
-          <button
-            key={tool.id}
-            onClick={() => navigate(tool.path)}
-            className="flex flex-col items-center justify-center p-6 rounded-3xl glass-card border border-card-border hover:bg-card/80 transition-all active:scale-95 shadow-sm"
-          >
-            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 ${tool.color}`}>
-              <div className="w-6 h-6">{tool.icon}</div>
-            </div>
-            <span className="text-sm font-bold text-primary">{tool.label}</span>
-          </button>
-        ))}
-      </div>
+      {activeTab === 'community' ? (
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {/* Momentum Circles */}
+          <section>
+            <CircleFeed />
+          </section>
+
+          {/* Path of Positivity (Friends) */}
+          <section>
+            <FriendsFeed />
+          </section>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {tools.map((tool) => (
+            <button
+              key={tool.id}
+              onClick={() => navigate(tool.path)}
+              className="flex flex-col items-center justify-center p-6 rounded-3xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all active:scale-95 shadow-sm group"
+            >
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-transform group-hover:scale-110 ${tool.color}`}>
+                <div className="w-6 h-6">{tool.icon}</div>
+              </div>
+              <span className="text-sm font-bold text-white/90">{tool.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

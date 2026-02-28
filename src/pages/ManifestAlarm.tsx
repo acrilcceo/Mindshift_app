@@ -157,7 +157,14 @@ const ManifestAlarm: React.FC<ManifestAlarmProps> = ({ state, onUpdate }) => {
       )}
 
       {/* Info / Disclaimer */}
-      <div className="text-center space-y-2 pt-8 opacity-60">
+      <div className="text-center space-y-4 pt-8 opacity-60">
+        <button
+          onClick={() => updateSettings({ manualTriggerTimestamp: Date.now() })}
+          className="text-xs text-accent-primary underline hover:text-accent-secondary transition-colors"
+        >
+          Test Ritual Flow
+        </button>
+        
         <p className="text-xs text-muted uppercase tracking-widest">
           MindShift Technology
         </p>

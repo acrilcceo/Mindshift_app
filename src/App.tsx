@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { ToastProvider } from './context/ToastContext';
+import { MindProvider } from './context/MindContext';
+import { FriendsProvider } from './context/FriendsContext';
+import { CircleProvider, useCircles } from './context/CircleContext';
 import ProtectedRoute from './routes/ProtectedRoute';
-import Landing from './pages/Landing';
 import Login from './pages/Login';
-import Signup from './pages/Signup';
 import ResetPassword from './pages/ResetPassword';
-import AuthSuccess from './pages/AuthSuccess';
-import { ToastContainer } from './components/ui';
 import { AppState, Theme } from './types';
 import { loadState, saveState, storageGet } from './services/store';
 
@@ -31,29 +29,11 @@ import GuidesPage from './pages/Guides';
 import MindHub from './pages/MindHub';
 import ServiceHub from './pages/ServiceHub';
 import ManifestAlarm from './pages/ManifestAlarm';
-import ManifestationModal from './components/ManifestationModal';
+import RitualOverlay from './components/RitualOverlay';
+import { SilentSessionOverlay } from './components/circles/SilentSessionOverlay';
 import MilestoneToast from './components/MilestoneToast';
 import { useManifestationTimer } from './hooks/useManifestationTimer';
-
-// Aura colors based on mood
-const getAuraColor = (mood?: string): string => {
-  if (!mood) return 'rgba(212, 165, 116, 0.25)'; // Default Warm Gold
-
-  const normalizedMood = mood.toLowerCase();
-  
-  // Map Anxiety -> Soft blue
-  if (normalizedMood.includes('anxiety')) return 'rgba(120, 170, 255, 0.25)';
-  // Map Overthinking -> Soft lavender
-  if (normalizedMood.includes('overthinking')) return 'rgba(160, 140, 255, 0.25)';
-  // Map Sadness/Melancholy -> Muted teal
-  if (normalizedMood.includes('sadness') || normalizedMood.includes('melancholy')) return 'rgba(120, 190, 170, 0.22)';
-  // Map Stress/Panic -> Warm amber
-  if (normalizedMood.includes('stress') || normalizedMood.includes('panic')) return 'rgba(212, 165, 116, 0.25)';
-  // Map Calm/Balanced -> Soft violet
-  if (normalizedMood.includes('calm') || normalizedMood.includes('balanced')) return 'rgba(150, 130, 255, 0.20)';
-  
-  return 'rgba(212, 165, 116, 0.25)'; // Default
-};
+import { getAuraColor } from './utils/auraStyles';
 
 // Wrapper to provide navigation helper to legacy components
 const NavigationWrapper = ({ children }: { children: (onNavigate: (view: string) => void) => React.ReactNode }) => {
@@ -83,6 +63,7 @@ const NavigationWrapper = ({ children }: { children: (onNavigate: (view: string)
 const AppContent: React.FC = () => {
   const [state, setState] = useState<AppState>(loadState());
   const [milestone, setMilestone] = useState<{streak: number, message: string} | null>(null);
+  const { currentSession, leaveSession, endSession } = useCircles();
   
   const handleUpdate = (updates: Partial<AppState>) => {
     setState(prev => ({ ...prev, ...updates }));
@@ -90,6 +71,13 @@ const AppContent: React.FC = () => {
 
   const { isModalOpen, setIsModalOpen } = useManifestationTimer(state, handleUpdate);
   
+  const handleSessionComplete = async () => {
+    if (currentSession) {
+      // End the session for everyone (idempotent)
+      await endSession(currentSession.circleId, currentSession.id);
+    }
+  };
+
   const handleManifestationComplete = () => {
     const today = new Date().toISOString().split('T')[0];
     const lastDate = state.manifestationStreak?.lastDate;
@@ -156,20 +144,21 @@ const AppContent: React.FC = () => {
         }}
       />
 
-      <ManifestationModal 
+      {/* 11:11 Ritual Overlay */}
+      <RitualOverlay 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
         onComplete={handleManifestationComplete}
-        settings={state.manifestationSettings || {
-          enabled: false,
-          timeAM: false,
-          timePM: false,
-          customAffirmation: "I am aligned with my highest purpose.",
-          soundEnabled: true,
-          ritualMode: 'quick'
-        }}
       />
 
+      {/* Shared Silent Session Overlay */}
+      <SilentSessionOverlay 
+        session={currentSession}
+        onClose={leaveSession}
+        onComplete={handleSessionComplete} 
+      />
+
+      {/* Toast Notification */}
       {milestone && (
         <MilestoneToast 
           streak={milestone.streak} 
@@ -177,18 +166,14 @@ const AppContent: React.FC = () => {
           onDismiss={() => setMilestone(null)} 
         />
       )}
-      
       <Routes>
-        {/* Public routes */}
-        <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
         <Route path="/reset" element={<ResetPassword />} />
-        <Route path="/auth-success" element={<AuthSuccess />} />
         
-        {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout state={state} onToggleTheme={toggleTheme} />}>
+            <Route path="/" element={<Navigate to="/home" replace />} />
+            
             <Route path="/home" element={
               <NavigationWrapper>
                 {(onNavigate) => <Home state={state} onUpdate={handleUpdate} onNavigate={onNavigate as any} />}
@@ -213,7 +198,7 @@ const AppContent: React.FC = () => {
         </Route>
       </Route>
       
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/home" replace />} />
     </Routes>
     </>
   );
@@ -222,12 +207,15 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <AuthProvider>
-      <ToastProvider>
+      <MindProvider>
+        <FriendsProvider>
+      <CircleProvider>
         <BrowserRouter>
           <AppContent />
-          <ToastContainer />
         </BrowserRouter>
-      </ToastProvider>
+      </CircleProvider>
+    </FriendsProvider>
+      </MindProvider>
     </AuthProvider>
   );
 };

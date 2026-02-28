@@ -1,147 +1,93 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import { auth } from '../firebase/firebaseConfig';
+import { sendPasswordResetEmail } from 'firebase/auth';
 import { Link } from 'react-router-dom';
-import { Button, Input } from '../components/ui';
-import { useToast } from '../context/ToastContext';
-import { forgotPassword } from '../api/auth';
+import { mapFirebaseAuthError } from '../utils/firebaseErrors';
 
 const ResetPassword: React.FC = () => {
+  const [userId, setUserId] = useState('');
   const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const { success, error: showError } = useToast();
+  const [processing, setProcessing] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const idValid = useMemo(() => /^[a-zA-Z0-9]{6,20}$/.test(userId), [userId]);
+  const emailValid = useMemo(() => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email), [email]);
+  const canSubmit = (idValid || emailValid) && !!auth && !processing;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!emailValid) {
-      showError('Please enter a valid email address');
+  const submit = async () => {
+    setMessage(null);
+    setError(null);
+    if (!auth) {
+      setError('Configuration error. Please contact admin.');
       return;
     }
-
-    setLoading(true);
+    setProcessing(true);
     try {
-      const response = await forgotPassword(email);
-      
-      if (response.success) {
-        setSubmitted(true);
-        success('If an account exists with this email, you will receive a password reset link.');
-      } else {
-        // Still show success to prevent email enumeration
-        setSubmitted(true);
-        success('If an account exists with this email, you will receive a password reset link.');
-      }
-    } catch (err) {
-      showError('Something went wrong. Please try again.');
+      const targetEmail = emailValid ? email : `${userId}@mindshift.local`;
+      await sendPasswordResetEmail(auth, targetEmail);
+      setMessage('Password reset email sent. Please check your inbox.');
+    } catch (e: any) {
+      setError(mapFirebaseAuthError(e));
     } finally {
-      setLoading(false);
+      setProcessing(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-primary transition-colors duration-500 px-4">
-      {/* Background */}
-      <div 
-        className="fixed inset-0 z-0"
-        style={{
-          background: `
-            radial-gradient(circle at 50% 30%, var(--bg-gradient-start), transparent 40%),
-            radial-gradient(circle at 50% 70%, var(--bg-gradient-end), transparent 45%),
-            var(--bg-primary)
-          `
-        }}
-      />
-
-      <div className="relative z-10 w-full max-w-md">
-        {/* Back to login */}
-        <Link 
-          to="/login" 
-          className="inline-flex items-center gap-2 text-sm text-muted hover:text-primary transition-colors mb-6"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Back to login
-        </Link>
-
-        <div className="card-base p-8 sm:p-10 rounded-[2rem] space-y-6 animate-fade-in">
-          {/* Header */}
-          <div className="text-center space-y-3">
-            <Link to="/" className="inline-flex items-center justify-center gap-3 group">
-              <div className="w-12 h-12 rounded-2xl bg-accent-primary flex items-center justify-center text-btn-primary font-bold text-2xl shadow-lg shadow-accent-glow transition-transform group-hover:scale-105">
-                M
-              </div>
-            </Link>
-            <h1 className="text-2xl font-serif text-primary font-bold">Reset Password</h1>
-            <p className="text-sm text-muted">
-              {submitted 
-                ? "Check your email for reset instructions" 
-                : "Enter your email and we'll send you a reset link"}
-            </p>
+    <div className="min-h-screen flex items-center justify-center bg-primary transition-colors duration-500">
+      <div className="card-base p-8 sm:p-10 rounded-[2rem] w-full max-w-md space-y-6">
+        <div className="text-center space-y-3">
+          <div className="flex items-center justify-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-accent-primary flex items-center justify-center text-btn-primary font-bold text-xl shadow-lg shadow-accent-glow">M</div>
+            <h1 className="text-2xl font-serif text-primary font-bold tracking-tight">Reset Password</h1>
           </div>
+          <p className="label text-secondary">Enter User ID or Email</p>
+        </div>
 
-          {!submitted ? (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <Input
-                type="email"
-                label="Email Address"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
-                autoComplete="email"
-                leftIcon={
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                }
-              />
-
-              <Button
-                type="submit"
-                variant="primary"
-                fullWidth
-                loading={loading}
-                size="lg"
-                disabled={!emailValid}
-              >
-                Send Reset Link
-              </Button>
-            </form>
-          ) : (
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 mx-auto rounded-full bg-green-500/10 flex items-center justify-center">
-                <svg className="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <p className="text-sm text-secondary">
-                We've sent password reset instructions to <strong className="text-primary">{email}</strong>
-              </p>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => {
-                  setSubmitted(false);
-                  setEmail('');
-                }}
-              >
-                Try another email
-              </Button>
-            </div>
-          )}
-
-          {/* Back to login link */}
-          <div className="text-center text-sm text-secondary">
-            Remember your password?{' '}
-            <Link
-              to="/login"
-              className="font-semibold text-accent-primary hover:text-accent-primary/80 transition-colors"
-            >
-              Sign in
-            </Link>
+        <div className="space-y-4">
+          <div>
+            <label className="label text-secondary">User ID</label>
+            <input
+              value={userId}
+              onChange={e => setUserId(e.target.value)}
+              placeholder="6–20 alphanumeric"
+              className="w-full bg-secondary border border-card-border rounded-xl px-4 py-3 text-sm text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-all duration-300"
+              aria-invalid={!idValid && userId.length > 0}
+            />
           </div>
+          <div>
+            <label className="label text-secondary">Email (optional)</label>
+            <input
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="example@domain.com"
+              className="w-full bg-secondary border border-card-border rounded-xl px-4 py-3 text-sm text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-all duration-300"
+              aria-invalid={!emailValid && email.length > 0}
+            />
+            <div className="text-sm text-muted mt-1">If provided, email takes precedence over User ID.</div>
+          </div>
+        </div>
+
+        {message && <div role="status" className="text-sm text-accent-secondary">{message}</div>}
+        {error && <div role="alert" className="text-sm text-error">{error}</div>}
+
+        <div className="flex gap-3">
+          <button
+            onClick={submit}
+            disabled={!canSubmit}
+            className="w-full h-12 min-w-[44px] min-h-[44px] rounded-2xl btn-primary-ritual text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Send password reset email"
+          >
+            {processing ? 'Sending…' : 'Send Reset Link'}
+          </button>
+          <Link
+            to="/login"
+            className="px-4 h-12 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-2xl bg-secondary border border-card-border text-secondary hover:text-primary hover:border-accent-primary/30 text-sm font-bold hover:shadow-[0_0_15px_var(--accent-glow)] active:scale-95 transition-all duration-300"
+            aria-label="Back to Login"
+          >
+            Back
+          </Link>
         </div>
       </div>
     </div>
