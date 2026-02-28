@@ -5,13 +5,13 @@ export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:30
 export const API_ENDPOINTS = {
   // Authentication
   AUTH: {
-    LOGIN: '/api/auth/login',
-    REGISTER: '/api/auth/register',
-    GOOGLE: '/api/auth/google',
-    LOGOUT: '/api/auth/logout',
-    ME: '/api/auth/me',
-    FORGOT_PASSWORD: '/api/auth/forgot-password',
-    RESET_PASSWORD: '/api/auth/reset-password',
+    LOGIN: '/auth/login',
+    REGISTER: '/auth/register',
+    GOOGLE: '/auth/google',
+    LOGOUT: '/auth/logout',
+    ME: '/auth/me',
+    FORGOT_PASSWORD: '/auth/forgot-password',
+    RESET_PASSWORD: '/auth/reset-password',
   },
 } as const;
 
