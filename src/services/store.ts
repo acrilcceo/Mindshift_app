@@ -1,4 +1,3 @@
-
 import { AppState } from '../types';
 
 const STORAGE_KEY = 'mindshift_manifest_data_v3';
@@ -41,6 +40,10 @@ const initialData: AppState = {
       sleep: 0,
       focus: 0
     }
+  },
+  manifestationStreak: {
+    lastDate: null,
+    count: 0
   }
 };
 
@@ -85,6 +88,22 @@ export const loadState = (): AppState => {
         sleep: 0,
         focus: 0
       }
+    };
+  }
+  if (!parsed.manifestationSettings) {
+    parsed.manifestationSettings = {
+      enabled: false,
+      timeAM: false,
+      timePM: false,
+      customAffirmation: "I am aligned with my highest purpose.",
+      soundEnabled: true,
+      ritualMode: 'quick'
+    };
+  }
+  if (!parsed.manifestationStreak) {
+    parsed.manifestationStreak = {
+      lastDate: null,
+      count: 0
     };
   }
   

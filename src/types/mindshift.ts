@@ -216,4 +216,20 @@ export interface AppState {
   soundAnalytics?: SoundAnalyticsProfile;
   marketplaceCart?: MarketplaceCart;
   wishlistProductIds?: string[];
+  manifestationSettings?: ManifestationSettings;
+  manifestationStreak?: {
+    lastDate: string | null;
+    count: number;
+  };
+}
+
+export interface ManifestationSettings {
+  enabled: boolean;
+  timeAM: boolean;
+  timePM: boolean;
+  customAffirmation: string;
+  soundEnabled: boolean;
+  ritualMode: 'quick' | 'deep';
+  lastTriggered?: number;
+  manualTriggerTimestamp?: number;
 }

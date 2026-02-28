@@ -3,7 +3,7 @@ import { negativeWords, positiveWords } from "./sentimentLexicon";
 import { themeKeywords } from "./themeLibrary";
 import { themeClusters } from "./themeClusters";
 import { extremeNegativeWords } from "./riskLexicon";
-import { storageGet, storageSet } from "./storageService";
+import { storageGet, storageSet } from "./store";
 import { getSoundSuggestion, getRecommendedDurationMinutes } from "./soundRiskMapping";
 
 export type NegativePattern =
@@ -100,7 +100,7 @@ export function detectDomain(input: string): ReframeDomain {
   const lowered = input.toLowerCase();
   for (const domain in domainKeywords) {
     const key = domain as ReframeDomain;
-    if (domainKeywords[key].some(word => lowered.includes(word))) {
+    if (domainKeywords[key].some((word: string) => lowered.includes(word))) {
       return key;
     }
   }

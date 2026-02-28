@@ -9,7 +9,7 @@ import Signup from './pages/Signup';
 import ResetPassword from './pages/ResetPassword';
 import { ToastContainer } from './components/ui';
 import { AppState, Theme } from './types';
-import { loadState, saveState } from './services/storageService';
+import { loadState, saveState, storageGet } from './services/store';
 
 // Layout
 import DashboardLayout from './pages/Dashboard';
@@ -29,6 +29,30 @@ import Marketplace from './components/Marketplace';
 import GuidesPage from './pages/Guides';
 import MindHub from './pages/MindHub';
 import ServiceHub from './pages/ServiceHub';
+import ManifestAlarm from './pages/ManifestAlarm';
+import ManifestationModal from './components/ManifestationModal';
+import MilestoneToast from './components/MilestoneToast';
+import { useManifestationTimer } from './hooks/useManifestationTimer';
+
+// Aura colors based on mood
+const getAuraColor = (mood?: string): string => {
+  if (!mood) return 'rgba(212, 165, 116, 0.25)'; // Default Warm Gold
+
+  const normalizedMood = mood.toLowerCase();
+  
+  // Map Anxiety -> Soft blue
+  if (normalizedMood.includes('anxiety')) return 'rgba(120, 170, 255, 0.25)';
+  // Map Overthinking -> Soft lavender
+  if (normalizedMood.includes('overthinking')) return 'rgba(160, 140, 255, 0.25)';
+  // Map Sadness/Melancholy -> Muted teal
+  if (normalizedMood.includes('sadness') || normalizedMood.includes('melancholy')) return 'rgba(120, 190, 170, 0.22)';
+  // Map Stress/Panic -> Warm amber
+  if (normalizedMood.includes('stress') || normalizedMood.includes('panic')) return 'rgba(212, 165, 116, 0.25)';
+  // Map Calm/Balanced -> Soft violet
+  if (normalizedMood.includes('calm') || normalizedMood.includes('balanced')) return 'rgba(150, 130, 255, 0.20)';
+  
+  return 'rgba(212, 165, 116, 0.25)'; // Default
+};
 
 // Wrapper to provide navigation helper to legacy components
 const NavigationWrapper = ({ children }: { children: (onNavigate: (view: string) => void) => React.ReactNode }) => {
@@ -57,6 +81,51 @@ const NavigationWrapper = ({ children }: { children: (onNavigate: (view: string)
 
 const AppContent: React.FC = () => {
   const [state, setState] = useState<AppState>(loadState());
+  const [milestone, setMilestone] = useState<{streak: number, message: string} | null>(null);
+  
+  const handleUpdate = (updates: Partial<AppState>) => {
+    setState(prev => ({ ...prev, ...updates }));
+  };
+
+  const { isModalOpen, setIsModalOpen } = useManifestationTimer(state, handleUpdate);
+  
+  const handleManifestationComplete = () => {
+    const today = new Date().toISOString().split('T')[0];
+    const lastDate = state.manifestationStreak?.lastDate;
+    let newStreak = state.manifestationStreak?.count || 0;
+
+    if (lastDate === today) return;
+
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayString = yesterday.toISOString().split('T')[0];
+
+    if (lastDate === yesterdayString) {
+      newStreak += 1;
+    } else {
+      newStreak = 1;
+    }
+
+    // Milestone Check
+    const milestones: Record<number, string> = {
+      3: "Momentum forming.",
+      7: "Consistency emerging.",
+      11: "Alignment deepening.",
+      21: "Identity shifting.",
+      33: "Embodied intention."
+    };
+
+    if (milestones[newStreak]) {
+      setMilestone({ streak: newStreak, message: milestones[newStreak] });
+    }
+
+    handleUpdate({
+      manifestationStreak: {
+        lastDate: today,
+        count: newStreak
+      }
+    });
+  };
   
   useEffect(() => {
     saveState(state);
@@ -67,10 +136,6 @@ const AppContent: React.FC = () => {
     }
   }, [state]);
 
-  const handleUpdate = (updates: Partial<AppState>) => {
-    setState(prev => ({ ...prev, ...updates }));
-  };
-
   const toggleTheme = () => {
     const nextTheme: Theme = state.theme === 'dark' ? 'light' : 'dark';
     handleUpdate({ theme: nextTheme });
@@ -79,25 +144,59 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <Routes>
-      {/* Public routes */}
-      <Route path="/" element={<Landing />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/reset" element={<ResetPassword />} />
+    <>
+      {/* 11:11 Aura Effect */}
+      <div 
+        className={`fixed inset-0 pointer-events-none z-[90] transition-opacity ease-in-out ${
+          isModalOpen ? 'opacity-100 duration-500' : 'opacity-0 duration-1000'
+        }`}
+        style={{
+          background: `radial-gradient(circle at center, ${getAuraColor(state.ftbaEntries?.[0]?.feel)}, transparent 60%)`
+        }}
+      />
+
+      <ManifestationModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onComplete={handleManifestationComplete}
+        settings={state.manifestationSettings || {
+          enabled: false,
+          timeAM: false,
+          timePM: false,
+          customAffirmation: "I am aligned with my highest purpose.",
+          soundEnabled: true,
+          ritualMode: 'quick'
+        }}
+      />
+
+      {milestone && (
+        <MilestoneToast 
+          streak={milestone.streak} 
+          message={milestone.message} 
+          onDismiss={() => setMilestone(null)} 
+        />
+      )}
       
-      {/* Protected routes */}
-      <Route element={<ProtectedRoute />}>
-        <Route element={<DashboardLayout state={state} onToggleTheme={toggleTheme} />}>
-          <Route path="/home" element={
-            <NavigationWrapper>
-              {(onNavigate) => <Home state={state} onUpdate={handleUpdate} onNavigate={onNavigate as any} />}
-            </NavigationWrapper>
-          } />
-          
-          <Route path="/dashboard" element={<FocusDashboard state={state} onUpdate={handleUpdate} />} />
-          <Route path="/mind" element={<MindHub state={state} />} />
-          <Route path="/services" element={<ServiceHub />} />
+      <Routes>
+        {/* Public routes */}
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/reset" element={<ResetPassword />} />
+        
+        {/* Protected routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<DashboardLayout state={state} onToggleTheme={toggleTheme} />}>
+            <Route path="/home" element={
+              <NavigationWrapper>
+                {(onNavigate) => <Home state={state} onUpdate={handleUpdate} onNavigate={onNavigate as any} />}
+              </NavigationWrapper>
+            } />
+            
+            <Route path="/dashboard" element={<FocusDashboard state={state} onUpdate={handleUpdate} />} />
+            <Route path="/mind" element={<MindHub state={state} />} />
+            <Route path="/manifest-1111" element={<ManifestAlarm state={state} onUpdate={handleUpdate} />} />
+            <Route path="/services" element={<ServiceHub />} />
           
           <Route path="/soundshift" element={<SoundShiftStudio state={state} onUpdate={handleUpdate} />} />
           <Route path="/beliefs" element={<BeliefReframer state={state} onUpdate={handleUpdate} />} />
@@ -114,6 +213,7 @@ const AppContent: React.FC = () => {
       
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </>
   );
 };
 
