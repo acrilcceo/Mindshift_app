@@ -7,6 +7,7 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ResetPassword from './pages/ResetPassword';
+import AuthSuccess from './pages/AuthSuccess';
 import { ToastContainer } from './components/ui';
 import { AppState, Theme } from './types';
 import { loadState, saveState, storageGet } from './services/store';
@@ -183,6 +184,7 @@ const AppContent: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/reset" element={<ResetPassword />} />
+        <Route path="/auth-success" element={<AuthSuccess />} />
         
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>

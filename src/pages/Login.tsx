@@ -3,9 +3,8 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Button, Input, Loader } from '../components/ui';
 import { useToast } from '../context/ToastContext';
-import { loginWithEmail, loginWithGoogle } from '../api/auth';
-import { auth, googleProvider } from '../firebase/firebaseConfig';
-import { signInWithPopup } from 'firebase/auth';
+import { loginWithEmail } from '../api/auth';
+import { API_BASE_URL, API_ENDPOINTS } from '../api/config';
 
 const GoogleIcon: React.FC = () => (
   <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -99,33 +98,12 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    if (!auth || !googleProvider) {
-      showError('Google login is not configured');
-      return;
-    }
-
-    setLoading(true);
+  const handleGoogleLogin = () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const idToken = await result.user.getIdToken();
-      
-      const response = await loginWithGoogle(idToken);
-      
-      if (response.success && response.data) {
-        login(response.data.user, response.data.token);
-        showSuccess('Welcome back!');
-        const from = (location.state as any)?.from?.pathname || '/home';
-        navigate(from, { replace: true });
-      } else {
-        showError(response.message || 'Google login failed');
-      }
+      const googleAuthUrl = `${API_BASE_URL}${API_ENDPOINTS.AUTH.GOOGLE}`;
+      window.location.href = googleAuthUrl;
     } catch (err: any) {
-      if (err.code !== 'auth/popup-closed-by-user') {
-        showError('Google login failed. Please try again.');
-      }
-    } finally {
-      setLoading(false);
+      showError(err?.message || 'Google login could not be started.');
     }
   };
 
