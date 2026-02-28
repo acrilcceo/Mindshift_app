@@ -33,22 +33,22 @@ const MindHub: React.FC<MindHubProps> = ({ state }) => {
 
   return (
     <div className="space-y-6 pb-24">
-      <header className="mb-2 sticky top-0 z-30 bg-[#0F1115]/80 backdrop-blur-md pt-4 pb-2 -mx-4 px-4 border-b border-white/5">
+      <header className="mb-2 sticky top-0 z-30 bg-[#0F1115]/80 backdrop-blur-md pt-4 pb-2 -mx-4 px-4 border-b border-slate-300 dark:border-slate-700">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-2xl font-serif text-white font-bold">Mind Hub</h1>
-            <p className="text-white/40 text-sm">Community & Tools</p>
+            <h1 className="text-2xl font-serif text-slate-800 dark:text-slate-100 font-bold">Mind Hub</h1>
+            <p className="text-slate-600 dark:text-slate-300 text-sm">Community & Tools</p>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex p-1 bg-white/5 rounded-xl">
+        <div className="flex p-1 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
           <button
             onClick={() => setActiveTab('community')}
             className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
               activeTab === 'community' 
-                ? 'bg-white/10 text-white shadow-sm' 
-                : 'text-white/40 hover:text-white/60'
+                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm' 
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
             }`}
           >
             Community
@@ -57,8 +57,8 @@ const MindHub: React.FC<MindHubProps> = ({ state }) => {
             onClick={() => setActiveTab('tools')}
             className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
               activeTab === 'tools' 
-                ? 'bg-white/10 text-white shadow-sm' 
-                : 'text-white/40 hover:text-white/60'
+                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm' 
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
             }`}
           >
             Toolkit

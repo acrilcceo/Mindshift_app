@@ -28,14 +28,14 @@ export const FriendCard: React.FC<FriendCardProps> = ({ friend, className = '', 
     : 'bg-gray-400/50';
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl border border-white/5 p-4 transition-all duration-300 hover:bg-white/5 ${auraStyles.container} ${className}`}>
+    <div className={`relative overflow-hidden rounded-2xl border border-slate-200 dark:border-white/5 bg-white dark:bg-[#151922] p-4 transition-all duration-300 hover:shadow-md dark:hover:bg-white/5 ${auraStyles.container} ${className}`}>
       {/* Background Aura Hint */}
       <div className={`absolute inset-0 opacity-20 pointer-events-none ${auraStyles.background}`} />
       
       <div className="relative flex items-center gap-4">
         {/* Avatar Section */}
         <div className="relative">
-          <div className={`h-12 w-12 rounded-full flex items-center justify-center bg-gray-800 text-lg font-medium text-white overflow-hidden transition-shadow duration-500 ${auraStyles.avatar}`}>
+          <div className={`h-12 w-12 rounded-full flex items-center justify-center bg-slate-100 dark:bg-gray-800 text-lg font-medium text-slate-700 dark:text-white overflow-hidden transition-shadow duration-500 ${auraStyles.avatar}`}>
             {friend.photoURL ? (
               <img src={friend.photoURL} alt={friend.displayName} className="h-full w-full object-cover" />
             ) : (
@@ -44,22 +44,22 @@ export const FriendCard: React.FC<FriendCardProps> = ({ friend, className = '', 
           </div>
           
           {/* Status Dot */}
-          <div className={`absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-[#0F1115] ${statusColor}`} />
+          <div className={`absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-white dark:border-[#0F1115] ${statusColor}`} />
         </div>
 
         {/* Info Section */}
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-medium text-white truncate">
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-white truncate">
             {friend.displayName}
           </h3>
           <div className="flex items-center gap-2 mt-0.5">
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-slate-600 dark:text-gray-400">
               {friend.streakCount > 0 ? (
                 <span className="flex items-center gap-1">
-                  <span className="text-orange-400">🔥</span> {friend.streakCount} day{friend.streakCount !== 1 ? 's' : ''}
+                  <span className="text-orange-500 dark:text-orange-400">🔥</span> {friend.streakCount} day{friend.streakCount !== 1 ? 's' : ''}
                 </span>
               ) : (
-                <span className="text-gray-500">Starting out</span>
+                <span className="text-slate-500 dark:text-gray-500">Starting out</span>
               )}
             </span>
           </div>
