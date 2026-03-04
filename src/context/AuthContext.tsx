@@ -1,143 +1,112 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { auth } from '../firebase/firebaseConfig';
-import { signOut } from 'firebase/auth';
-import { getAuthToken, setAuthToken, removeAuthToken } from '../api/client';
-import { getCurrentUser, logout as apiLogout } from '../api/auth';
+import { signInAnonymously, signOut } from 'firebase/auth';
 
-export type User = {
-  id: string;
-  email: string;
+type SimpleUser = {
   name: string;
-  avatar?: string;
 };
 
 type AuthContextType = {
-  currentUser: User | null;
+  currentUser: SimpleUser | null;
+  userUid: string | null;
   loading: boolean;
-  login: (user: User, token: string) => void;
-  logout: () => Promise<void>;
-  updateUser: (updates: Partial<User>) => void;
+  loginWithName: (name: string) => void;
+  logout: () => void;
 };
 
-const USER_STORAGE_KEY = 'mindshift_user';
+const STORAGE_KEY = 'mindshift_user_name';
 
 const AuthContext = createContext<AuthContextType>({
   currentUser: null,
+  userUid: null,
   loading: true,
-  login: () => {},
-  logout: async () => {},
-  updateUser: () => {}
+  loginWithName: () => {},
+  logout: () => {}
 });
 
 export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<SimpleUser | null>(null);
+  const [userUid, setUserUid] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Initialize auth state from storage
   useEffect(() => {
-    const initAuth = async () => {
-      try {
-        const token = getAuthToken();
-        const storedUser = localStorage.getItem(USER_STORAGE_KEY);
+    let unsubscribe: () => void = () => {};
 
-        if (token && storedUser) {
-          // Try to parse stored user
-          const user = JSON.parse(storedUser) as User;
-          setCurrentUser(user);
-
-          // Optionally verify token with backend
-          const response = await getCurrentUser();
-          if (response.success && response.data) {
-            const updatedUser = response.data as User;
-            setCurrentUser(updatedUser);
-            localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
-          } else {
-            // Token might be invalid, but keep user logged in with stored data
-            // Backend will return 401 on actual requests if token is expired
-          }
+    if (auth) {
+      unsubscribe = auth.onAuthStateChanged((user) => {
+        if (user) {
+          setUserUid(user.uid);
         } else {
-          setCurrentUser(null);
-        }
-      } catch (error) {
-        console.error('Auth initialization error:', error);
-        setCurrentUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initAuth();
-  }, []);
-
-  const login = (user: User, token: string) => {
-    setCurrentUser(user);
-    setAuthToken(token);
-    try {
-      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
-    } catch (error) {
-      console.error('Failed to store user:', error);
-    }
-  };
-
-  const logout = async () => {
-    setCurrentUser(null);
-    
-    try {
-      // Call API logout
-      await apiLogout();
-      
-      // Clear local storage
-      removeAuthToken();
-      localStorage.removeItem(USER_STORAGE_KEY);
-      
-      // Clear any other app data
-      const keysToKeep = ['theme']; // Keep theme preference
-      const allKeys = Object.keys(localStorage);
-      allKeys.forEach(key => {
-        if (!keysToKeep.includes(key)) {
-          localStorage.removeItem(key);
+          setUserUid(null);
         }
       });
-
-      // Sign out of Firebase if configured
-      if (auth) {
-        await signOut(auth).catch(() => {});
-      }
-
-      // Clear cookies
-      const cookies = document.cookie.split(';');
-      for (const raw of cookies) {
-        const [name] = raw.split('=');
-        if (!name) continue;
-        document.cookie = `${name.trim()}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
-      }
-    } catch (error) {
-      console.error('Logout error:', error);
     }
+
+    try {
+      const stored = typeof window !== 'undefined' ? window.localStorage.getItem(STORAGE_KEY) : null;
+      if (stored && stored.trim()) {
+        setCurrentUser({ name: stored });
+        if (auth && !auth.currentUser) {
+           signInAnonymously(auth).catch(console.error);
+        }
+      } else {
+        setCurrentUser(null);
+      }
+    } catch {
+      setCurrentUser(null);
+    } finally {
+      setLoading(false);
+    }
+
+    return () => unsubscribe();
+  }, []);
+
+  const loginWithName = (name: string) => {
+    const trimmed = name.trim();
+    setCurrentUser(trimmed ? { name: trimmed } : null);
+    try {
+      if (trimmed && typeof window !== 'undefined') {
+        window.localStorage.setItem(STORAGE_KEY, trimmed);
+        if (auth) {
+          signInAnonymously(auth).catch(console.error);
+        }
+      } else if (typeof window !== 'undefined') {
+        window.localStorage.removeItem(STORAGE_KEY);
+        if (auth) {
+          signOut(auth).catch(console.error);
+        }
+      }
+    } catch {}
   };
 
-  const updateUser = (updates: Partial<User>) => {
-    if (!currentUser) return;
-    
-    const updatedUser = { ...currentUser, ...updates };
-    setCurrentUser(updatedUser);
-    
+  const logout = () => {
+    setCurrentUser(null);
     try {
-      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
-    } catch (error) {
-      console.error('Failed to update user:', error);
-    }
+      if (typeof window !== 'undefined') {
+        window.localStorage.removeItem(STORAGE_KEY);
+        window.localStorage.clear();
+        const cookies = document.cookie.split(';');
+        for (const raw of cookies) {
+          const [name] = raw.split('=');
+          if (!name) continue;
+          document.cookie = `${name.trim()}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        }
+        if (auth) {
+          signOut(auth).catch(console.error);
+        }
+      }
+    } catch {}
   };
 
   const value = useMemo(
     () => ({
       currentUser,
+      userUid,
       loading,
-      login,
-      logout,
-      updateUser
+      loginWithName,
+      logout
     }),
-    [currentUser, loading]
+    [currentUser, userUid, loading]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

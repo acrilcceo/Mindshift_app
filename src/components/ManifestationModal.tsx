@@ -122,7 +122,7 @@ const ManifestationModal: React.FC<ManifestationModalProps> = ({ isOpen, onClose
           
           {stage === 'intro' && (
             <div className="space-y-8 animate-fade-in">
-              <div className="p-6 rounded-2xl bg-card/30 border border-white/10 backdrop-blur-md">
+              <div className="p-6 rounded-2xl bg-card/30 border border-card-border backdrop-blur-md">
                 <p className="text-xl md:text-2xl font-serif italic text-primary leading-relaxed">
                   "{settings.customAffirmation || "I am aligned with my highest purpose."}"
                 </p>

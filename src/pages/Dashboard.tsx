@@ -61,7 +61,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ state, onToggleTheme 
           className={`absolute inset-0 bg-secondary/80 backdrop-blur-sm transition-opacity duration-500 ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`}
           onClick={() => setIsMenuOpen(false)}
         ></div>
-        <nav className={`absolute top-0 right-0 bottom-0 w-4/5 max-w-xs bg-secondary shadow-2xl transition-transform duration-500 ease-out flex flex-col p-8 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <nav className={`absolute top-0 right-0 bottom-0 w-[280px] max-w-[85%] bg-secondary shadow-2xl transition-transform duration-500 ease-out flex flex-col p-8 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="flex justify-between items-center mb-12">
             <div className="text-sm uppercase tracking-widest text-muted font-bold">Main Navigation</div>
             <button onClick={() => setIsMenuOpen(false)} className="text-muted hover:text-accent-primary">✕</button>
@@ -149,7 +149,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ state, onToggleTheme 
         </div>
       </nav>
 
-      <main className="min-h-screen pt-20 lg:pt-8 px-6 pb-4 md:pb-12">
+      <main className="min-h-screen pt-20 lg:pt-8 px-6 pb-24 md:pb-12">
         <div className="max-w-6xl mx-auto">
           <Outlet />
         </div>
@@ -157,8 +157,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ state, onToggleTheme 
 
       {/* Mobile Footer Brand */}
       <div className="md:hidden w-full text-center pb-24 pt-8">
-         <p className="text-[12px] text-gray-500 dark:text-gray-400">© 2026 MindShift Manifest • Elevate your Reality</p>
-         <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">Made to heal your inner self - Sambit Ghosh</p>
+         <p className="text-[12px] text-textSecondary-light dark:text-textSecondary-dark">© 2026 MindShift Manifest • Elevate your Reality</p>
+         <p className="text-[11px] text-textMuted mt-1">Made to heal your inner self - Sambit Ghosh</p>
       </div>
 
       <footer className="hidden md:block w-full py-8 text-center text-muted text-sm uppercase tracking-widest border-t border-card-border leading-relaxed ml-0 lg:ml-0">
@@ -182,15 +182,21 @@ interface NavItemProps {
 const NavItem: React.FC<NavItemProps> = ({ icon, label, active, onClick }) => (
   <button
     onClick={onClick}
-    className={`nav-item ${active ? 'nav-item-active' : ''} w-full text-left`}
+    className={`flex items-center gap-3 py-3 w-full text-left transition-colors duration-200 group ${
+      active 
+        ? 'text-accent-primary font-medium' 
+        : 'text-muted hover:text-primary'
+    }`}
   >
-    <span className="nav-item-icon">
+    <div className={`shrink-0 transition-colors ${active ? 'text-accent-primary' : 'text-current group-hover:text-primary'}`}>
       {icon}
-    </span>
-    <span className="nav-item-label">
+    </div>
+    <span className="text-sm tracking-wide">
       {label}
     </span>
-    {active && <span className="nav-item-dot" />}
+    {active && (
+      <span className="ml-auto w-1.5 h-1.5 rounded-full bg-accent-primary shadow-[0_0_8px_rgba(var(--accent-primary-rgb),0.6)]" />
+    )}
   </button>
 );
 

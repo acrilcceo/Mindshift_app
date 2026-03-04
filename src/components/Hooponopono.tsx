@@ -168,7 +168,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
     if (phase === 'Inhale') return 'text-accent-primary';
     if (phase === 'Hold') return 'text-accent-secondary';
     if (phase === 'Exhale') return 'text-accent-primary'; // Using primary for exhale too for consistency
-    return 'text-muted';
+    return 'text-textSecondary-light dark:text-textSecondary-dark';
   };
 
   const defaultMantra = "I am sorry.\n\nPlease forgive me.\n\nThank you.\n\nI love you.";
@@ -275,10 +275,10 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
   return (
     <div className="flex flex-col items-center space-y-8 py-10 animate-in fade-in duration-1000">
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-serif text-primary">Frequency Alignment</h2>
+        <h2 className="text-2xl font-serif text-textPrimary-light dark:text-textPrimary-dark">Frequency Alignment</h2>
         <div className="flex items-center justify-center gap-3 mt-1">
-          <p className="text-sm tracking-widest uppercase text-muted">Breathing Ritual</p>
-          <span className="w-1 h-1 rounded-full bg-card-border"></span>
+          <p className="text-sm tracking-widest uppercase text-textSecondary-light dark:text-textSecondary-dark">Breathing Ritual</p>
+          <span className="w-1 h-1 rounded-full bg-surface-muted dark:bg-darkSurface-muted"></span>
           <span className="text-sm font-mono text-accent-primary">{formatTime(totalSessionSeconds)}</span>
         </div>
       </div>
@@ -307,7 +307,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
               <div className="text-4xl font-mono font-bold auto-text">
                 {secondsRemaining}s
               </div>
-              <div className="text-sm text-muted uppercase tracking-widest font-bold mt-2">
+              <div className="text-sm text-textSecondary-light dark:text-textSecondary-dark uppercase tracking-widest font-bold mt-2">
                 Cycle {cyclesCompleted + 1}
               </div>
             </>
@@ -317,32 +317,27 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
 
       {/* Controls */}
       <div className="flex gap-4">
-        {timerStatus !== 'running' ? (
-          <button 
-            onClick={handleStart}
-            className="px-8 py-3 rounded-2xl btn-primary-ritual font-bold transition-all shadow-lg active:scale-95 text-sm"
+        <button
+            onClick={timerStatus === 'running' ? handlePause : handleStart}
+            className={`px-8 py-3 rounded-2xl font-bold transition-all active:scale-95 text-sm ${
+              timerStatus === 'running'
+                ? "bg-surface-elevated dark:bg-darkSurface-elevated text-textPrimary-light dark:text-textPrimary-dark border border-card-border hover:bg-surface-muted dark:hover:bg-darkSurface-muted shadow-lg"
+                : "bg-btn-primary text-btn-primary shadow-btn hover:shadow-btn-hover transform hover:-translate-y-0.5"
+            }`}
           >
-            {timerStatus === 'paused' ? 'Resume' : 'Start Session'}
+            {timerStatus === 'idle' ? 'Start Session' : timerStatus === 'running' ? 'Pause' : 'Resume'}
           </button>
-        ) : (
-          <button 
-            onClick={handlePause}
-            className="px-8 py-3 rounded-2xl bg-card text-primary border border-card-border font-bold hover:bg-secondary transition-all shadow-lg active:scale-95 text-sm"
-          >
-            Pause
-          </button>
-        )}
         <button 
           onClick={handleReset}
-          className="px-6 py-3 rounded-2xl border border-card-border text-muted font-bold hover:text-primary transition-all active:scale-95 text-sm"
+          className="px-6 py-3 rounded-2xl border border-card-border text-textSecondary-light dark:text-textSecondary-dark font-bold hover:text-textPrimary-light dark:hover:text-textPrimary-dark transition-all active:scale-95 text-sm"
         >
           {timerStatus === 'idle' ? 'Reset' : 'Finish Session'}
         </button>
       </div>
 
       {/* Configuration Section */}
-      <div className="card-base p-6 rounded-3xl w-full max-w-sm border border-card-border space-y-4 shadow-xl">
-        <h3 className="text-sm uppercase tracking-widest text-muted font-bold text-center">Customize Rhythm (Seconds)</h3>
+      <div className="bg-surface-elevated dark:bg-darkSurface-elevated p-6 rounded-3xl w-full max-w-sm border border-card-border space-y-4 shadow-xl">
+        <h3 className="text-sm uppercase tracking-widest text-textSecondary-light dark:text-textSecondary-dark font-bold text-center">Customize Rhythm (Seconds)</h3>
         <div className="grid grid-cols-3 gap-4">
           <div className="space-y-1">
             <label className="text-sm text-accent-primary/70 font-bold uppercase block text-center">Inhale</label>
@@ -367,7 +362,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
                   setInhaleInput(String(num));
                 }
               }}
-              className="w-full bg-secondary border border-card-border rounded-xl px-2 py-2 text-center text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/40 focus:border-transparent"
+              className="w-full bg-surface-muted dark:bg-darkSurface-muted border border-card-border rounded-xl px-2 py-2 text-center text-sm text-textPrimary-light dark:text-textPrimary-dark focus:outline-none focus:ring-2 focus:ring-accent-primary/40 focus:border-transparent"
             />
           </div>
           <div className="space-y-1">
@@ -393,7 +388,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
                   setHoldInput(String(num));
                 }
               }}
-              className="w-full bg-secondary border border-card-border rounded-xl px-2 py-2 text-center text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent-secondary/40 focus:border-transparent"
+              className="w-full bg-surface-muted dark:bg-darkSurface-muted border border-card-border rounded-xl px-2 py-2 text-center text-sm text-textPrimary-light dark:text-textPrimary-dark focus:outline-none focus:ring-2 focus:ring-accent-secondary/40 focus:border-transparent"
             />
           </div>
           <div className="space-y-1">
@@ -419,21 +414,21 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
                   setExhaleInput(String(num));
                 }
               }}
-              className="w-full bg-secondary border border-card-border rounded-xl px-2 py-2 text-center text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/40 focus:border-transparent"
+              className="w-full bg-surface-muted dark:bg-darkSurface-muted border border-card-border rounded-xl px-2 py-2 text-center text-sm text-textPrimary-light dark:text-textPrimary-dark focus:outline-none focus:ring-2 focus:ring-accent-primary/40 focus:border-transparent"
             />
           </div>
         </div>
       </div>
 
       {/* Ritual Text */}
-      <div className="card-base p-8 rounded-[2rem] max-w-sm w-full text-center space-y-8 border border-accent-primary/10 shadow-2xl">
-        <div className="space-y-4 text-sm font-medium tracking-wide text-primary whitespace-pre-line">
+      <div className="bg-surface-elevated dark:bg-darkSurface-elevated p-8 rounded-[2rem] max-w-sm w-full text-center space-y-8 border border-accent-primary/10 shadow-2xl">
+        <div className="space-y-4 text-sm font-medium tracking-wide text-textPrimary-light dark:text-textPrimary-dark whitespace-pre-line">
           {mantra}
         </div>
 
         <div className="h-px bg-card-border w-full"></div>
 
-        <div className="text-sm text-muted italic leading-relaxed px-4 min-h-[40px] flex items-center justify-center">
+        <div className="text-sm text-textSecondary-light dark:text-textSecondary-dark italic leading-relaxed px-4 min-h-[40px] flex items-center justify-center">
           {loading ? 'Aligning frequencies...' : prompt}
         </div>
 
@@ -479,7 +474,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
                   of {target}
                 </div>
                 {isComplete && (
-                  <div className="mt-2 text-sm tracking-widest uppercase text-muted">
+                  <div className="mt-2 text-sm tracking-widest uppercase text-textSecondary-light dark:text-textSecondary-dark">
                     Cycle Complete
                   </div>
                 )}
@@ -491,7 +486,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
             <button
               aria-label="Reset chant"
               onClick={handleResetChant}
-              className="px-4 py-2 rounded-full bg-secondary border border-card-border text-sm text-primary font-medium active:scale-95 transition-theme"
+              className="px-4 py-2 rounded-full bg-surface-muted dark:bg-darkSurface-muted border border-card-border text-sm text-textPrimary-light dark:text-textPrimary-dark font-medium active:scale-95 transition-theme"
             >
               Reset
             </button>
@@ -519,7 +514,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
               className={`px-3 py-2 rounded-full text-sm ${
                 target === 50
                   ? 'bg-accent-primary text-btn-primary shadow-[0_0_10px_var(--accent-glow)]'
-                  : 'bg-secondary text-primary border border-card-border hover:border-accent-primary transition-colors'
+                  : 'bg-surface-muted dark:bg-darkSurface-muted text-textPrimary-light dark:text-textPrimary-dark border border-card-border hover:border-accent-primary transition-colors'
               }`}
               onClick={() => setTarget(50)}
             >
@@ -530,7 +525,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
               className={`px-3 py-2 rounded-full text-sm ${
                 target === 108
                   ? 'bg-accent-primary text-btn-primary-text shadow-[0_0_10px_var(--accent-glow)]'
-                  : 'bg-secondary text-primary border border-card-border hover:border-accent-primary transition-colors'
+                  : 'bg-surface-muted dark:bg-darkSurface-muted text-textPrimary-light dark:text-textPrimary-dark border border-card-border hover:border-accent-primary transition-colors'
               }`}
               onClick={() => setTarget(108)}
             >
@@ -542,7 +537,7 @@ const Hooponopono: React.FC<HooponoponoProps> = ({ state, onUpdate }) => {
               min={1}
               value={target}
               onChange={e => setTarget(Math.max(1, parseInt(e.target.value || '1')))}
-              className="px-3 py-2 rounded-full bg-secondary border border-card-border text-sm text-center text-primary focus:outline-none focus:ring-2 focus:ring-accent-secondary/40 focus:border-transparent"
+              className="px-3 py-2 rounded-full bg-surface-muted dark:bg-darkSurface-muted border border-card-border text-sm text-center text-textPrimary-light dark:text-textPrimary-dark focus:outline-none focus:ring-2 focus:ring-accent-secondary/40 focus:border-transparent"
             />
           </div>
 

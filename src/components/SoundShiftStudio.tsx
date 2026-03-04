@@ -200,37 +200,37 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
     <div className="space-y-10 animate-in fade-in duration-700">
       <div className="flex justify-between items-end px-2">
         <div>
-          <h2 className="text-3xl sm:text-4xl font-serif font-semibold text-primary">
+          <h2 className="text-3xl sm:text-4xl font-serif font-semibold text-textPrimary-light dark:text-textPrimary-dark">
             SoundShift Studio
           </h2>
-          <p className="text-sm mt-1 text-secondary">
+          <p className="text-sm mt-1 text-textSecondary-light dark:text-textSecondary-dark">
             Regulate your state through sound and subtle frequency.
           </p>
         </div>
         <div className="text-right">
-          <div className="text-sm text-muted">Today</div>
-          <div className="text-3xl font-semibold text-primary">
+          <div className="text-sm text-textSecondary-light dark:text-textSecondary-dark">Today</div>
+          <div className="text-3xl font-semibold text-textPrimary-light dark:text-textPrimary-dark">
             {listeningMinutes} min
           </div>
-          <div className="text-sm mt-1 text-muted">Listening</div>
+          <div className="text-sm mt-1 text-textSecondary-light dark:text-textSecondary-dark">Listening</div>
         </div>
       </div>
 
-      <div className="glass-card p-6 rounded-[2rem] flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="bg-surface-elevated dark:bg-darkSurface-elevated border border-card-border shadow-sm p-6 rounded-[2rem] flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="text-sm font-semibold tracking-wide text-secondary uppercase tracking-widest">
+          <div className="text-sm font-semibold tracking-wide text-textSecondary-light dark:text-textSecondary-dark uppercase tracking-widest">
             Last sound
           </div>
-          <div className="text-base sm:text-lg mt-1 font-semibold text-primary">
+          <div className="text-base sm:text-lg mt-1 font-semibold text-textPrimary-light dark:text-textPrimary-dark">
             {lastMix ? lastMix.name : 'No mix played yet'}
           </div>
-          <div className="text-sm mt-1 text-secondary">
+          <div className="text-sm mt-1 text-textSecondary-light dark:text-textSecondary-dark">
             Tap a tile below to build a calming or focusing soundscape.
           </div>
         </div>
         <button
           type="button"
-          className="btn-primary-ritual px-5 py-3 rounded-full text-sm font-semibold text-btn-primary"
+          className="px-5 py-3 rounded-full text-sm font-semibold bg-btn-primary text-btn-primary shadow-btn hover:shadow-btn-hover transition-all transform hover:-translate-y-0.5 duration-200"
           disabled={!canQuickResume}
           onClick={handleQuickResume}
         >
@@ -238,11 +238,11 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
         </button>
       </div>
 
-      <div className="glass-card p-6 rounded-[2rem]">
+      <div className="bg-surface-elevated dark:bg-darkSurface-elevated border border-card-border shadow-sm p-6 rounded-[2rem]">
         <div className="flex justify-between items-center mb-4">
           <div>
-            <div className="text-sm font-semibold text-secondary uppercase tracking-widest">How are you feeling?</div>
-            <p className="text-sm mt-1 text-secondary">Select an emotional state to see suggested sound patterns.</p>
+            <div className="text-sm font-semibold text-textSecondary-light dark:text-textSecondary-dark uppercase tracking-widest">How are you feeling?</div>
+            <p className="text-sm mt-1 text-textSecondary-light dark:text-textSecondary-dark">Select an emotional state to see suggested sound patterns.</p>
           </div>
         </div>
         <div className="flex flex-wrap gap-3 mt-2">
@@ -251,14 +251,14 @@ const SoundShiftStudio: React.FC<SoundShiftStudioProps> = ({ state, onUpdate }) 
               key={es.id}
               type="button"
               onClick={() => handleSelectEmotionalState(es.id)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
-                selectedEmotion === es.id 
-                  ? 'bg-accent-primary text-btn-primary border-accent-primary shadow-lg shadow-accent-primary/20' 
-                  : 'bg-secondary text-secondary border-card-border hover:text-primary hover:border-accent-primary/50'
-              }`}
-            >
-              {es.label}
-            </button>
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
+              selectedEmotion === es.id 
+                ? 'bg-accent-primary text-white border-accent-primary shadow-lg shadow-accent-primary/20' 
+                : 'bg-surface-muted dark:bg-darkSurface-muted text-textSecondary-light dark:text-textSecondary-dark border-card-border hover:text-textPrimary-light dark:hover:text-textPrimary-dark hover:border-accent-primary/50'
+            }`}
+          >
+            {es.label}
+          </button>
           ))}
         </div>
       </div>
@@ -323,17 +323,19 @@ const SoundTile: React.FC<SoundTileProps> = ({ label, tag, onClick, active }) =>
     <button
       type="button"
       onClick={onClick}
-      className={`soundshift-tile relative group aspect-[4/3] flex flex-col justify-between p-4 border ${
-        active ? 'soundshift-tile-active' : ''
+      className={`relative group aspect-[4/3] flex flex-col justify-between p-4 border rounded-2xl transition-all duration-300 ${
+        active 
+          ? 'bg-accent-primary text-white border-accent-primary shadow-lg shadow-accent-primary/20' 
+          : 'bg-surface-elevated dark:bg-darkSurface-elevated text-textPrimary-light dark:text-textPrimary-dark border-card-border hover:border-accent-primary/50'
       }`}
     >
       <div className="relative z-10">
-        <div className="text-sm mb-1 soundshift-tile-subtitle">{tag}</div>
-        <div className="text-lg font-semibold soundshift-tile-title">{label}</div>
+        <div className={`text-sm mb-1 ${active ? 'text-white/90' : 'text-textSecondary-light dark:text-textSecondary-dark'}`}>{tag}</div>
+        <div className="text-lg font-semibold">{label}</div>
       </div>
       <div className="relative z-10 flex items-end justify-between mt-3">
-        <div className="flex items-center gap-1 text-sm text-muted">
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-secondary" />
+        <div className={`flex items-center gap-1 text-sm ${active ? 'text-white/80' : 'text-textSecondary-light dark:text-textSecondary-dark'}`}>
+          <span className={`inline-block w-1.5 h-1.5 rounded-full ${active ? 'bg-white' : 'bg-accent-secondary'}`} />
           <span>∞ loop</span>
         </div>
         <div className="soundshift-wave">
