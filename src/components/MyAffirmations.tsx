@@ -140,7 +140,7 @@ const MyAffirmations: React.FC = () => {
       {/* Header & Controls (kept minimal) */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 z-10 relative">
         <div>
-          <h3 id="myAffirmationsTitle" className="label text-secondary">My Affirmations</h3>
+          <h3 id="myAffirmationsTitle" className="label text-secondary">Daily Invocation</h3>
           <p className="body-sm text-muted">Swipe through your personal invocations.</p>
         </div>
         <div className="flex flex-wrap gap-2 justify-end items-center">
@@ -249,17 +249,19 @@ const MyAffirmations: React.FC = () => {
               </div>
 
               {/* Progress Dots */}
-              <div className="flex justify-center flex-wrap gap-2 mt-8 max-w-[80%]">
+              <div className="flex justify-center flex-wrap gap-3 mt-10 max-w-[90%]">
                 {processed.length <= 20 ? (
                    processed.map((_, i) => (
                     <div 
                       key={i} 
-                      className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${
+                      className={`h-2 w-2 rounded-full transition-all duration-300 cursor-pointer ${
                         i === currentIndex 
-                          ? "bg-accent-primary w-3" 
+                          ? "bg-accent-primary scale-125 shadow-[0_0_10px_rgba(var(--accent-primary),0.5)]" 
                           : "bg-surface-muted dark:bg-darkSurface-muted hover:bg-accent-primary/50" 
                       }`} 
-                      onClick={() => setCurrentIndex(i)} // Allow jumping
+                      onClick={() => setCurrentIndex(i)}
+                      role="button"
+                      aria-label={`Go to affirmation ${i + 1}`}
                     />
                   ))
                 ) : (
