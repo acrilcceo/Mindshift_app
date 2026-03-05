@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { UserAffirmation, AffirmationCategory } from '../types';
 import { getAll, remove, duplicate, exportJSON, importJSON } from '../services/affirmationService';
 import AffirmationForm from './AffirmationForm';
@@ -11,7 +11,10 @@ const MyAffirmations: React.FC = () => {
   const [category, setCategory] = useState<AffirmationCategory | 'All'>('All');
   const [reminder, setReminder] = useState<'All' | 'Has' | 'None'>('All');
   const [sort, setSort] = useState<SortKey>('newest');
-  const [page, setPage] = useState(1);
+  
+  // Single view state
+  const [currentIndex, setCurrentIndex] = useState(0);
+  
   const [openForm, setOpenForm] = useState(false);
   const [editing, setEditing] = useState<UserAffirmation | null>(null);
   const [confirmId, setConfirmId] = useState<string | null>(null);
@@ -19,16 +22,19 @@ const MyAffirmations: React.FC = () => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
 
+  // Touch handling
+  const touchStart = useRef<number | null>(null);
+  const touchEnd = useRef<number | null>(null);
+
   useEffect(() => {
     setItems(getAll());
   }, []);
+
   useEffect(() => {
     const handler = () => { setEditing(null); setOpenForm(true); };
     window.addEventListener('openAddAffirmation' as any, handler as any);
     return () => window.removeEventListener('openAddAffirmation' as any, handler as any);
   }, []);
-
-  const PAGE_SIZE = 20;
 
   const processed = useMemo(() => {
     let arr = items;
@@ -57,8 +63,14 @@ const MyAffirmations: React.FC = () => {
     return arr;
   }, [items, search, category, reminder, sort]);
 
-  const totalPages = Math.max(1, Math.ceil(processed.length / PAGE_SIZE));
-  const pageItems = processed.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  // Ensure index is valid when list changes
+  useEffect(() => {
+    if (processed.length === 0) {
+      setCurrentIndex(0);
+    } else if (currentIndex >= processed.length) {
+      setCurrentIndex(processed.length - 1);
+    }
+  }, [processed.length]); // Intentionally not including currentIndex to avoid loops, just capping it
 
   const handleSaved = () => {
     setItems(getAll());
@@ -97,8 +109,42 @@ const MyAffirmations: React.FC = () => {
     }
   };
 
+  // Swipe handlers
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchEnd.current = null;
+    touchStart.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    touchEnd.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart.current || !touchEnd.current) return;
+    const distance = touchStart.current - touchEnd.current;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) {
+      handleNext();
+    }
+    if (isRightSwipe) {
+      handlePrev();
+    }
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex(prev => Math.max(prev - 1, 0));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex(prev => Math.min(prev + 1, processed.length - 1));
+  };
+
+  const currentItem = processed[currentIndex];
+
   return (
-    <section aria-labelledby="myAffirmationsTitle" className="glass-card p-8 rounded-[2rem] mt-10">
+    <section aria-labelledby="myAffirmationsTitle" className="glass-card p-8 rounded-[2rem] mt-10 min-h-[700px] flex flex-col">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
         <div>
           <h3 id="myAffirmationsTitle" className="label text-secondary">My Affirmations</h3>
@@ -136,14 +182,14 @@ const MyAffirmations: React.FC = () => {
             aria-label="Search affirmations"
             placeholder="Search..."
             value={search}
-            onChange={e => { setSearch(e.target.value); setPage(1); }}
+            onChange={e => { setSearch(e.target.value); setCurrentIndex(0); }}
             className="w-full h-10 bg-card border border-card-border rounded-xl px-4 text-sm text-primary placeholder-muted focus:outline-none focus:border-accent-primary"
           />
         </div>
         <select
           aria-label="Filter by category"
           value={category}
-          onChange={e => { setCategory(e.target.value as any); setPage(1); }}
+          onChange={e => { setCategory(e.target.value as any); setCurrentIndex(0); }}
           className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-sm text-primary focus:outline-none focus:border-accent-primary"
         >
           <option value="All">All Categories</option>
@@ -152,7 +198,7 @@ const MyAffirmations: React.FC = () => {
         <select
           aria-label="Filter by reminder"
           value={reminder}
-          onChange={e => { setReminder(e.target.value as any); setPage(1); }}
+          onChange={e => { setReminder(e.target.value as any); setCurrentIndex(0); }}
           className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-sm text-primary focus:outline-none focus:border-accent-primary"
         >
           <option value="All">All Reminders</option>
@@ -162,7 +208,7 @@ const MyAffirmations: React.FC = () => {
         <select
           aria-label="Sort affirmations"
           value={sort}
-          onChange={e => setSort(e.target.value as SortKey)}
+          onChange={e => { setSort(e.target.value as SortKey); setCurrentIndex(0); }}
           className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-sm text-primary focus:outline-none focus:border-accent-primary"
         >
           <option value="newest">Newest</option>
@@ -174,62 +220,124 @@ const MyAffirmations: React.FC = () => {
           type="date"
           aria-label="Start date"
           value={startDate}
-          onChange={e => { setStartDate(e.target.value); setPage(1); }}
+          onChange={e => { setStartDate(e.target.value); setCurrentIndex(0); }}
           className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-sm text-primary focus:outline-none focus:border-accent-primary"
         />
         <input
           type="date"
           aria-label="End date"
           value={endDate}
-          onChange={e => { setEndDate(e.target.value); setPage(1); }}
+          onChange={e => { setEndDate(e.target.value); setCurrentIndex(0); }}
           className="w-full h-10 bg-card border border-card-border rounded-xl px-3 text-sm text-primary focus:outline-none focus:border-accent-primary"
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {pageItems.map(a => (
-          <div key={a.id} className="glass-card p-6 rounded-3xl border-l-4 border-accent-secondary">
-            <div className="label text-secondary mb-2">{a.category}</div>
-            <div className="text-primary leading-relaxed">{a.text}</div>
-            <div className="mt-4 flex items-center justify-between text-sm text-muted">
-              <span>Created {new Date(a.createdAt).toLocaleDateString()}</span>
-              <span>Used {a.useCount}</span>
-            </div>
-            <div className="mt-4 flex gap-2">
-              <button className="px-3 py-1 rounded-xl bg-secondary text-secondary hover:text-primary transition-colors text-sm" onClick={() => { setEditing(a); setOpenForm(true); }} aria-label="Edit affirmation">Edit</button>
-              <button className="px-3 py-1 rounded-xl bg-secondary text-secondary hover:text-primary transition-colors text-sm" onClick={() => handleDuplicate(a.id)} aria-label="Duplicate affirmation">Duplicate</button>
-              <button className="px-3 py-1 rounded-xl bg-error/10 text-error hover:bg-error hover:text-btn-primary-text transition-colors text-sm" onClick={() => setConfirmId(a.id)} aria-label="Delete affirmation">Delete</button>
-            </div>
-            {confirmId === a.id && (
-              <div className="mt-3 flex gap-2 items-center" role="alertdialog" aria-label="Confirm delete">
-                <span className="text-sm text-primary">Delete?</span>
-                <button className="px-3 py-1 rounded-xl bg-error text-btn-primary-text text-sm" onClick={() => handleRemove(a.id)}>Confirm</button>
-                <button className="px-3 py-1 rounded-xl bg-secondary text-secondary text-sm" onClick={() => setConfirmId(null)}>Cancel</button>
-              </div>
-            )}
-            {a.versions.length > 1 && (
-              <details className="mt-3">
-                <summary className="cursor-pointer text-sm text-secondary">Version History</summary>
-                <ul className="mt-2 space-y-2">
-                  {a.versions.map((v, i) => (
-                    <li key={i} className="text-sm text-secondary">
-                      <span className="font-mono">{new Date(v.timestamp).toLocaleString()}</span> — {v.text}
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            )}
-          </div>
-        ))}
-      </div>
+      <div 
+        className="flex-1 flex flex-col items-center justify-center mt-4 relative min-h-[400px]"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        {processed.length === 0 ? (
+          <div className="text-center text-muted">No affirmations found matching your criteria.</div>
+        ) : (
+          currentItem && (
+            <div className="w-full max-w-2xl mx-auto flex flex-col items-center animate-in fade-in duration-500">
+              
+              <div className="w-full bg-surface-elevated dark:bg-darkSurface-elevated p-10 md:p-14 rounded-[2.5rem] shadow-xl border border-card-border relative overflow-hidden group">
+                {/* Background Decoration */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-accent-primary/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent-secondary/5 rounded-full blur-2xl -ml-8 -mb-8 pointer-events-none"></div>
 
-      <div className="mt-6 flex items-center justify-between">
-        <div className="text-sm text-muted">Showing {pageItems.length} of {processed.length}</div>
-        <div className="flex gap-2" role="navigation" aria-label="Pagination">
-          <button className="px-3 py-1 rounded-xl bg-secondary text-sm text-secondary hover:text-primary" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} aria-disabled={page === 1}>Prev</button>
-          <span className="px-3 py-1 rounded-xl bg-secondary text-sm text-primary">{page} / {totalPages}</span>
-          <button className="px-3 py-1 rounded-xl bg-secondary text-sm text-secondary hover:text-primary" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} aria-disabled={page === totalPages}>Next</button>
-        </div>
+                {/* Category Chip */}
+                <div className="flex justify-center mb-8">
+                  <span className="px-4 py-1.5 rounded-full bg-surface-muted dark:bg-darkSurface-muted text-accent-primary text-xs font-bold uppercase tracking-widest border border-card-border">
+                    {currentItem.category}
+                  </span>
+                </div>
+
+                {/* Text */}
+                <p className="text-2xl md:text-3xl lg:text-4xl font-serif text-center text-textPrimary-light dark:text-textPrimary-dark leading-relaxed mb-10 transition-all duration-300">
+                  {currentItem.text}
+                </p>
+
+                {/* Action Buttons (Subtle) */}
+                <div className="flex items-center justify-center gap-6 text-sm text-muted opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <button onClick={() => { setEditing(currentItem); setOpenForm(true); }} className="hover:text-primary transition-colors flex items-center gap-1">
+                      <span className="text-xs uppercase tracking-wider">Edit</span>
+                    </button>
+                    <div className="w-1 h-1 rounded-full bg-card-border"></div>
+                    <button onClick={() => handleDuplicate(currentItem.id)} className="hover:text-primary transition-colors flex items-center gap-1">
+                      <span className="text-xs uppercase tracking-wider">Duplicate</span>
+                    </button>
+                    <div className="w-1 h-1 rounded-full bg-card-border"></div>
+                    <button onClick={() => setConfirmId(currentItem.id)} className="hover:text-error text-error/70 transition-colors flex items-center gap-1">
+                      <span className="text-xs uppercase tracking-wider">Delete</span>
+                    </button>
+                </div>
+
+                {/* Delete Confirmation Overlay */}
+                {confirmId === currentItem.id && (
+                  <div className="absolute inset-0 bg-surface-elevated/95 dark:bg-darkSurface-elevated/95 backdrop-blur-md flex flex-col items-center justify-center z-20 p-6 text-center animate-in fade-in duration-200">
+                      <p className="text-lg font-medium text-primary mb-6">Are you sure you want to delete this affirmation?</p>
+                      <div className="flex gap-4">
+                        <button className="px-6 py-2.5 rounded-xl bg-error text-white font-medium shadow-lg shadow-error/20 hover:shadow-error/30 transition-all" onClick={() => handleRemove(currentItem.id)}>Delete</button>
+                        <button className="px-6 py-2.5 rounded-xl bg-secondary text-primary font-medium hover:bg-surface-muted transition-colors" onClick={() => setConfirmId(null)}>Cancel</button>
+                      </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Navigation Controls */}
+              <div className="w-full flex items-center justify-between mt-12 px-4 md:px-10">
+                <button 
+                  onClick={handlePrev} 
+                  disabled={currentIndex === 0}
+                  className={`group flex items-center gap-3 px-6 py-3 rounded-2xl transition-all duration-300 ${
+                    currentIndex === 0 
+                      ? 'opacity-30 cursor-not-allowed text-muted' 
+                      : 'bg-surface-elevated dark:bg-darkSurface-elevated hover:bg-surface-muted dark:hover:bg-darkSurface-muted text-primary shadow-sm hover:shadow-md'
+                  }`}
+                  aria-label="Previous Affirmation"
+                >
+                  <span className="text-xl group-hover:-translate-x-1 transition-transform">←</span>
+                  <span className="hidden sm:inline font-medium">Previous</span>
+                </button>
+                
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-sm font-medium text-primary font-mono">
+                    {currentIndex + 1} <span className="text-muted">/</span> {processed.length}
+                  </span>
+                  <div className="w-32 h-1 bg-surface-muted dark:bg-darkSurface-muted rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-accent-primary transition-all duration-500 ease-out"
+                      style={{ width: `${((currentIndex + 1) / processed.length) * 100}%` }}
+                    />
+                  </div>
+                </div>
+
+                <button 
+                  onClick={handleNext} 
+                  disabled={currentIndex === processed.length - 1}
+                  className={`group flex items-center gap-3 px-6 py-3 rounded-2xl transition-all duration-300 ${
+                    currentIndex === processed.length - 1 
+                      ? 'opacity-30 cursor-not-allowed text-muted' 
+                      : 'bg-surface-elevated dark:bg-darkSurface-elevated hover:bg-surface-muted dark:hover:bg-darkSurface-muted text-primary shadow-sm hover:shadow-md'
+                  }`}
+                  aria-label="Next Affirmation"
+                >
+                  <span className="hidden sm:inline font-medium">Next</span>
+                  <span className="text-xl group-hover:translate-x-1 transition-transform">→</span>
+                </button>
+              </div>
+              
+              <div className="mt-6 text-center text-xs text-muted/50 font-medium uppercase tracking-widest">
+                Swipe to Navigate
+              </div>
+
+            </div>
+          )
+        )}
       </div>
 
       <AffirmationForm open={openForm} onClose={() => setOpenForm(false)} editing={editing || undefined} onSaved={handleSaved} />
