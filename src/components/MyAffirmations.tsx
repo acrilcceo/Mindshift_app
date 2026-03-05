@@ -22,9 +22,10 @@ const MyAffirmations: React.FC = () => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
 
-  // Touch handling
+  // Touch and Mouse handling refs
   const touchStart = useRef<number | null>(null);
   const touchEnd = useRef<number | null>(null);
+  const isDragging = useRef(false);
 
   useEffect(() => {
     setItems(getAll());
@@ -109,17 +110,20 @@ const MyAffirmations: React.FC = () => {
     }
   };
 
-  // Swipe handlers (optimized with useRef for performance)
-  const onTouchStart = (e: React.TouchEvent) => {
+  // Swipe handlers (Touch + Mouse)
+  const handleStart = (clientX: number) => {
     touchEnd.current = null;
-    touchStart.current = e.targetTouches[0].clientX;
+    touchStart.current = clientX;
+    isDragging.current = true;
   };
 
-  const onTouchMove = (e: React.TouchEvent) => {
-    touchEnd.current = e.targetTouches[0].clientX;
+  const handleMove = (clientX: number) => {
+    if (!isDragging.current) return;
+    touchEnd.current = clientX;
   };
 
-  const onTouchEnd = () => {
+  const handleEnd = () => {
+    isDragging.current = false;
     if (!touchStart.current || !touchEnd.current) return;
     const distance = touchStart.current - touchEnd.current;
     const isLeftSwipe = distance > 50;
@@ -131,12 +135,28 @@ const MyAffirmations: React.FC = () => {
     if (isRightSwipe && currentIndex > 0) {
       setCurrentIndex(prev => prev - 1);
     }
+    // Reset
+    touchStart.current = null;
+    touchEnd.current = null;
+  };
+
+  // Touch Events
+  const onTouchStart = (e: React.TouchEvent) => handleStart(e.targetTouches[0].clientX);
+  const onTouchMove = (e: React.TouchEvent) => handleMove(e.targetTouches[0].clientX);
+  const onTouchEnd = () => handleEnd();
+
+  // Mouse Events
+  const onMouseDown = (e: React.MouseEvent) => handleStart(e.clientX);
+  const onMouseMove = (e: React.MouseEvent) => handleMove(e.clientX);
+  const onMouseUp = () => handleEnd();
+  const onMouseLeave = () => {
+    if (isDragging.current) handleEnd();
   };
 
   const currentItem = processed[currentIndex];
 
   return (
-    <section aria-labelledby="myAffirmationsTitle" className="glass-card p-6 md:p-8 rounded-[2rem] mt-4 min-h-[80vh] flex flex-col relative overflow-hidden">
+    <section aria-labelledby="myAffirmationsTitle" className="glass-card p-6 md:p-8 rounded-[2rem] mt-4 min-h-[80vh] flex flex-col relative overflow-hidden select-none">
       {/* Header & Controls (kept minimal) */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 z-10 relative">
         <div>
@@ -188,10 +208,14 @@ const MyAffirmations: React.FC = () => {
        </div>
 
       <div 
-        className="flex-1 flex flex-col items-center justify-center relative w-full"
+        className="flex-1 flex flex-col items-center justify-center relative w-full cursor-grab active:cursor-grabbing"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseLeave}
       >
         {processed.length === 0 ? (
           <div className="text-center text-muted">No affirmations found.</div>
@@ -211,7 +235,7 @@ const MyAffirmations: React.FC = () => {
                 </span>
 
                 {/* Affirmation Text */}
-                <p className="text-2xl md:text-3xl leading-relaxed font-serif text-textPrimary-light dark:text-textPrimary-dark font-medium opacity-90">
+                <p className="text-2xl md:text-3xl leading-relaxed font-serif text-textPrimary-light dark:text-textPrimary-dark font-medium opacity-90 select-text">
                   {currentItem.text}
                 </p>
 
@@ -221,16 +245,16 @@ const MyAffirmations: React.FC = () => {
                 </div>
 
                 {/* Edit Actions (Hover only) */}
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                    <button onClick={() => { setEditing(currentItem); setOpenForm(true); }} className="p-2 hover:bg-surface-muted rounded-full text-muted hover:text-primary transition-colors" title="Edit">
+                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2 z-20">
+                    <button onClick={(e) => { e.stopPropagation(); setEditing(currentItem); setOpenForm(true); }} className="p-2 hover:bg-surface-muted rounded-full text-muted hover:text-primary transition-colors" title="Edit">
                       <span className="sr-only">Edit</span>
                       ✎
                     </button>
-                    <button onClick={() => handleDuplicate(currentItem.id)} className="p-2 hover:bg-surface-muted rounded-full text-muted hover:text-primary transition-colors" title="Duplicate">
+                    <button onClick={(e) => { e.stopPropagation(); handleDuplicate(currentItem.id); }} className="p-2 hover:bg-surface-muted rounded-full text-muted hover:text-primary transition-colors" title="Duplicate">
                       <span className="sr-only">Duplicate</span>
                       ⧉
                     </button>
-                     <button onClick={() => setConfirmId(currentItem.id)} className="p-2 hover:bg-surface-muted rounded-full text-muted hover:text-error transition-colors" title="Delete">
+                     <button onClick={(e) => { e.stopPropagation(); setConfirmId(currentItem.id); }} className="p-2 hover:bg-surface-muted rounded-full text-muted hover:text-error transition-colors" title="Delete">
                       <span className="sr-only">Delete</span>
                       ×
                     </button>
@@ -238,7 +262,7 @@ const MyAffirmations: React.FC = () => {
                  
                  {/* Delete Confirmation Overlay */}
                 {confirmId === currentItem.id && (
-                  <div className="absolute inset-0 bg-surface-elevated/95 dark:bg-darkSurface-elevated/95 backdrop-blur-sm flex flex-col items-center justify-center z-20 p-6 text-center animate-in fade-in duration-200">
+                  <div className="absolute inset-0 bg-surface-elevated/95 dark:bg-darkSurface-elevated/95 backdrop-blur-sm flex flex-col items-center justify-center z-20 p-6 text-center animate-in fade-in duration-200" onMouseDown={e => e.stopPropagation()}>
                       <p className="text-lg font-medium text-primary mb-6">Delete this affirmation?</p>
                       <div className="flex gap-4">
                         <button className="px-6 py-2 rounded-xl bg-error text-white text-sm font-medium shadow-lg shadow-error/20" onClick={() => handleRemove(currentItem.id)}>Delete</button>
@@ -259,7 +283,7 @@ const MyAffirmations: React.FC = () => {
                           ? "bg-accent-primary scale-125 shadow-[0_0_10px_rgba(var(--accent-primary),0.5)]" 
                           : "bg-surface-muted dark:bg-darkSurface-muted hover:bg-accent-primary/50" 
                       }`} 
-                      onClick={() => setCurrentIndex(i)}
+                      onClick={(e) => { e.stopPropagation(); setCurrentIndex(i); }}
                       role="button"
                       aria-label={`Go to affirmation ${i + 1}`}
                     />
