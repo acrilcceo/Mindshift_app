@@ -224,7 +224,7 @@ const MyAffirmations: React.FC = () => {
             <div className="w-full max-w-lg mx-auto flex flex-col items-center animate-in fade-in zoom-in-95 duration-700 ease-out">
               
               {/* Card */}
-              <div className="w-full bg-surface-elevated dark:bg-darkSurface-elevated p-8 md:p-12 rounded-[2.5rem] shadow-2xl border border-card-border/50 relative overflow-hidden group min-h-[400px] flex flex-col items-center justify-center text-center transform-gpu transition-all duration-500 hover:shadow-accent-primary/5">
+              <div key={currentItem.id} className="w-full bg-surface-elevated dark:bg-darkSurface-elevated p-8 md:p-12 rounded-[2.5rem] shadow-2xl border border-card-border/50 relative overflow-hidden group min-h-[400px] flex flex-col items-center justify-center text-center transform-gpu transition-all duration-500 hover:shadow-accent-primary/5 animate-in fade-in zoom-in-95 slide-in-from-bottom-4 duration-500">
                 
                 {/* Ambient Glow */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-accent-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
